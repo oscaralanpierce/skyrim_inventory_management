@@ -83,4 +83,5 @@ production:
   <<: *default
   database: skyrim_inventory_management_production
   username: skyrim_inventory_management
+  url: <%= ENV['SKYRIM_INVENTORY_MANAGEMENT_DATABASE_URL'] %>
   password: <%= ENV['SKYRIM_INVENTORY_MANAGEMENT_DATABASE_PASSWORD'] %>
