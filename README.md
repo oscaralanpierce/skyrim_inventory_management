@@ -110,82 +110,36 @@ We use [Trello](https://trello.com/b/Jo7Z3oUh/sim-project-board) to track work f
 
 ### CI
 
-Rubocop and RSpec are run against all pull requests using [GitHub Actions](https://github.com/features/actions). Pull requests may not be merged if the build is broken. CI also runs any time changes are pushed or merged to `main`. Please wait for these builds to pass before deploying to Heroku.
+Rubocop and RSpec are run against all pull requests using [GitHub Actions](https://github.com/features/actions). Pull requests may not be merged if the build is broken. CI also runs any time changes are pushed or merged to `main`. [Render](https://render.com) automatically deploys on merge to main after checks have passed.
 
 ### Deployment
 
-The Skyrim Inventory Management API is deployed to Heroku under the app name `whispering-scrubland-92626`. Deployments are done automatically when `main` is merged, after CI passes. Monitor the deploy and test in production when it is finished to ensure no breakage has been introduced. If any config or initializers have been changed, you will need to restart the app from the command line using:
-
-```
-heroku restart --app=whispering-scrubland-92626
-```
-
-#### Manual Deployment Steps
-
-To deploy manually, you will first need to [configure Heroku as a Git remote](https://devcenter.heroku.com/articles/git) using the Heroku CLI. Once you've done this, first run `heroku login --app=whispering-scrubland-92626` and press any key to be taken to the browser login screen. After following the prompts and getting logged in, return to your command line. If you haven't configured the Heroku Git remote yet, from the root directory of this repository, run:
-
-```
-heroku git:remote --app=whispering-scrubland-92626
-```
-
-Now, you will have a Git remote called `heroku` that you can use to deploy.
-
-Once the git remote is configured, you can run the following to deploy:
-
-```
-git push heroku main
-```
-
-You should only deploy from `main` and only after any running CI build has passed. **Do not deploy from any branch but `main` or if any steps are failing in CI.** Manual deploy should generally not be necessary as Heroku deploys automatically after merge to `main`.
-
-If your deploy includes migrations, ensure that they have run by inspecting the deploy output. If migrations have not run, you can run them manually using:
-
-```
-heroku run bundle exec rails db:migrate
-```
-
-Additionally, if you have changed any config or initializers, you will need to restart the app in production. Generally, this includes any changes you've made to the `/config` directory:
-
-```
-heroku restart --app=whispering-scrubland-92626
-```
+The Skyrim Inventory Management API is deployed to [Render](https://render.com). Deployments are done automatically when `main` is merged, after CI passes. Monitor the deploy via the Render dashboard and test in production when it is finished to ensure no breakage has been introduced. The `render` command line tool can be used to view logs, manage deploys, restart services, or use SSH or psql locally. Use `render restart` after updating initializers.
 
 ### Troubleshooting in Production
 
-Heroku offers several tools to troubleshoot.
+Use the Render dashboard and command line tool to troubleshoot production deploys.
 
 #### Viewing Logs
 
-You can tail logs in Heroku by running:
+You can view logs with the Render CLI using:
 
 ```
-heroku logs
+render logs
 ```
 
-If you would like to see more or less log output, you can specify the number of lines of output using the `-n` flag:
-
-```
-heroku logs -n 200
-```
-
-If you'd like to see the logs updating live, you can run the following for a similar effect to `tail -f` on Linux:
-
-```
-heroku logs --tail
-```
+You will be prompted to select a service.
 
 #### Using the Rails Console
 
-Heroku gives you access to the Rails console as well through its command line tool:
+You can use the production Rails console from your development machine by SSHing into the production instance using:
 
 ```
-heroku run rails console
+render ssh
 ```
 
-#### Other Heroku Commands
-
-You can run arbitrary commands in Heroku using:
+Once you are into the production box, run:
 
 ```
-heroku run <command>
+rails console
 ```
