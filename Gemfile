@@ -28,7 +28,7 @@ gem 'csv', '~> 3.3'
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
-  gem 'byebug', '~> 11.1', platforms: %i[mri mingw x64_mingw]
+  gem 'byebug', '~> 13.0', platforms: %i[mri mingw x64_mingw]
 
   # Use RSpec for unit and integration testing
   gem 'rspec-rails', '~> 7.1'
