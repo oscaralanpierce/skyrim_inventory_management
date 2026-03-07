@@ -34,10 +34,9 @@
 # Rubocop docs are available here:
 # https://www.rubydoc.info/gems/rubocop/RuboCop
 
-require:
+plugins:
   - rubocop-rails
   - rubocop-rspec
-  - rubocop-rspec_rails
   - rubocop-performance
   - rubocop-factory_bot
 AllCops:
@@ -46,7 +45,7 @@ AllCops:
     - 'db/schema.rb'
     - 'vendor/bundle/**/*'
   DisabledByDefault: true
-  TargetRubyVersion: 3.4.1
+  TargetRubyVersion: 4.0.1
 
 ############################
 ### Gemfile requirements ###
@@ -634,7 +633,7 @@ Naming/MethodParameterName:
     - os
     - pp
     - to
-Naming/PredicateName:
+Naming/PredicatePrefix:
   Enabled: true
   NamePrefix:
     - is_
@@ -1478,9 +1477,6 @@ RSpec/ExpectChange:
   EnforcedStyle: method_call
 RSpec/ExpectInHook:
   Enabled: true
-RSpec/FilePath:
-  Enabled: true
-  IgnoreMethods: true
 RSpec/Focus:
   Enabled: true
 RSpec/HookArgument:
@@ -1556,6 +1552,11 @@ RSpec/SharedContext:
 RSpec/SharedExamples:
   Enabled: true
 RSpec/SingleArgumentMessageChain:
+  Enabled: true
+RSpec/SpecFilePathFormat:
+  Enabled: true
+  IgnoreMethods: true
+RSpec/SpecFilePathSuffix:
   Enabled: true
 RSpec/StubbedMock:
   Enabled: true
