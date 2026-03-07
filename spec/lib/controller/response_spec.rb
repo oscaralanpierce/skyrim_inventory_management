@@ -25,7 +25,7 @@ RSpec.describe Controller::Response do
     context 'when the resource is present but empty' do
       let(:controller) { instance_double(WishListsController, render: nil) }
       let(:options) { {} }
-      let(:result) { Service::OKResult.new(resource: []) }
+      let(:result) { Service::OkResult.new(resource: []) }
 
       it 'returns the empty resource' do
         execute
@@ -36,7 +36,7 @@ RSpec.describe Controller::Response do
     context 'when there is a resource' do
       let(:controller) { instance_double(WishListsController, render: nil) }
       let(:options) { {} }
-      let(:result) { Service::OKResult.new(resource:) }
+      let(:result) { Service::OkResult.new(resource:) }
 
       let(:resource) do
         {

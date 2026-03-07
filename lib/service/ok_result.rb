@@ -3,7 +3,7 @@
 require 'service/result'
 
 module Service
-  class OKResult < Result
+  class OkResult < Result
     def status
       :ok
     end

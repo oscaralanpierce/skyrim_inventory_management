@@ -35,7 +35,7 @@ class InventoryItemsController < ApplicationController
 
       resource = params[:unit_weight] ? all_matching_items : [aggregate_list_item, list_item]
 
-      Service::OKResult.new(resource:)
+      Service::OkResult.new(resource:)
     rescue ActiveRecord::RecordInvalid
       Service::UnprocessableEntityResult.new(errors: list_item.error_array)
     rescue ActiveRecord::RecordNotFound

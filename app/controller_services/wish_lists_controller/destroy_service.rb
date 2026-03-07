@@ -23,7 +23,7 @@ class WishListsController < ApplicationController
 
       resource = aggregate_list&.persisted? ? { deleted: ids, aggregate: aggregate_list } : { deleted: ids }
 
-      Service::OKResult.new(resource:)
+      Service::OkResult.new(resource:)
     rescue ActiveRecord::RecordNotFound
       Service::NotFoundResult.new
     rescue StandardError => e

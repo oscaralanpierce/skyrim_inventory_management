@@ -22,7 +22,7 @@ class WishListsController < ApplicationController
       return Service::UnprocessableEntityResult.new(errors: [DISALLOWED_UPDATE_ERROR]) if params[:aggregate] == true
 
       if wish_list.update(params)
-        Service::OKResult.new(resource: wish_list)
+        Service::OkResult.new(resource: wish_list)
       else
         Service::UnprocessableEntityResult.new(errors: wish_list.error_array)
       end

@@ -40,7 +40,7 @@ class InventoryItemsController < ApplicationController
 
           resource = params[:unit_weight] ? all_matching_list_items : [aggregate_list_item, item]
 
-          Service::OKResult.new(resource:)
+          Service::OkResult.new(resource:)
         end
       end
     rescue ActiveRecord::RecordInvalid

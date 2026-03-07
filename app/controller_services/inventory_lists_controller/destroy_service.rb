@@ -19,7 +19,7 @@ class InventoryListsController < ApplicationController
       return Service::MethodNotAllowedResult.new(errors: [AGGREGATE_LIST_ERROR]) if inventory_list.aggregate == true
 
       aggregate_list = destroy_and_update_aggregate_list_items
-      aggregate_list.nil? ? Service::NoContentResult.new : Service::OKResult.new(resource: aggregate_list)
+      aggregate_list.nil? ? Service::NoContentResult.new : Service::OkResult.new(resource: aggregate_list)
     rescue ActiveRecord::RecordNotFound
       Service::NotFoundResult.new
     rescue StandardError => e

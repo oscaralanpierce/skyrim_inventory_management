@@ -165,8 +165,8 @@ RSpec.describe WishListItemsController::CreateService do
             expect(aggregate_list.list_items.first.quantity).to eq 5
           end
 
-          it 'returns a Service::OKResult' do
-            expect(perform).to be_a(Service::OKResult)
+          it 'returns a Service::OkResult' do
+            expect(perform).to be_a(Service::OkResult)
           end
 
           it 'sets all the changed wish lists as the resource' do
@@ -200,8 +200,8 @@ RSpec.describe WishListItemsController::CreateService do
             expect(other_item.quantity).to eq 2
           end
 
-          it 'returns a Service::OKResult' do
-            expect(perform).to be_a(Service::OKResult)
+          it 'returns a Service::OkResult' do
+            expect(perform).to be_a(Service::OkResult)
           end
 
           it 'sets all the changed wish lists as the resource' do

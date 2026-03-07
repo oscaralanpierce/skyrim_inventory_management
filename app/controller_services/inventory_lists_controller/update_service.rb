@@ -22,7 +22,7 @@ class InventoryListsController < ApplicationController
       return Service::UnprocessableEntityResult.new(errors: [DISALLOWED_UPDATE_ERROR]) if params[:aggregate] == true
 
       if inventory_list.update(params)
-        Service::OKResult.new(resource: inventory_list)
+        Service::OkResult.new(resource: inventory_list)
       else
         Service::UnprocessableEntityResult.new(errors: inventory_list.error_array)
       end

@@ -20,8 +20,8 @@ RSpec.describe GamesController::UpdateService do
         expect(game.reload.description).to eq 'New description'
       end
 
-      it 'returns a Service::OKResult' do
-        expect(perform).to be_a(Service::OKResult)
+      it 'returns a Service::OkResult' do
+        expect(perform).to be_a(Service::OkResult)
       end
 
       it 'sets the game as the resource' do

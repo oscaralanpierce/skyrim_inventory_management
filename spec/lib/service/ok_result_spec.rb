@@ -2,7 +2,7 @@
 
 require 'service/ok_result'
 
-RSpec.describe Service::OKResult do
+RSpec.describe Service::OkResult do
   subject(:result) { described_class.new(options) }
 
   let(:options) do

@@ -14,7 +14,7 @@ Results objects live in the `/lib/service` directory. There is a base `Service::
 
 Existing result classes are:
 
-* `Service::OKResult`
+* `Service::OkResult`
 * `Service::CreatedResult`
 * `Service::NoContentResult`
 * `Service::UnauthorizedResult`
