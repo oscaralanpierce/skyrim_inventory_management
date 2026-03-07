@@ -54,3 +54,9 @@ jobs:
           PGUSER: postgres
           PGPASSWORD: postgres
           RAILS_MASTER_KEY: ${{ secrets.RAILS_MASTER_KEY }}
+      - name: Deploy to Render
+        if: github.ref == 'refs/heads/main'
+        env:
+          deploy_url: ${{ secrets.RENDER_DEPLOY_HOOK_URL }}
+        run: |
+          curl "$deploy_url"
