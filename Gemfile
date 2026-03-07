@@ -23,6 +23,9 @@ gem 'rack-cors', '~> 2.0.2'
 # Use Faraday to validate Google auth access tokens
 gem 'faraday', '~> 2.14.1'
 
+# Use the CSV gem, which is no longer included in the standard library, to parse CSVs
+gem 'csv', '~> 3.3'
+
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'byebug', '~> 11.1', platforms: %i[mri mingw x64_mingw]
