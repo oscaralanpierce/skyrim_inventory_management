@@ -31,7 +31,7 @@ group :development, :test do
   gem 'byebug', '~> 13.0', platforms: %i[mri mingw x64_mingw]
 
   # Use RSpec for unit and integration testing
-  gem 'rspec-rails', '~> 7.1'
+  gem 'rspec-rails', '~> 8.0'
 
   # Use Timecop to freeze time in tests (for testing timestamps, etc.)
   gem 'timecop', '~> 0.9.10'
