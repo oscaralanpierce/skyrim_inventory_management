@@ -3,10 +3,10 @@
 source 'https://rubygems.org'
 git_source(:github) {|repo| "https://github.com/#{repo}.git" }
 
-ruby '3.4.1'
+ruby '4.0.1'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails', branch: 'main'
-gem 'rails', '~> 7.2.2'
+gem 'rails', '7.2.3'
 
 # Use postgresql as the database for Active Record
 gem 'pg', '~> 1.5'
@@ -43,16 +43,16 @@ group :development, :test do
   gem 'factory_bot_rails', '~> 6.4.4'
 
   # Use Rubocop to enforce style guide
-  gem 'rubocop-rails', '~> 2.27', require: false
+  gem 'rubocop-rails', '~> 2.34', require: false
 
   # Use Rubocop to enforce RSpec styles
-  gem 'rubocop-rspec', '~> 2.29', require: false
+  gem 'rubocop-rspec', '~> 3.9', require: false
 
   # Use Rubocop to enforce performance standards
-  gem 'rubocop-performance', '~> 1.22', require: false
+  gem 'rubocop-performance', '~> 1.23', require: false
 
   # Use Rubocop to lint factories
-  gem 'rubocop-factory_bot', '~> 2.26', require: false
+  gem 'rubocop-factory_bot', '~> 2.27', require: false
 
   # Use WebMock to mock HTTP requests, mainly for auth purposes
   gem 'webmock', '~> 3.24'

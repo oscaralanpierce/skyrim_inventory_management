@@ -27,4 +27,4 @@ updates:
       - dependency-name: "rubocop-rails"
       - dependency-name: "rubocop-rspec"
       - dependency-name: "rubocop-performance"
-      - dependency-name: "rubocop-factorybot"
+      - dependency-name: "rubocop-factory_bot"

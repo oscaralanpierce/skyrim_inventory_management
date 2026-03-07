@@ -22,8 +22,6 @@ class Weapon < EnchantableInGameItem
               allow_blank: true,
             }
 
-  delegate :crafting_materials, to: :canonical_weapon
-
   DOES_NOT_MATCH = "doesn't match a weapon that exists in Skyrim"
   DUPLICATE_MATCH = 'is a duplicate of a unique in-game item'
 
