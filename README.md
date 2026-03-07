@@ -1,6 +1,6 @@
 # Skyrim Inventory Management API
 
-[Skyrim Inventory Management](https://sim.danascheider.com) is a fully featured, split-stack Rails/React app enabling users to manage inventory and tasks across multiple properties in Skyrim. The back end API found in this repo is hosted on [Heroku](https://heroku.com) at https://sim-api.danascheider.com.
+[Skyrim Inventory Management](https://sim.oscaralanpierce.com) is a fully featured, split-stack Rails/React app enabling users to manage inventory and tasks across multiple properties in Skyrim. The backend API found in this repo is hosted on [Render](https://render.com) at https://sim-api.oscaralanpierce.com.
 
 ## Disclaimer
 
