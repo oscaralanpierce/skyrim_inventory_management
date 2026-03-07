@@ -14,8 +14,8 @@ RSpec.describe InventoryListsController::IndexService do
     context 'when there are no inventory lists for that game' do
       let(:game) { create(:game, user:) }
 
-      it 'returns a Service::OKResult' do
-        expect(perform).to be_a(Service::OKResult)
+      it 'returns a Service::OkResult' do
+        expect(perform).to be_a(Service::OkResult)
       end
 
       it 'returns the empty list' do
@@ -26,8 +26,8 @@ RSpec.describe InventoryListsController::IndexService do
     context 'when there are inventory lists for that game' do
       let(:game) { create(:game_with_inventory_lists, user:) }
 
-      it 'returns a Service::OKResult' do
-        expect(perform).to be_a(Service::OKResult)
+      it 'returns a Service::OkResult' do
+        expect(perform).to be_a(Service::OkResult)
       end
 
       it 'returns the inventory lists' do

@@ -11,7 +11,7 @@ class InventoryListsController < ApplicationController
     end
 
     def perform
-      Service::OKResult.new(resource: game.inventory_lists)
+      Service::OkResult.new(resource: game.inventory_lists)
     rescue ActiveRecord::RecordNotFound
       Service::NotFoundResult.new
     rescue StandardError => e

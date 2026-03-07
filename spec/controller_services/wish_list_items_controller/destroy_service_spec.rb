@@ -34,8 +34,8 @@ RSpec.describe WishListItemsController::DestroyService do
             .to change(aggregate_list.list_items, :count).from(1).to(0)
         end
 
-        it 'returns a Service::OKResult' do
-          expect(perform).to be_a Service::OKResult
+        it 'returns a Service::OkResult' do
+          expect(perform).to be_a Service::OkResult
         end
 
         it 'sets the aggregate list and the regular list as the resource' do
@@ -93,8 +93,8 @@ RSpec.describe WishListItemsController::DestroyService do
           end
         end
 
-        it 'returns a Service::OKResult' do
-          expect(perform).to be_a Service::OKResult
+        it 'returns a Service::OkResult' do
+          expect(perform).to be_a Service::OkResult
         end
 
         it 'sets the aggregate list and the regular list as the resource' do

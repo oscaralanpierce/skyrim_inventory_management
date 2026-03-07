@@ -48,8 +48,8 @@ RSpec.describe WishListsController::DestroyService do
           end
         end
 
-        it 'returns a Service::OKResult' do
-          expect(perform).to be_a(Service::OKResult)
+        it 'returns a Service::OkResult' do
+          expect(perform).to be_a(Service::OkResult)
         end
 
         it 'includes the deleted list ID and the aggregate list as the resource' do
@@ -107,8 +107,8 @@ RSpec.describe WishListsController::DestroyService do
           end
         end
 
-        it 'returns a Service::OKResult' do
-          expect(perform).to be_a(Service::OKResult)
+        it 'returns a Service::OkResult' do
+          expect(perform).to be_a(Service::OkResult)
         end
 
         it 'returns an array of deleted list IDs as the resource' do

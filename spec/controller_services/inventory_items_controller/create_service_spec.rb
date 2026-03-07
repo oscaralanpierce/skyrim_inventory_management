@@ -129,8 +129,8 @@ RSpec.describe InventoryItemsController::CreateService do
             expect(aggregate_list.list_items.first.quantity).to eq 5
           end
 
-          it 'returns a Service::OKResult' do
-            expect(perform).to be_a(Service::OKResult)
+          it 'returns a Service::OkResult' do
+            expect(perform).to be_a(Service::OkResult)
           end
 
           it 'returns the requested item and the aggregate list item' do
@@ -164,8 +164,8 @@ RSpec.describe InventoryItemsController::CreateService do
             expect(other_item.quantity).to eq 2
           end
 
-          it 'returns a Service::OKResult' do
-            expect(perform).to be_a(Service::OKResult)
+          it 'returns a Service::OkResult' do
+            expect(perform).to be_a(Service::OkResult)
           end
 
           it 'returns all the items that have been updated' do

@@ -55,8 +55,8 @@ RSpec.describe InventoryItemsController::DestroyService do
             .to change(game.inventory_items, :count).from(3).to(2)
         end
 
-        it 'returns a Service::OKResult' do
-          expect(perform).to be_a(Service::OKResult)
+        it 'returns a Service::OkResult' do
+          expect(perform).to be_a(Service::OkResult)
         end
 
         it 'returns the aggregate list item', :aggregate_failures do

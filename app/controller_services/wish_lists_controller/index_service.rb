@@ -12,7 +12,7 @@ class WishListsController < ApplicationController
     end
 
     def perform
-      Service::OKResult.new(resource: game.wish_lists.index_order)
+      Service::OkResult.new(resource: game.wish_lists.index_order)
     rescue ActiveRecord::RecordNotFound
       Service::NotFoundResult.new
     rescue StandardError => e

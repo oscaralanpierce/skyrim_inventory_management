@@ -7,7 +7,7 @@ class HealthChecksController < ApplicationController
   skip_before_action :authenticate_user!
 
   def index
-    result = Service::OKResult.new(resource: {})
+    result = Service::OkResult.new(resource: {})
 
     ::Controller::Response.new(self, result).execute
   end

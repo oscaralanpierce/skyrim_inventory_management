@@ -50,8 +50,8 @@ RSpec.describe InventoryListsController::DestroyService do
           end
         end
 
-        it 'returns a Service::OKResult' do
-          expect(perform).to be_a Service::OKResult
+        it 'returns a Service::OkResult' do
+          expect(perform).to be_a Service::OkResult
         end
 
         it 'sets the resource as the aggregate list' do

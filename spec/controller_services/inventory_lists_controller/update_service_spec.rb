@@ -24,8 +24,8 @@ RSpec.describe InventoryListsController::UpdateService do
         expect(inventory_list.reload.title).to eq 'My New Title'
       end
 
-      it 'returns a Service::OKResult' do
-        expect(perform).to be_a(Service::OKResult)
+      it 'returns a Service::OkResult' do
+        expect(perform).to be_a(Service::OkResult)
       end
 
       it 'sets the resource to the updated inventory list' do

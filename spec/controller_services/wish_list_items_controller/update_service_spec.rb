@@ -38,8 +38,8 @@ RSpec.describe WishListItemsController::UpdateService do
           expect(aggregate_list_item.notes).to be_nil
         end
 
-        it 'returns a Service::OKResult' do
-          expect(perform).to be_a(Service::OKResult)
+        it 'returns a Service::OkResult' do
+          expect(perform).to be_a(Service::OkResult)
         end
 
         it 'returns the modified wish list items as the resource' do
@@ -71,8 +71,8 @@ RSpec.describe WishListItemsController::UpdateService do
             expect(aggregate_list.reload.list_items.first.quantity).to eq 15
           end
 
-          it 'returns a Service::OKResult' do
-            expect(perform).to be_a(Service::OKResult)
+          it 'returns a Service::OkResult' do
+            expect(perform).to be_a(Service::OkResult)
           end
 
           it 'returns the two modified list items as the resource' do
@@ -101,8 +101,8 @@ RSpec.describe WishListItemsController::UpdateService do
             expect(other_item.unit_weight).to eq 2
           end
 
-          it 'returns a Service::OKResult' do
-            expect(perform).to be_a(Service::OKResult)
+          it 'returns a Service::OkResult' do
+            expect(perform).to be_a(Service::OkResult)
           end
 
           it 'returns all modified list items as the resource' do
@@ -131,8 +131,8 @@ RSpec.describe WishListItemsController::UpdateService do
             expect(other_item.unit_weight).to be_nil
           end
 
-          it 'returns a Service::OKResult' do
-            expect(perform).to be_a(Service::OKResult)
+          it 'returns a Service::OkResult' do
+            expect(perform).to be_a(Service::OkResult)
           end
 
           it 'returns all modified list items as the resource' do

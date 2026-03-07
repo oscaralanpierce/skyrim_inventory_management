@@ -40,8 +40,8 @@ RSpec.describe WishListsController::IndexService do
       let(:game) { create(:game, user:) }
       let(:game_id) { game.id }
 
-      it 'returns a Service::OKResult' do
-        expect(perform).to be_a(Service::OKResult)
+      it 'returns a Service::OkResult' do
+        expect(perform).to be_a(Service::OkResult)
       end
 
       it 'sets the resource to be an empty array' do
@@ -53,8 +53,8 @@ RSpec.describe WishListsController::IndexService do
       let(:game) { create(:game_with_wish_lists, user:) }
       let(:game_id) { game.id }
 
-      it 'returns a Service::OKResult' do
-        expect(perform).to be_a(Service::OKResult)
+      it 'returns a Service::OkResult' do
+        expect(perform).to be_a(Service::OkResult)
       end
 
       it "sets the resource to the game's wish lists" do

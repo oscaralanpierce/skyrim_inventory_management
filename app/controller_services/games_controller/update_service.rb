@@ -15,7 +15,7 @@ class GamesController < ApplicationController
 
     def perform
       if game.update(params)
-        Service::OKResult.new(resource: game)
+        Service::OkResult.new(resource: game)
       else
         Service::UnprocessableEntityResult.new(errors: game.error_array)
       end

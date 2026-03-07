@@ -39,7 +39,7 @@ class WishListItemsController < ApplicationController
 
           aggregate_list.update_item_from_child_list(params[:description], changed_attributes)
 
-          Service::OKResult.new(resource: lists_changed)
+          Service::OkResult.new(resource: lists_changed)
         end
       end
     rescue ActiveRecord::RecordInvalid

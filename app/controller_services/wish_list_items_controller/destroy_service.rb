@@ -22,7 +22,7 @@ class WishListItemsController < ApplicationController
         aggregate_list.remove_item_from_child_list(wish_list_item.attributes)
       end
 
-      Service::OKResult.new(resource: [aggregate_list.reload, wish_list.reload])
+      Service::OkResult.new(resource: [aggregate_list.reload, wish_list.reload])
     rescue ActiveRecord::RecordNotFound
       Service::NotFoundResult.new
     rescue StandardError => e

@@ -11,8 +11,8 @@ RSpec.describe GamesController::IndexService do
     context 'when the user has no games' do
       let(:user) { create(:user) }
 
-      it 'returns a Service::OKResult' do
-        expect(perform).to be_a(Service::OKResult)
+      it 'returns a Service::OkResult' do
+        expect(perform).to be_a(Service::OkResult)
       end
 
       it 'sets the resource to an empty array' do
@@ -27,8 +27,8 @@ RSpec.describe GamesController::IndexService do
         create(:game) # another user's game, shouldn't be included
       end
 
-      it 'returns a Service::OKResult' do
-        expect(perform).to be_a(Service::OKResult)
+      it 'returns a Service::OkResult' do
+        expect(perform).to be_a(Service::OkResult)
       end
 
       it 'sets the resource to the games' do

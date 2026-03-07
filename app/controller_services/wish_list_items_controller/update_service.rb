@@ -28,7 +28,7 @@ class WishListItemsController < ApplicationController
         aggregate_list.update_item_from_child_list(list_item.description, changed_attributes)
       end
 
-      Service::OKResult.new(
+      Service::OkResult.new(
         resource: changed_attributes[:unit_weight].present? ? all_matching_items : [aggregate_list_item, list_item.reload],
       )
     rescue ActiveRecord::RecordInvalid

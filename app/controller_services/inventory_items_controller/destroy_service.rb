@@ -25,7 +25,7 @@ class InventoryItemsController < ApplicationController
         aggregate_list_item = aggregate_list.remove_item_from_child_list(list_item.attributes)
       end
 
-      aggregate_list_item.nil? ? Service::NoContentResult.new : Service::OKResult.new(resource: aggregate_list_item)
+      aggregate_list_item.nil? ? Service::NoContentResult.new : Service::OkResult.new(resource: aggregate_list_item)
     rescue ActiveRecord::RecordNotFound
       Service::NotFoundResult.new
     rescue StandardError => e
