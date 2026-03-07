@@ -45,8 +45,6 @@ module Aggregatable
 
     has_many :child_lists, class_name: to_s, foreign_key: :aggregate_list_id, inverse_of: :aggregate_list
 
-    serialize :list_items, class_name: 'Array'
-
     validate :one_aggregate_list_per_game, if: :aggregate_list?
     validate :not_named_all_items, unless: :aggregate_list?
     validate :ensure_aggregate_list_is_aggregate, unless: :aggregate_list?
@@ -63,6 +61,10 @@ module Aggregatable
     scope :includes_items, -> { includes(:list_items) }
 
     delegate :user, to: :game
+  end
+
+  def as_json(options = {})
+    super(options.merge(include: :list_items))
   end
 
   def add_item_from_child_list(item)
