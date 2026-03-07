@@ -17,3 +17,14 @@ updates:
     reviewers:
       - "danascheider"
     versioning-strategy: "increase"
+    ignore:
+      # Framework updates should be by humans
+      - dependency-name: "rails"
+
+      # Rubocop packages need to be updated together, often when
+      # Ruby or Rails have been updated
+      - dependency-name: "rubocop"
+      - dependency-name: "rubocop-rails"
+      - dependency-name: "rubocop-rspec"
+      - dependency-name: "rubocop-performance"
+      - dependency-name: "rubocop-factorybot"
