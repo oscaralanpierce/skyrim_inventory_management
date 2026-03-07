@@ -293,7 +293,6 @@ GEM
       rubocop (~> 1.81)
     ruby-progressbar (1.13.0)
     securerandom (0.4.1)
-    spring (4.4.2)
     stringio (3.2.0)
     thor (1.5.0)
     timecop (0.9.10)
@@ -339,7 +338,6 @@ DEPENDENCIES
   rubocop-performance (~> 1.23)
   rubocop-rails (~> 2.34)
   rubocop-rspec (~> 3.9)
-  spring (~> 4.4)
   timecop (~> 0.9.10)
   webmock (~> 3.24)
 
