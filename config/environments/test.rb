@@ -10,7 +10,7 @@ require 'active_support/core_ext/integer/time'
 Rails.application.configure do
   # Settings specified here will take precedence over those in config/application.rb.
 
-  # Turn false under Spring and add config.action_view.cache_template_loading = true.
+  # While tests run files are not watched, reloading is not necessary.
   config.enable_reloading = false
 
   # Eager loading loads your whole application. When running a single test locally,
