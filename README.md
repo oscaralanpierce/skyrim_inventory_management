@@ -42,7 +42,7 @@ See the [API docs](/docs/api/README.md) for information about resources like gam
 
 ### Local Setup
 
-The Skyrim Inventory Management API is a basic Rails API running on Rails 7 and Ruby 4. You can set it up locally by cloning the repository, `cd`ing into it, and running:
+The Skyrim Inventory Management API is a basic Rails API running on Rails 8 and Ruby 4. You can set it up locally by cloning the repository, `cd`ing into it, and running:
 ```bash
 ./script/setup.sh
 ```

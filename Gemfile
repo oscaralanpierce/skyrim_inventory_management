@@ -27,8 +27,8 @@ gem 'faraday', '~> 2.14.1'
 gem 'csv', '~> 3.3'
 
 group :development, :test do
-  # Call 'byebug' anywhere in the code to stop execution and get a debugger console
-  gem 'byebug', '~> 13.0', platforms: %i[mri windows]
+  # Use debug as the debugger
+  gem 'debug', '~> 1.10'
 
   # Use RSpec for unit and integration testing
   gem 'rspec-rails', '~> 8.0'
@@ -56,9 +56,4 @@ group :development, :test do
 
   # Use WebMock to mock HTTP requests, mainly for auth purposes
   gem 'webmock', '~> 3.24'
-end
-
-group :development do
-  # Use listen to hot-reload app code
-  gem 'listen', '~> 3.9'
 end
