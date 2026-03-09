@@ -41,7 +41,7 @@ RSpec.describe Canonical::Sync::TemperingMaterials do
         create(:canonical_raw_material, name: 'Ebony Ingot', item_code: '0005AD9D')
         create(:canonical_raw_material, name: 'Leather', item_code: '000DB5D2')
         create(:canonical_raw_material, name: 'Leather Strips', item_code: '000800E4')
-        create(:canonical_ingredient, name: 'Daedra Heart', item_code: '0003AD5B')\
+        create(:canonical_ingredient, name: 'Daedra Heart', item_code: '0003AD5B')
       end
 
       context 'when preserve_existing_records is false' do
