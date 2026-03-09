@@ -18,9 +18,7 @@ RSpec.describe WishListItemsController::DestroyService do
       let(:list_item) { create(:wish_list_item, list: wish_list, notes: 'some notes') }
       let(:user) { game.user }
 
-      before do
-        aggregate_list.add_item_from_child_list(list_item)
-      end
+      before { aggregate_list.add_item_from_child_list(list_item) }
 
       context 'when the quantity on the aggregate list equals the quantity on the regular list' do
         it 'destroys the list item' do
@@ -59,16 +57,16 @@ RSpec.describe WishListItemsController::DestroyService do
         let(:user) { game.user }
         let(:second_list) { create(:wish_list, game:, aggregate_list:) }
         let(:second_list_item) do
-          create(:wish_list_item,
-                 list: second_list,
-                 description: list_item.description.upcase, # make sure comparison is case insensitive
-                 quantity: 2,
-                 notes: 'some other notes',)
+          create(
+            :wish_list_item,
+            list: second_list,
+            description: list_item.description.upcase, # make sure comparison is case insensitive
+            quantity: 2,
+            notes: 'some other notes',
+          )
         end
 
-        before do
-          aggregate_list.add_item_from_child_list(second_list_item)
-        end
+        before { aggregate_list.add_item_from_child_list(second_list_item) }
 
         it 'destroys the list item' do
           perform
@@ -158,11 +156,7 @@ RSpec.describe WishListItemsController::DestroyService do
       let(:user) { list_item.user }
       let(:list_item) { create(:wish_list_item, list: wish_list) }
 
-      before do
-        allow_any_instance_of(WishListItem)
-          .to receive(:destroy!)
-                .and_raise(StandardError, 'Something went horribly wrong')
-      end
+      before { allow_any_instance_of(WishListItem).to receive(:destroy!).and_raise(StandardError, 'Something went horribly wrong') }
 
       it 'returns a Service::InternalServerErrorResult' do
         expect(perform).to be_a(Service::InternalServerErrorResult)

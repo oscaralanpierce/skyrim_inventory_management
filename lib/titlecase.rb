@@ -52,26 +52,7 @@
 # excluded from the list unless they are three characters or less.
 
 module Titlecase
-  LOWERCASE_WORDS = %w[
-    a
-    an
-    the
-    and
-    but
-    for
-    at
-    by
-    from
-    with
-    to
-    in
-    of
-    into
-    onto
-    on
-    without
-    within
-  ].freeze
+  LOWERCASE_WORDS = %w[a an the and but for at by from with to in of into onto on without within].freeze
 
   module_function
 

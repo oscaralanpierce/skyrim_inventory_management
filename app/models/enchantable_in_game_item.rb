@@ -3,13 +3,8 @@
 class EnchantableInGameItem < InGameItem
   self.abstract_class = true
 
-  has_many :enchantables_enchantments,
-           dependent: :destroy,
-           as: :enchantable
-  has_many :enchantments,
-           -> { select 'enchantments.*, enchantables_enchantments.strength as strength' },
-           through: :enchantables_enchantments,
-           source: :enchantment
+  has_many :enchantables_enchantments, dependent: :destroy, as: :enchantable
+  has_many :enchantments, -> { select 'enchantments.*, enchantables_enchantments.strength as strength' }, through: :enchantables_enchantments, source: :enchantment
 
   after_create :set_enchantments, if: -> { canonical_model.present? }
 
@@ -26,16 +21,9 @@ class EnchantableInGameItem < InGameItem
 
     enchantables_enchantments.added_manually.each do |join_model|
       canonicals = if join_model.strength.present?
-                     canonicals.left_outer_joins(:enchantables_enchantments).where(
-                       "(enchantables_enchantments.enchantment_id = :enchantment_id AND enchantables_enchantments.strength = :strength) OR #{canonical_table}.enchantable = true",
-                       enchantment_id: join_model.enchantment_id,
-                       strength: join_model.strength,
-                     )
+                     canonicals.left_outer_joins(:enchantables_enchantments).where("(enchantables_enchantments.enchantment_id = :enchantment_id AND enchantables_enchantments.strength = :strength) OR #{canonical_table}.enchantable = true", enchantment_id: join_model.enchantment_id, strength: join_model.strength)
                    else
-                     canonicals.left_outer_joins(:enchantables_enchantments).where(
-                       "(enchantables_enchantments.enchantment_id = :enchantment_id AND enchantables_enchantments.strength IS NULL) OR #{canonical_table}.enchantable = true",
-                       enchantment_id: join_model.enchantment_id,
-                     )
+                     canonicals.left_outer_joins(:enchantables_enchantments).where("(enchantables_enchantments.enchantment_id = :enchantment_id AND enchantables_enchantments.strength IS NULL) OR #{canonical_table}.enchantable = true", enchantment_id: join_model.enchantment_id)
                    end
     end
 
@@ -58,11 +46,6 @@ class EnchantableInGameItem < InGameItem
 
     remove_automatically_added_enchantments!
 
-    canonical_model.enchantables_enchantments.each do |model|
-      enchantables_enchantments.find_or_create_by!(
-        enchantment_id: model.enchantment_id,
-        strength: model.strength,
-      ) {|new_model| new_model.added_automatically = true }
-    end
+    canonical_model.enchantables_enchantments.each {|model| enchantables_enchantments.find_or_create_by!(enchantment_id: model.enchantment_id, strength: model.strength) {|new_model| new_model.added_automatically = true } }
   end
 end

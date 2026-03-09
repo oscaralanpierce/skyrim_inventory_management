@@ -8,9 +8,7 @@ RSpec.describe Potion, type: :model do
 
     let(:potion) { build(:potion) }
 
-    before do
-      create(:alchemical_property, name: 'Fortify Destruction', effect_type: 'potion')
-    end
+    before { create(:alchemical_property, name: 'Fortify Destruction', effect_type: 'potion') }
 
     describe '#name' do
       it "can't be blank" do
@@ -41,14 +39,7 @@ RSpec.describe Potion, type: :model do
       context 'when the canonical potion is not unique' do
         let(:canonical_potion) { create(:canonical_potion) }
 
-        before do
-          create_list(
-            :potion,
-            3,
-            canonical_potion:,
-            game:,
-          )
-        end
+        before { create_list(:potion, 3, canonical_potion:, game:) }
 
         it 'is valid' do
           expect(potion).to be_valid
@@ -56,14 +47,7 @@ RSpec.describe Potion, type: :model do
       end
 
       context 'when the canonical potion is unique' do
-        let(:canonical_potion) do
-          create(
-            :canonical_potion,
-            max_quantity: 1,
-            unique_item: true,
-            rare_item: true,
-          )
-        end
+        let(:canonical_potion) { create(:canonical_potion, max_quantity: 1, unique_item: true, rare_item: true) }
 
         context 'when there are no other non-canonical matches' do
           it 'is valid' do
@@ -72,9 +56,7 @@ RSpec.describe Potion, type: :model do
         end
 
         context 'when there is another match for a different game' do
-          before do
-            create(:potion, canonical_potion:)
-          end
+          before { create(:potion, canonical_potion:) }
 
           it 'is valid' do
             expect(potion).to be_valid
@@ -82,9 +64,7 @@ RSpec.describe Potion, type: :model do
         end
 
         context 'when there is another match for the same game' do
-          before do
-            create(:potion, canonical_potion:, game:)
-          end
+          before { create(:potion, canonical_potion:, game:) }
 
           it 'is invalid' do
             validate
@@ -96,25 +76,15 @@ RSpec.describe Potion, type: :model do
 
     describe 'player-created potions and poisons' do
       before do
-        data = JSON.parse(
-          File.read(
-            Rails.root.join(
-              'spec',
-              'support',
-              'fixtures',
-              'canonical',
-              'sync',
-              'alchemical_properties.json',
-            ),
-          ),
-          symbolize_names: true,
-        )
+        data = JSON.parse(File.read(Rails.root.join('spec', 'support', 'fixtures', 'canonical', 'sync', 'alchemical_properties.json')), symbolize_names: true)
 
+        # rubocop:disable Layout/RedundantLineBreak
         data.each do |object|
           AlchemicalProperty.create!(object[:attributes])
         rescue ActiveRecord::RecordInvalid
           next
         end
+        # rubocop:enable Layout/RedundantLineBreak
       end
 
       context 'when the potion has a valid name' do
@@ -156,9 +126,7 @@ RSpec.describe Potion, type: :model do
     context 'when there is no canonical model assigned' do
       let(:potion) { create(:potion) }
 
-      before do
-        create_list(:canonical_potion, 2)
-      end
+      before { create_list(:canonical_potion, 2) }
 
       it 'returns nil' do
         expect(canonical_model).to be_nil
@@ -172,17 +140,9 @@ RSpec.describe Potion, type: :model do
     context 'when only the name has to match' do
       let(:potion) { build(:potion, name: 'Potion of Healing') }
 
-      let!(:matching_canonicals) do
-        create_list(
-          :canonical_potion,
-          3,
-          name: 'potion of healing',
-        )
-      end
+      let!(:matching_canonicals) { create_list(:canonical_potion, 3, name: 'potion of healing') }
 
-      before do
-        create(:canonical_potion)
-      end
+      before { create(:canonical_potion) }
 
       it 'matches case-insensitively' do
         expect(canonical_models).to contain_exactly(*matching_canonicals)
@@ -192,18 +152,9 @@ RSpec.describe Potion, type: :model do
     context 'when there are magical effects defined' do
       let(:potion) { build(:potion, name: 'Potion of Healing', magical_effects: 'foobar') }
 
-      let!(:matching_canonicals) do
-        create_list(
-          :canonical_potion,
-          3,
-          name: 'potion of healing',
-          magical_effects: 'Foobar',
-        )
-      end
+      let!(:matching_canonicals) { create_list(:canonical_potion, 3, name: 'potion of healing', magical_effects: 'Foobar') }
 
-      before do
-        create(:canonical_potion, name: 'potion of healing', magical_effects: nil)
-      end
+      before { create(:canonical_potion, name: 'potion of healing', magical_effects: nil) }
 
       it 'returns all matching canonicals' do
         expect(canonical_models).to contain_exactly(*matching_canonicals)
@@ -213,9 +164,7 @@ RSpec.describe Potion, type: :model do
     context 'when there are no matches' do
       let(:potion) { build(:potion, name: 'Deadly Poison', magical_effects: 'foo') }
 
-      before do
-        create(:canonical_potion, name: 'Deadly Poison')
-      end
+      before { create(:canonical_potion, name: 'Deadly Poison') }
 
       it 'is empty' do
         expect(canonical_models).to be_empty
@@ -225,12 +174,7 @@ RSpec.describe Potion, type: :model do
     context 'when the match changes' do
       let(:potion) { create(:potion, :with_matching_canonical) }
 
-      let!(:new_canonical) do
-        create(
-          :canonical_potion,
-          name: 'Elixir of Light Feet',
-        )
-      end
+      let!(:new_canonical) { create(:canonical_potion, name: 'Elixir of Light Feet') }
 
       it 'returns the canonical that matches the new attributes' do
         potion.name = 'elixir of light feet'
@@ -257,38 +201,14 @@ RSpec.describe Potion, type: :model do
         context 'when strength and duration are not defined' do
           let!(:canonical_potions) { create_list(:canonical_potion, 3, name: 'Foo') }
 
-          let!(:join_model) do
-            create(
-              :potions_alchemical_property,
-              potion:,
-              strength: nil,
-              duration: nil,
-            )
-          end
+          let!(:join_model) { create(:potions_alchemical_property, potion:, strength: nil, duration: nil) }
 
           before do
-            create(
-              :canonical_potions_alchemical_property,
-              potion: canonical_potions.first,
-              alchemical_property: join_model.alchemical_property,
-              strength: 5,
-              duration: nil,
-            )
+            create(:canonical_potions_alchemical_property, potion: canonical_potions.first, alchemical_property: join_model.alchemical_property, strength: 5, duration: nil)
 
-            create(
-              :canonical_potions_alchemical_property,
-              potion: canonical_potions.second,
-              strength: nil,
-              duration: nil,
-            )
+            create(:canonical_potions_alchemical_property, potion: canonical_potions.second, strength: nil, duration: nil)
 
-            create(
-              :canonical_potions_alchemical_property,
-              potion: canonical_potions.last,
-              alchemical_property: join_model.alchemical_property,
-              strength: nil,
-              duration: nil,
-            )
+            create(:canonical_potions_alchemical_property, potion: canonical_potions.last, alchemical_property: join_model.alchemical_property, strength: nil, duration: nil)
 
             potion.reload
           end
@@ -301,31 +221,12 @@ RSpec.describe Potion, type: :model do
         context 'when strength is defined but not duration' do
           let!(:canonical_potions) { create_list(:canonical_potion, 2, name: 'Foo') }
 
-          let!(:join_model) do
-            create(
-              :potions_alchemical_property,
-              potion:,
-              strength: 16,
-              duration: nil,
-            )
-          end
+          let!(:join_model) { create(:potions_alchemical_property, potion:, strength: 16, duration: nil) }
 
           before do
-            create(
-              :canonical_potions_alchemical_property,
-              potion: canonical_potions.first,
-              alchemical_property: join_model.alchemical_property,
-              strength: 16,
-              duration: 30,
-            )
+            create(:canonical_potions_alchemical_property, potion: canonical_potions.first, alchemical_property: join_model.alchemical_property, strength: 16, duration: 30)
 
-            create(
-              :canonical_potions_alchemical_property,
-              potion: canonical_potions.last,
-              alchemical_property: join_model.alchemical_property,
-              strength: 16,
-              duration: nil,
-            )
+            create(:canonical_potions_alchemical_property, potion: canonical_potions.last, alchemical_property: join_model.alchemical_property, strength: 16, duration: nil)
 
             potion.reload
           end
@@ -338,31 +239,12 @@ RSpec.describe Potion, type: :model do
         context 'when duration is defined but not strength' do
           let!(:canonical_potions) { create_list(:canonical_potion, 2, name: 'Foo') }
 
-          let!(:join_model) do
-            create(
-              :potions_alchemical_property,
-              potion:,
-              strength: nil,
-              duration: 30,
-            )
-          end
+          let!(:join_model) { create(:potions_alchemical_property, potion:, strength: nil, duration: 30) }
 
           before do
-            create(
-              :canonical_potions_alchemical_property,
-              potion: canonical_potions.first,
-              alchemical_property: join_model.alchemical_property,
-              strength: nil,
-              duration: 30,
-            )
+            create(:canonical_potions_alchemical_property, potion: canonical_potions.first, alchemical_property: join_model.alchemical_property, strength: nil, duration: 30)
 
-            create(
-              :canonical_potions_alchemical_property,
-              potion: canonical_potions.last,
-              alchemical_property: join_model.alchemical_property,
-              strength: 16,
-              duration: 30,
-            )
+            create(:canonical_potions_alchemical_property, potion: canonical_potions.last, alchemical_property: join_model.alchemical_property, strength: 16, duration: 30)
 
             potion.reload
           end
@@ -375,31 +257,12 @@ RSpec.describe Potion, type: :model do
         context 'when both strength and duration are defined' do
           let!(:canonical_potions) { create_list(:canonical_potion, 2, name: 'Foo') }
 
-          let!(:join_model) do
-            create(
-              :potions_alchemical_property,
-              potion:,
-              strength: 12,
-              duration: 30,
-            )
-          end
+          let!(:join_model) { create(:potions_alchemical_property, potion:, strength: 12, duration: 30) }
 
           before do
-            create(
-              :canonical_potions_alchemical_property,
-              potion: canonical_potions.first,
-              alchemical_property: join_model.alchemical_property,
-              strength: 12,
-              duration: 30,
-            )
+            create(:canonical_potions_alchemical_property, potion: canonical_potions.first, alchemical_property: join_model.alchemical_property, strength: 12, duration: 30)
 
-            create(
-              :canonical_potions_alchemical_property,
-              potion: canonical_potions.last,
-              alchemical_property: join_model.alchemical_property,
-              strength: 16,
-              duration: 30,
-            )
+            create(:canonical_potions_alchemical_property, potion: canonical_potions.last, alchemical_property: join_model.alchemical_property, strength: 16, duration: 30)
 
             potion.reload
           end
@@ -413,86 +276,29 @@ RSpec.describe Potion, type: :model do
       context 'when the potion has multiple alchemical properties' do
         let!(:canonical_potions) { create_list(:canonical_potion, 4, name: 'foo') }
 
-        let!(:join_models) do
-          [
-            create(
-              :potions_alchemical_property,
-              potion:,
-              strength: 5,
-              duration: 20,
-            ),
-            create(
-              :potions_alchemical_property,
-              potion:,
-              strength: nil,
-              duration: 60,
-            ),
-          ]
-        end
+        let!(:join_models) { [create(:potions_alchemical_property, potion:, strength: 5, duration: 20), create(:potions_alchemical_property, potion:, strength: nil, duration: 60)] }
 
         before do
           # The first canonical potion has one alchemical property that matches,
           # but shouldn't show up in the results since it doesn't have both.
-          create(
-            :canonical_potions_alchemical_property,
-            potion: canonical_potions.first,
-            alchemical_property: join_models.first.alchemical_property,
-            strength: 5,
-            duration: 20,
-          )
+          create(:canonical_potions_alchemical_property, potion: canonical_potions.first, alchemical_property: join_models.first.alchemical_property, strength: 5, duration: 20)
 
           # The second canonical potion has multiple alchemical properties
           # but shouldn't show up in results because only one matches the
           # strength and duration
-          create(
-            :canonical_potions_alchemical_property,
-            potion: canonical_potions.second,
-            alchemical_property: join_models.first.alchemical_property,
-            strength: 5,
-            duration: 20,
-          )
-          create(
-            :canonical_potions_alchemical_property,
-            potion: canonical_potions.second,
-            alchemical_property: join_models.last.alchemical_property,
-            strength: 15,
-            duration: nil,
-          )
+          create(:canonical_potions_alchemical_property, potion: canonical_potions.second, alchemical_property: join_models.first.alchemical_property, strength: 5, duration: 20)
+          create(:canonical_potions_alchemical_property, potion: canonical_potions.second, alchemical_property: join_models.last.alchemical_property, strength: 15, duration: nil)
 
           # The third canonical potion has exact matching alchemical
           # properties - it should show up in results
-          create(
-            :canonical_potions_alchemical_property,
-            potion: canonical_potions.third,
-            alchemical_property: join_models.first.alchemical_property,
-            strength: 5,
-            duration: 20,
-          )
-          create(
-            :canonical_potions_alchemical_property,
-            potion: canonical_potions.third,
-            alchemical_property: join_models.second.alchemical_property,
-            strength: nil,
-            duration: 60,
-          )
+          create(:canonical_potions_alchemical_property, potion: canonical_potions.third, alchemical_property: join_models.first.alchemical_property, strength: 5, duration: 20)
+          create(:canonical_potions_alchemical_property, potion: canonical_potions.third, alchemical_property: join_models.second.alchemical_property, strength: nil, duration: 60)
 
           # The fourth canonical potion has both alchemical properties that
           # match as well as a third one - that's OK and it should be included
           # in the results too
-          create(
-            :canonical_potions_alchemical_property,
-            potion: canonical_potions.last,
-            alchemical_property: join_models.first.alchemical_property,
-            strength: 5,
-            duration: 20,
-          )
-          create(
-            :canonical_potions_alchemical_property,
-            potion: canonical_potions.last,
-            alchemical_property: join_models.second.alchemical_property,
-            strength: nil,
-            duration: 60,
-          )
+          create(:canonical_potions_alchemical_property, potion: canonical_potions.last, alchemical_property: join_models.first.alchemical_property, strength: 5, duration: 20)
+          create(:canonical_potions_alchemical_property, potion: canonical_potions.last, alchemical_property: join_models.second.alchemical_property, strength: nil, duration: 60)
           create(:canonical_potions_alchemical_property, potion: canonical_potions.last)
 
           potion.alchemical_properties.reload
@@ -508,25 +314,12 @@ RSpec.describe Potion, type: :model do
         let(:potion) { create(:potion) }
         let(:shared_property) { create(:alchemical_property) }
 
-        let!(:matching_canonicals) do
-          create_list(
-            :canonical_potion,
-            2,
-          )
-        end
+        let!(:matching_canonicals) { create_list(:canonical_potion, 2) }
 
         before do
-          create(
-            :canonical_potions_alchemical_property,
-            potion: matching_canonicals.first,
-            alchemical_property: shared_property,
-          )
+          create(:canonical_potions_alchemical_property, potion: matching_canonicals.first, alchemical_property: shared_property)
 
-          create(
-            :canonical_potions_alchemical_property,
-            potion: matching_canonicals.last,
-            alchemical_property: shared_property,
-          )
+          create(:canonical_potions_alchemical_property, potion: matching_canonicals.last, alchemical_property: shared_property)
 
           create(:canonical_potions_alchemical_property, potion: matching_canonicals.first)
           create(:canonical_potions_alchemical_property, potion: matching_canonicals.last)
@@ -536,19 +329,9 @@ RSpec.describe Potion, type: :model do
             canonical.alchemical_properties.reload
           end
 
-          create(
-            :potions_alchemical_property,
-            potion:,
-            alchemical_property: shared_property,
-            added_automatically: false,
-          )
+          create(:potions_alchemical_property, potion:, alchemical_property: shared_property, added_automatically: false)
 
-          create(
-            :potions_alchemical_property,
-            potion:,
-            alchemical_property: matching_canonicals.first.alchemical_properties.last,
-            added_automatically: true,
-          )
+          create(:potions_alchemical_property, potion:, alchemical_property: matching_canonicals.first.alchemical_properties.last, added_automatically: true)
 
           potion.potions_alchemical_properties.reload
           potion.alchemical_properties.reload
@@ -612,29 +395,16 @@ RSpec.describe Potion, type: :model do
       let(:potion) { create(:potion, :with_matching_canonical) }
 
       before do
-        create(
-          :potions_alchemical_property,
-          potion:,
-          added_automatically: false,
-        )
+        create(:potions_alchemical_property, potion:, added_automatically: false)
 
         potion.potions_alchemical_properties.reload
       end
 
       context 'when the update changes the canonical association' do
-        let!(:new_canonical) do
-          create(
-            :canonical_potion,
-            name: 'My Special Potion',
-          )
-        end
+        let!(:new_canonical) { create(:canonical_potion, name: 'My Special Potion') }
 
         before do
-          create(
-            :canonical_potions_alchemical_property,
-            potion: new_canonical,
-            alchemical_property: potion.potions_alchemical_properties.added_manually.first.alchemical_property,
-          )
+          create(:canonical_potions_alchemical_property, potion: new_canonical, alchemical_property: potion.potions_alchemical_properties.added_manually.first.alchemical_property)
 
           new_canonical.canonical_potions_alchemical_properties.reload
         end
@@ -667,13 +437,7 @@ RSpec.describe Potion, type: :model do
       end
 
       context 'when the update results in an ambiguous match' do
-        before do
-          create_list(
-            :canonical_potion,
-            2,
-            name: 'My Special Potion',
-          )
-        end
+        before { create_list(:canonical_potion, 2, name: 'My Special Potion') }
 
         it 'removes the associated canonical potion' do
           potion.name = 'My Special Potion'

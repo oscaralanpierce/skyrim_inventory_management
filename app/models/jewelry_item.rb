@@ -1,18 +1,11 @@
 # frozen_string_literal: true
 
 class JewelryItem < EnchantableInGameItem
-  belongs_to :canonical_jewelry_item,
-             optional: true,
-             inverse_of: :jewelry_items,
-             class_name: 'Canonical::JewelryItem'
+  belongs_to :canonical_jewelry_item, optional: true, inverse_of: :jewelry_items, class_name: 'Canonical::JewelryItem'
 
   validates :name, presence: true
 
-  validates :unit_weight,
-            allow_blank: true,
-            numericality: {
-              greater_than_or_equal_to: 0,
-            }
+  validates :unit_weight, allow_blank: true, numericality: { greater_than_or_equal_to: 0 }
 
   validate :validate_unique_canonical
 

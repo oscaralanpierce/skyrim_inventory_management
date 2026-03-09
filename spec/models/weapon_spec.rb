@@ -39,14 +39,7 @@ RSpec.describe Weapon, type: :model do
       context 'when the canonical weapon is not unique' do
         let(:canonical_weapon) { create(:canonical_weapon) }
 
-        before do
-          create_list(
-            :weapon,
-            3,
-            canonical_weapon:,
-            game:,
-          )
-        end
+        before { create_list(:weapon, 3, canonical_weapon:, game:) }
 
         it 'is valid' do
           expect(weapon).to be_valid
@@ -54,14 +47,7 @@ RSpec.describe Weapon, type: :model do
       end
 
       context 'when the canonical weapon is unique' do
-        let(:canonical_weapon) do
-          create(
-            :canonical_weapon,
-            max_quantity: 1,
-            unique_item: true,
-            rare_item: true,
-          )
-        end
+        let(:canonical_weapon) { create(:canonical_weapon, max_quantity: 1, unique_item: true, rare_item: true) }
 
         context 'when there are no other matches for the canonical weapon' do
           it 'is valid' do
@@ -70,9 +56,7 @@ RSpec.describe Weapon, type: :model do
         end
 
         context 'when the canonical weapon has other matches in other games' do
-          before do
-            create(:weapon, canonical_weapon:)
-          end
+          before { create(:weapon, canonical_weapon:) }
 
           it 'is valid' do
             expect(weapon).to be_valid
@@ -80,9 +64,7 @@ RSpec.describe Weapon, type: :model do
         end
 
         context 'when the canonical weapon has other matches in the same game' do
-          before do
-            create(:weapon, canonical_weapon:, game:)
-          end
+          before { create(:weapon, canonical_weapon:, game:) }
 
           it 'is invalid' do
             validate
@@ -107,9 +89,7 @@ RSpec.describe Weapon, type: :model do
     context 'when there is no canonical weapon associated' do
       let(:weapon) { create(:weapon) }
 
-      before do
-        create_list(:canonical_weapon, 2)
-      end
+      before { create_list(:canonical_weapon, 2) }
 
       it 'returns nil' do
         expect(canonical_model).to be_nil
@@ -121,20 +101,12 @@ RSpec.describe Weapon, type: :model do
     subject(:canonical_models) { weapon.canonical_models }
 
     context 'when there is no existing canonical match' do
-      before do
-        create(:canonical_weapon, name: 'Something Else')
-      end
+      before { create(:canonical_weapon, name: 'Something Else') }
 
       context 'when only the name has to match' do
         let(:weapon) { build(:weapon, unit_weight: nil) }
 
-        let!(:matching_canonicals) do
-          create_list(
-            :canonical_weapon,
-            3,
-            unit_weight: 2.5,
-          )
-        end
+        let!(:matching_canonicals) { create_list(:canonical_weapon, 3, unit_weight: 2.5) }
 
         it 'returns all matching items' do
           expect(canonical_models).to contain_exactly(*matching_canonicals)
@@ -144,17 +116,9 @@ RSpec.describe Weapon, type: :model do
       context 'when multiple attributes have to match' do
         let(:weapon) { build(:weapon, unit_weight: 2.5) }
 
-        let!(:matching_canonicals) do
-          create_list(
-            :canonical_weapon,
-            3,
-            unit_weight: 2.5,
-          )
-        end
+        let!(:matching_canonicals) { create_list(:canonical_weapon, 3, unit_weight: 2.5) }
 
-        before do
-          create(:canonical_weapon, unit_weight: 1)
-        end
+        before { create(:canonical_weapon, unit_weight: 1) }
 
         it 'returns only the items for which all values match' do
           expect(canonical_models).to contain_exactly(*matching_canonicals)
@@ -165,45 +129,21 @@ RSpec.describe Weapon, type: :model do
         let(:weapon) { create(:weapon) }
         let(:shared_enchantment) { create(:enchantment) }
 
-        let!(:matching_canonicals) do
-          create_list(
-            :canonical_weapon,
-            2,
-            enchantable: false,
-          )
-        end
+        let!(:matching_canonicals) { create_list(:canonical_weapon, 2, enchantable: false) }
 
         before do
-          create(
-            :enchantables_enchantment,
-            enchantable: matching_canonicals.first,
-            enchantment: shared_enchantment,
-          )
+          create(:enchantables_enchantment, enchantable: matching_canonicals.first, enchantment: shared_enchantment)
 
-          create(
-            :enchantables_enchantment,
-            enchantable: matching_canonicals.last,
-            enchantment: shared_enchantment,
-          )
+          create(:enchantables_enchantment, enchantable: matching_canonicals.last, enchantment: shared_enchantment)
 
           create(:enchantables_enchantment, enchantable: matching_canonicals.first)
           create(:enchantables_enchantment, enchantable: matching_canonicals.last)
 
           matching_canonicals.each {|canonical| canonical.enchantables_enchantments.reload }
 
-          create(
-            :enchantables_enchantment,
-            enchantable: weapon,
-            enchantment: shared_enchantment,
-            added_automatically: false,
-          )
+          create(:enchantables_enchantment, enchantable: weapon, enchantment: shared_enchantment, added_automatically: false)
 
-          create(
-            :enchantables_enchantment,
-            enchantable: weapon,
-            enchantment: matching_canonicals.first.enchantments.last,
-            added_automatically: true,
-          )
+          create(:enchantables_enchantment, enchantable: weapon, enchantment: matching_canonicals.first.enchantments.last, added_automatically: true)
 
           weapon.enchantables_enchantments.reload
         end
@@ -217,13 +157,7 @@ RSpec.describe Weapon, type: :model do
     context 'when changed attributes lead to a changed canonical' do
       let(:weapon) { create(:weapon, :with_matching_canonical) }
 
-      let!(:new_canonical) do
-        create(
-          :canonical_weapon,
-          name: 'Nordic Carved Sword',
-          unit_weight: 9,
-        )
-      end
+      let!(:new_canonical) { create(:canonical_weapon, name: 'Nordic Carved Sword', unit_weight: 9) }
 
       it 'returns the new canonical' do
         weapon.name = 'Nordic Carved Sword'
@@ -241,22 +175,9 @@ RSpec.describe Weapon, type: :model do
       context 'when the in-game item model has no enchantments' do
         let(:weapon) { build(:weapon, name: 'foobar', unit_weight: 12) }
 
-        let!(:matching_canonical) do
-          create(
-            :canonical_weapon,
-            :with_enchantments,
-            name: 'Foobar',
-            unit_weight: 12,
-          )
-        end
+        let!(:matching_canonical) { create(:canonical_weapon, :with_enchantments, name: 'Foobar', unit_weight: 12) }
 
-        before do
-          create(
-            :canonical_weapon,
-            name: 'Foobar',
-            unit_weight: 14,
-          )
-        end
+        before { create(:canonical_weapon, name: 'Foobar', unit_weight: 14) }
 
         it 'assigns the canonical_weapon' do
           expect { validate }
@@ -283,13 +204,7 @@ RSpec.describe Weapon, type: :model do
       context 'when the in-game item has enchantments' do
         let(:weapon) { create(:weapon, name: 'foobar') }
 
-        let!(:canonicals) do
-          [
-            create(:canonical_weapon, :with_enchantments, name: 'Foobar'),
-            create(:canonical_weapon, name: 'Foobar', enchantable: false),
-            create(:canonical_weapon, name: 'Foobar', enchantable: false),
-          ]
-        end
+        let!(:canonicals) { [create(:canonical_weapon, :with_enchantments, name: 'Foobar'), create(:canonical_weapon, name: 'Foobar', enchantable: false), create(:canonical_weapon, name: 'Foobar', enchantable: false)] }
 
         before do
           # Returning to this context, I'm realising it is difficult to reason about.
@@ -298,19 +213,9 @@ RSpec.describe Weapon, type: :model do
           # not enchantable. This is possible because non-enchantable canonicals
           # can, in many cases, have existing enchantments, and those are allowed -
           # indeed, required - to be present on matching in-game items.
-          create(
-            :enchantables_enchantment,
-            enchantable: canonicals.second,
-            enchantment: canonicals.first.enchantments.first,
-            strength: 2,
-          )
+          create(:enchantables_enchantment, enchantable: canonicals.second, enchantment: canonicals.first.enchantments.first, strength: 2)
 
-          create(
-            :enchantables_enchantment,
-            enchantable: weapon,
-            enchantment: canonicals.first.enchantments.first,
-            strength: canonicals.first.enchantments.first.strength,
-          )
+          create(:enchantables_enchantment, enchantable: weapon, enchantment: canonicals.first.enchantments.first, strength: canonicals.first.enchantments.first.strength)
 
           weapon.enchantables_enchantments.reload
         end
@@ -335,9 +240,7 @@ RSpec.describe Weapon, type: :model do
       context 'when there are no enchantments involved' do
         let(:weapon) { build(:weapon, name: 'foobar') }
 
-        before do
-          create_list(:canonical_weapon, 2, name: 'Foobar')
-        end
+        before { create_list(:canonical_weapon, 2, name: 'Foobar') }
 
         it "doesn't assign a canonical_weapon" do
           validate
@@ -391,23 +294,9 @@ RSpec.describe Weapon, type: :model do
         context 'when the in-game item model is already enchanted' do
           let(:weapon) { create(:weapon, name: 'foobar') }
 
-          let!(:canonicals) do
-            [
-              create(:canonical_weapon, :with_enchantments, name: 'Foobar', enchantable: false),
-              create(:canonical_weapon, :with_enchantments, name: 'FoObAr', enchantable: false),
-              create(:canonical_weapon, :with_enchantments, name: 'fOoBaR', enchantable: false),
-              create(:canonical_weapon, name: 'fOObAR', enchantable: true),
-            ]
-          end
+          let!(:canonicals) { [create(:canonical_weapon, :with_enchantments, name: 'Foobar', enchantable: false), create(:canonical_weapon, :with_enchantments, name: 'FoObAr', enchantable: false), create(:canonical_weapon, :with_enchantments, name: 'fOoBaR', enchantable: false), create(:canonical_weapon, name: 'fOObAR', enchantable: true)] }
 
-          before do
-            create(
-              :enchantables_enchantment,
-              enchantable: weapon,
-              enchantment: canonicals.first.enchantments.first,
-              strength: canonicals.first.enchantments.first.strength,
-            )
-          end
+          before { create(:enchantables_enchantment, enchantable: weapon, enchantment: canonicals.first.enchantments.first, strength: canonicals.first.enchantments.first.strength) }
 
           it "doesn't assign a canonical_weapon" do
             validate
@@ -439,9 +328,7 @@ RSpec.describe Weapon, type: :model do
     context 'when there are no matching canonical models' do
       let(:weapon) { build(:weapon, name: 'Foobar') }
 
-      before do
-        create_list(:canonical_weapon, 2)
-      end
+      before { create_list(:canonical_weapon, 2) }
 
       it 'adds an error' do
         validate
@@ -455,32 +342,16 @@ RSpec.describe Weapon, type: :model do
       before do
         weapon.canonical_weapon.update!(enchantable: true)
 
-        create(
-          :enchantables_enchantment,
-          enchantable: weapon,
-          added_automatically: false,
-        )
+        create(:enchantables_enchantment, enchantable: weapon, added_automatically: false)
 
         weapon.enchantables_enchantments.reload
       end
 
       context 'when the update changes the canonical association' do
-        let!(:new_canonical) do
-          create(
-            :canonical_weapon,
-            name: 'Elven Battleaxe of Shocks',
-            unit_weight: 24,
-            weapon_type: 'battleaxe',
-            category: 'two-handed',
-          )
-        end
+        let!(:new_canonical) { create(:canonical_weapon, name: 'Elven Battleaxe of Shocks', unit_weight: 24, weapon_type: 'battleaxe', category: 'two-handed') }
 
         before do
-          create(
-            :enchantables_enchantment,
-            enchantable: new_canonical,
-            enchantment: weapon.enchantables_enchantments.added_manually.first.enchantment,
-          )
+          create(:enchantables_enchantment, enchantable: new_canonical, enchantment: weapon.enchantables_enchantments.added_manually.first.enchantment)
 
           new_canonical.enchantables_enchantments.reload
         end
@@ -525,13 +396,7 @@ RSpec.describe Weapon, type: :model do
       end
 
       context 'when the update results in an ambiguous match' do
-        before do
-          create_list(
-            :canonical_weapon,
-            2,
-            name: 'Iron Mace of Burning',
-          )
-        end
+        before { create_list(:canonical_weapon, 2, name: 'Iron Mace of Burning') }
 
         it 'removes the associated canonical weapon' do
           weapon.name = 'iron mace of burning'
@@ -584,21 +449,10 @@ RSpec.describe Weapon, type: :model do
 
   describe '::after_save' do
     context 'when there is one matching canonical model' do
-      let!(:matching_canonical) do
-        create(
-          :canonical_weapon,
-          :with_enchantments,
-          name: 'Elven War Axe',
-        )
-      end
+      let!(:matching_canonical) { create(:canonical_weapon, :with_enchantments, name: 'Elven War Axe') }
 
       context "when the new weapon doesn't have its own enchantments" do
-        let(:weapon) do
-          build(
-            :weapon,
-            name: 'elven war axe',
-          )
-        end
+        let(:weapon) { build(:weapon, name: 'elven war axe') }
 
         it 'adds enchantments from the canonical weapon' do
           weapon.save!
@@ -608,16 +462,13 @@ RSpec.describe Weapon, type: :model do
         it 'sets "added_automatically" to true on new associations' do
           weapon.save!
 
-          expect(weapon.enchantables_enchantments.pluck(:added_automatically))
-            .to be_all(true)
+          expect(weapon.enchantables_enchantments.pluck(:added_automatically)).to be_all(true)
         end
 
         it 'sets the correct strengths', :aggregate_failures do
           weapon.save!
           matching_canonical.enchantables_enchantments.each do |join_model|
-            has_matching = weapon.enchantables_enchantments.any? do |model|
-              model.enchantment == join_model.enchantment && model.strength == join_model.strength
-            end
+            has_matching = weapon.enchantables_enchantments.any? {|model| model.enchantment == join_model.enchantment && model.strength == join_model.strength }
 
             expect(has_matching).to be true
           end
@@ -625,21 +476,14 @@ RSpec.describe Weapon, type: :model do
       end
 
       context 'when the new weapon has its own enchantments' do
-        let(:weapon) do
-          create(
-            :weapon,
-            :with_enchantments,
-            name: 'elven war axe',
-          )
-        end
+        let(:weapon) { create(:weapon, :with_enchantments, name: 'elven war axe') }
 
         it "doesn't remove the existing enchantments" do
           expect(weapon.enchantments.reload.length).to eq 4
         end
 
         it 'sets "added_automatically" only on the new associations' do
-          expect(weapon.enchantables_enchantments.pluck(:added_automatically))
-            .to eq [true, true, false, false]
+          expect(weapon.enchantables_enchantments.pluck(:added_automatically)).to eq [true, true, false, false]
         end
       end
     end
@@ -649,14 +493,7 @@ RSpec.describe Weapon, type: :model do
 
       let(:weapon) { build(:weapon, name: 'Foobar') }
 
-      before do
-        create_list(
-          :canonical_weapon,
-          2,
-          :with_enchantments,
-          name: 'Foobar',
-        )
-      end
+      before { create_list(:canonical_weapon, 2, :with_enchantments, name: 'Foobar') }
 
       it "doesn't add enchantments" do
         expect { save }
@@ -671,13 +508,7 @@ RSpec.describe Weapon, type: :model do
 
       context 'when there is a canonical weapon assigned' do
         let(:weapon) { create(:weapon, name: 'Foobar', canonical_weapon:) }
-        let(:canonical_weapon) do
-          create(
-            :canonical_weapon,
-            :with_crafting_materials,
-            name: 'Foobar',
-          )
-        end
+        let(:canonical_weapon) { create(:canonical_weapon, :with_crafting_materials, name: 'Foobar') }
 
         it 'returns the crafting materials for the canonical' do
           expect(crafting_materials).to eq canonical_weapon.crafting_materials
@@ -687,13 +518,7 @@ RSpec.describe Weapon, type: :model do
       context 'when there is no canonical weapon assigned' do
         let(:weapon) { create(:weapon, name: 'Foobar') }
 
-        before do
-          create_list(
-            :canonical_weapon,
-            2,
-            name: 'Foobar',
-          )
-        end
+        before { create_list(:canonical_weapon, 2, name: 'Foobar') }
 
         it 'returns nil' do
           expect(crafting_materials).to be_nil
@@ -706,13 +531,7 @@ RSpec.describe Weapon, type: :model do
 
       context 'when there is a canonical weapon assigned' do
         let(:weapon) { create(:weapon, name: 'Foobar', canonical_weapon:) }
-        let(:canonical_weapon) do
-          create(
-            :canonical_weapon,
-            :with_tempering_materials,
-            name: 'Foobar',
-          )
-        end
+        let(:canonical_weapon) { create(:canonical_weapon, :with_tempering_materials, name: 'Foobar') }
 
         it 'returns the tempering materials for the canonical' do
           expect(tempering_materials).to eq canonical_weapon.tempering_materials
@@ -722,13 +541,7 @@ RSpec.describe Weapon, type: :model do
       context 'when there is no canonical weapon assigned' do
         let(:weapon) { create(:weapon, name: 'Foobar') }
 
-        before do
-          create_list(
-            :canonical_weapon,
-            2,
-            name: 'Foobar',
-          )
-        end
+        before { create_list(:canonical_weapon, 2, name: 'Foobar') }
 
         it 'returns nil' do
           expect(tempering_materials).to be_nil
@@ -740,15 +553,7 @@ RSpec.describe Weapon, type: :model do
   describe 'adding enchantments' do
     let(:weapon) { create(:weapon, name: 'foobar') }
 
-    before do
-      create_list(
-        :canonical_weapon,
-        2,
-        :with_enchantments,
-        name: 'Foobar',
-        enchantable:,
-      )
-    end
+    before { create_list(:canonical_weapon, 2, :with_enchantments, name: 'Foobar', enchantable:) }
 
     context 'when the added enchantment eliminates all canoncial matches' do
       subject(:add_enchantment) { create(:enchantables_enchantment, enchantable: weapon) }
@@ -764,14 +569,7 @@ RSpec.describe Weapon, type: :model do
     end
 
     context 'when the added enchantment narrows it down to one canonical match' do
-      subject(:add_enchantment) do
-        create(
-          :enchantables_enchantment,
-          enchantable: weapon,
-          enchantment: Canonical::Weapon.last.enchantments.first,
-          strength: Canonical::Weapon.last.enchantments.first.strength,
-        )
-      end
+      subject(:add_enchantment) { create(:enchantables_enchantment, enchantable: weapon, enchantment: Canonical::Weapon.last.enchantments.first, strength: Canonical::Weapon.last.enchantments.first.strength) }
 
       let(:enchantable) { false }
 

@@ -47,12 +47,7 @@ RSpec.describe WishListsController::CreateService do
 
     context 'when the request tries to create an aggregate list' do
       let(:game) { create(:game, user:) }
-      let(:params) do
-        {
-          title: 'All Items',
-          aggregate: true,
-        }
-      end
+      let(:params) { { title: 'All Items', aggregate: true } }
 
       it 'returns a Service::UnprocessableEntityResult' do
         expect(perform).to be_a(Service::UnprocessableEntityResult)
@@ -68,9 +63,7 @@ RSpec.describe WishListsController::CreateService do
       let(:params) { { title: 'Proudspire Manor' } }
 
       context 'when the game has other wish lists' do
-        before do
-          create(:wish_list, game:)
-        end
+        before { create(:wish_list, game:) }
 
         it 'creates a wish list for the given game' do
           expect { perform }
@@ -151,11 +144,7 @@ RSpec.describe WishListsController::CreateService do
       let(:game) { create(:game, user:) }
       let(:params) { { title: 'Foobar' } }
 
-      before do
-        allow_any_instance_of(WishList)
-          .to receive(:save)
-                .and_raise(StandardError, 'Something went horribly wrong')
-      end
+      before { allow_any_instance_of(WishList).to receive(:save).and_raise(StandardError, 'Something went horribly wrong') }
 
       it 'returns a Service::InternalServerErrorResult' do
         expect(perform).to be_a(Service::InternalServerErrorResult)

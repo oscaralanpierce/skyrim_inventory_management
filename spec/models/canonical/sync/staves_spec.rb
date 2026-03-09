@@ -9,17 +9,9 @@ RSpec.describe Canonical::Sync::Staves do
   let(:json_path) { Rails.root.join('spec', 'support', 'fixtures', 'canonical', 'sync', 'staves.json') }
   let!(:json_data) { File.read(json_path) }
 
-  let(:spell_names) do
-    [
-      'Soul Trap',
-      'Pacify',
-      'Turn Lesser Undead',
-    ]
-  end
+  let(:spell_names) { ['Soul Trap', 'Pacify', 'Turn Lesser Undead'] }
 
-  before do
-    allow(File).to receive(:read).and_return(json_data)
-  end
+  before { allow(File).to receive(:read).and_return(json_data) }
 
   describe '::perform' do
     subject(:perform) { described_class.perform(preserve_existing_records) }
@@ -111,17 +103,13 @@ RSpec.describe Canonical::Sync::Staves do
       end
 
       context 'when there are no spells or powers in the database' do
-        before do
-          allow(Rails.logger).to receive(:error)
-        end
+        before { allow(Rails.logger).to receive(:error) }
 
         it "logs an error and doesn't create models", :aggregate_failures do
           expect { perform }
             .to raise_error(Canonical::Sync::PrerequisiteNotMetError)
 
-          expect(Rails.logger)
-            .to have_received(:error)
-                  .with('Prerequisite(s) not met: sync Power, Spell before canonical staves')
+          expect(Rails.logger).to have_received(:error).with('Prerequisite(s) not met: sync Power, Spell before canonical staves')
 
           expect(Canonical::Staff.count).to eq 0
         end
@@ -141,9 +129,7 @@ RSpec.describe Canonical::Sync::Staves do
           expect { perform }
             .to raise_error ActiveRecord::RecordInvalid
 
-          expect(Rails.logger)
-            .to have_received(:error)
-                  .with('Validation error saving associations for canonical staff "XX039FAC": Validation failed: Power must exist')
+          expect(Rails.logger).to have_received(:error).with('Validation error saving associations for canonical staff "XX039FAC": Validation failed: Power must exist')
         end
       end
     end
@@ -193,11 +179,7 @@ RSpec.describe Canonical::Sync::Staves do
       let(:preserve_existing_records) { false }
 
       context 'when an ActiveRecord::RecordInvalid error is raised' do
-        let(:errored_model) do
-          instance_double Canonical::Staff,
-                          errors:,
-                          class: class_double(Canonical::Staff, i18n_scope: :activerecord)
-        end
+        let(:errored_model) { instance_double Canonical::Staff, errors:, class: class_double(Canonical::Staff, i18n_scope: :activerecord) }
 
         let(:errors) { double('errors', full_messages: ["Name can't be blank"]) }
 
@@ -205,9 +187,7 @@ RSpec.describe Canonical::Sync::Staves do
           create(:spell)
           create(:power)
 
-          allow_any_instance_of(Canonical::Staff)
-            .to receive(:save!)
-                  .and_raise(ActiveRecord::RecordInvalid, errored_model)
+          allow_any_instance_of(Canonical::Staff).to receive(:save!).and_raise(ActiveRecord::RecordInvalid, errored_model)
           allow(Rails.logger).to receive(:error)
         end
 
@@ -215,9 +195,7 @@ RSpec.describe Canonical::Sync::Staves do
           expect { perform }
             .to raise_error(ActiveRecord::RecordInvalid)
 
-          expect(Rails.logger)
-            .to have_received(:error)
-                  .with("Error saving canonical staff \"000AB704\": Validation failed: Name can't be blank")
+          expect(Rails.logger).to have_received(:error).with("Error saving canonical staff \"000AB704\": Validation failed: Name can't be blank")
         end
       end
 
@@ -233,9 +211,7 @@ RSpec.describe Canonical::Sync::Staves do
           expect { perform }
             .to raise_error(StandardError)
 
-          expect(Rails.logger)
-            .to have_received(:error)
-                  .with('Unexpected error StandardError saving canonical staff "000AB704": foobar')
+          expect(Rails.logger).to have_received(:error).with('Unexpected error StandardError saving canonical staff "000AB704": foobar')
         end
       end
 
@@ -252,9 +228,7 @@ RSpec.describe Canonical::Sync::Staves do
           expect { perform }
             .to raise_error(StandardError)
 
-          expect(Rails.logger)
-            .to have_received(:error)
-                  .with('Unexpected error StandardError while syncing canonical staves: foobar')
+          expect(Rails.logger).to have_received(:error).with('Unexpected error StandardError while syncing canonical staves: foobar')
         end
       end
     end

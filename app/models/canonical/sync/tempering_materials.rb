@@ -20,26 +20,15 @@ module Canonical
           destroy_existing_models unless preserve_existing_records
 
           json_data.each do |object|
-            temperable = self
-                           .class
-                           .const_get(object[:temperable][:type])
-                           .find_by(item_code: object[:temperable][:item_code])
+            temperable = self.class.const_get(object[:temperable][:type]).find_by(item_code: object[:temperable][:item_code])
 
-            if temperable.name != object[:metadata][:name]
-              raise DataIntegrityError.new(
-                "Expected temperable item name to be #{object[:metadata][:name]} but was #{temperable.name}",
-              )
-            end
+            raise DataIntegrityError.new("Expected temperable item name to be #{object[:metadata][:name]} but was #{temperable.name}") if temperable.name != object[:metadata][:name]
 
             object[:materials].each do |material|
               source_material_class = self.class.const_get(material[:metadata][:source_material_type])
               source_material = source_material_class.find_by(item_code: material[:metadata][:item_code])
 
-              if source_material.name != material[:metadata][:name]
-                raise DataIntegrityError.new(
-                  "Expected material name to be #{material[:metadata][:name]} but was #{source_material.name}",
-                )
-              end
+              raise DataIntegrityError.new("Expected material name to be #{material[:metadata][:name]} but was #{source_material.name}") if source_material.name != material[:metadata][:name]
 
               attributes = material[:attributes].merge(temperable:, source_material:)
 
@@ -78,12 +67,7 @@ module Canonical
       end
 
       def json_file_path
-        Rails.root.join(
-          'lib',
-          'tasks',
-          'canonical_models',
-          'canonical_tempering_materials.json',
-        )
+        Rails.root.join('lib', 'tasks', 'canonical_models', 'canonical_tempering_materials.json')
       end
 
       def json_data

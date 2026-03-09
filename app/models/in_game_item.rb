@@ -5,11 +5,7 @@ class InGameItem < ApplicationRecord
 
   belongs_to :game
 
-  validates :unit_weight,
-            numericality: {
-              greater_than_or_equal_to: 0,
-              allow_nil: true,
-            }
+  validates :unit_weight, numericality: { greater_than_or_equal_to: 0, allow_nil: true }
 
   validate :validate_unique_canonical
   validate :ensure_canonicals_exist

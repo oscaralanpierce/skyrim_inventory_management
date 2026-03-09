@@ -30,9 +30,7 @@ RSpec.describe Armor, type: :model do
       context 'when the canonical armor is not a unique item' do
         let(:canonical_armor) { create(:canonical_armor, unique_item: false) }
 
-        before do
-          create(:armor, canonical_armor:)
-        end
+        before { create(:armor, canonical_armor:) }
 
         it 'is allowed' do
           armor.canonical_armor = canonical_armor
@@ -42,21 +40,12 @@ RSpec.describe Armor, type: :model do
       end
 
       context 'when the canonical armor is a unique item' do
-        let(:canonical_armor) do
-          create(
-            :canonical_armor,
-            max_quantity: 1,
-            unique_item: true,
-            rare_item: true,
-          )
-        end
+        let(:canonical_armor) { create(:canonical_armor, max_quantity: 1, unique_item: true, rare_item: true) }
 
         context 'when there are duplicate associations in the same game' do
           let(:game) { create(:game) }
 
-          before do
-            create(:armor, canonical_armor:, game:)
-          end
+          before { create(:armor, canonical_armor:, game:) }
 
           it 'is invalid' do
             armor.canonical_armor = canonical_armor
@@ -67,9 +56,7 @@ RSpec.describe Armor, type: :model do
         end
 
         context 'when there are duplicate associations for different games' do
-          before do
-            create(:armor, canonical_armor:)
-          end
+          before { create(:armor, canonical_armor:) }
 
           it 'is invalid' do
             armor.canonical_armor = canonical_armor
@@ -86,19 +73,9 @@ RSpec.describe Armor, type: :model do
     let(:armor) { create(:armor, name: 'Steel Plate Armor', canonical_armor:) }
 
     before do
-      3.times do |n|
-        create(
-          :canonical_material,
-          craftable: canonical_armor,
-          quantity: n + 1,
-        )
-      end
+      3.times {|n| create(:canonical_material, craftable: canonical_armor, quantity: n + 1) }
 
-      create(
-        :canonical_material,
-        source_material: create(:canonical_raw_material),
-        temperable: canonical_armor,
-      )
+      create(:canonical_material, source_material: create(:canonical_raw_material), temperable: canonical_armor)
 
       canonical_armor.reload
     end
@@ -132,33 +109,11 @@ RSpec.describe Armor, type: :model do
     subject(:validate) { armor.validate }
 
     context 'when there is a single matching canonical model' do
-      let(:armor) do
-        build(
-          :armor,
-          name: 'steel plate armor',
-          unit_weight: 20,
-          magical_effects: 'something',
-        )
-      end
+      let(:armor) { build(:armor, name: 'steel plate armor', unit_weight: 20, magical_effects: 'something') }
 
-      let!(:matching_canonical) do
-        create(
-          :canonical_armor,
-          :with_enchantments,
-          name: 'Steel Plate Armor',
-          unit_weight: 20,
-          magical_effects: 'Something',
-          weight: 'heavy armor',
-        )
-      end
+      let!(:matching_canonical) { create(:canonical_armor, :with_enchantments, name: 'Steel Plate Armor', unit_weight: 20, magical_effects: 'Something', weight: 'heavy armor') }
 
-      before do
-        create(
-          :canonical_armor,
-          name: 'Steel Plate Armor',
-          unit_weight: 30,
-        )
-      end
+      before { create(:canonical_armor, name: 'Steel Plate Armor', unit_weight: 30) }
 
       it 'assigns the canonical armor' do
         expect { validate }
@@ -177,15 +132,7 @@ RSpec.describe Armor, type: :model do
     end
 
     context 'when there are multiple matching canonical models' do
-      let!(:matching_canonicals) do
-        create_list(
-          :canonical_armor,
-          2,
-          :with_enchantments,
-          name: 'Steel Plate Armor',
-          weight: 'heavy armor',
-        )
-      end
+      let!(:matching_canonicals) { create_list(:canonical_armor, 2, :with_enchantments, name: 'Steel Plate Armor', weight: 'heavy armor') }
 
       let(:armor) { build(:armor, name: 'Steel plate armor') }
 
@@ -217,32 +164,16 @@ RSpec.describe Armor, type: :model do
       before do
         armor.canonical_armor.update!(enchantable: true)
 
-        create(
-          :enchantables_enchantment,
-          enchantable: armor,
-          added_automatically: false,
-        )
+        create(:enchantables_enchantment, enchantable: armor, added_automatically: false)
 
         armor.enchantables_enchantments.reload
       end
 
       context 'when the update changes the canonical association' do
-        let!(:new_canonical) do
-          create(
-            :canonical_armor,
-            name: 'Imperial Boots of Resist Frost',
-            weight: 'light armor',
-            magical_effects: 'This Will Be Case Insensitive',
-            unit_weight: 2,
-          )
-        end
+        let!(:new_canonical) { create(:canonical_armor, name: 'Imperial Boots of Resist Frost', weight: 'light armor', magical_effects: 'This Will Be Case Insensitive', unit_weight: 2) }
 
         before do
-          create(
-            :enchantables_enchantment,
-            enchantable: new_canonical,
-            enchantment: armor.enchantables_enchantments.added_manually.first.enchantment,
-          )
+          create(:enchantables_enchantment, enchantable: new_canonical, enchantment: armor.enchantables_enchantments.added_manually.first.enchantment)
 
           new_canonical.enchantables_enchantments.reload
         end
@@ -287,17 +218,7 @@ RSpec.describe Armor, type: :model do
       end
 
       context 'when the update results in an ambiguous match' do
-        before do
-          create_list(
-            :canonical_armor,
-            2,
-            name: 'Imperial Boots of Resist Frost',
-            weight: 'light armor',
-            magical_effects: 'This Will Be Case Insensitive',
-            unit_weight: 2,
-            enchantable: true,
-          )
-        end
+        before { create_list(:canonical_armor, 2, name: 'Imperial Boots of Resist Frost', weight: 'light armor', magical_effects: 'This Will Be Case Insensitive', unit_weight: 2, enchantable: true) }
 
         it 'removes the canonical_armor association' do
           armor.name = 'imperial boots of resist frost'
@@ -362,25 +283,10 @@ RSpec.describe Armor, type: :model do
 
   describe '::after_create' do
     context 'when there is a single matching canonical model' do
-      let!(:matching_canonical) do
-        create(
-          :canonical_armor,
-          :with_enchantments,
-          name: 'Steel Plate Armor',
-          unit_weight: 20,
-          weight: 'heavy armor',
-          magical_effects: 'Something',
-        )
-      end
+      let!(:matching_canonical) { create(:canonical_armor, :with_enchantments, name: 'Steel Plate Armor', unit_weight: 20, weight: 'heavy armor', magical_effects: 'Something') }
 
       context "when the new armor doesn't have its own enchantments" do
-        let(:armor) do
-          build(
-            :armor,
-            name: 'Steel plate armor',
-            unit_weight: 20,
-          )
-        end
+        let(:armor) { build(:armor, name: 'Steel plate armor', unit_weight: 20) }
 
         it 'adds enchantments from the canonical armor' do
           armor.save!
@@ -390,16 +296,13 @@ RSpec.describe Armor, type: :model do
         it 'sets "added_automatically" to true on new associations' do
           armor.save!
 
-          expect(armor.enchantables_enchantments.pluck(:added_automatically))
-            .to be_all(true)
+          expect(armor.enchantables_enchantments.pluck(:added_automatically)).to be_all(true)
         end
 
         it 'sets the correct strengths', :aggregate_failures do
           armor.save!
           matching_canonical.enchantables_enchantments.each do |join_model|
-            has_matching = armor.enchantables_enchantments.any? do |model|
-              model.enchantment == join_model.enchantment && model.strength == join_model.strength
-            end
+            has_matching = armor.enchantables_enchantments.any? {|model| model.enchantment == join_model.enchantment && model.strength == join_model.strength }
 
             expect(has_matching).to be true
           end
@@ -407,38 +310,20 @@ RSpec.describe Armor, type: :model do
       end
 
       context 'when the new armor has its own enchantments' do
-        let(:armor) do
-          create(
-            :armor,
-            :with_enchantments,
-            name: 'Steel plate armor',
-            unit_weight: 20,
-          )
-        end
+        let(:armor) { create(:armor, :with_enchantments, name: 'Steel plate armor', unit_weight: 20) }
 
         it "doesn't remove the existing enchantments" do
           expect(armor.enchantments.reload.length).to eq 4
         end
 
         it 'sets "added_automatically" only on the new associations' do
-          expect(armor.enchantables_enchantments.pluck(:added_automatically))
-            .to eq [true, true, false, false]
+          expect(armor.enchantables_enchantments.pluck(:added_automatically)).to eq [true, true, false, false]
         end
       end
     end
 
     context 'when there are multiple matching canonical models' do
-      let!(:matching_canonicals) do
-        create_list(
-          :canonical_armor,
-          2,
-          :with_enchantments,
-          name: 'Steel Plate Armor',
-          unit_weight: 20,
-          weight: 'heavy armor',
-          magical_effects: 'Something',
-        )
-      end
+      let!(:matching_canonicals) { create_list(:canonical_armor, 2, :with_enchantments, name: 'Steel Plate Armor', unit_weight: 20, weight: 'heavy armor', magical_effects: 'Something') }
 
       let(:armor) { create(:armor, name: 'Steel Plate Armor') }
 
@@ -462,9 +347,7 @@ RSpec.describe Armor, type: :model do
     context 'when there is no canonical armor associated' do
       let(:armor) { create(:armor) }
 
-      before do
-        create_list(:canonical_armor, 2)
-      end
+      before { create_list(:canonical_armor, 2) }
 
       it 'returns nil' do
         expect(canonical_model).to be_nil
@@ -476,19 +359,10 @@ RSpec.describe Armor, type: :model do
     subject(:canonical_models) { armor.canonical_models }
 
     context 'when there is no existing canonical match' do
-      before do
-        create(:canonical_armor, name: 'Something Else')
-      end
+      before { create(:canonical_armor, name: 'Something Else') }
 
       context 'when only the name has to match' do
-        let!(:matching_canonicals) do
-          create_list(
-            :canonical_armor,
-            3,
-            name: armor.name,
-            unit_weight: 2.5,
-          )
-        end
+        let!(:matching_canonicals) { create_list(:canonical_armor, 3, name: armor.name, unit_weight: 2.5) }
 
         let(:armor) { build(:armor, unit_weight: nil) }
 
@@ -502,9 +376,7 @@ RSpec.describe Armor, type: :model do
 
         let(:armor) { build(:armor, unit_weight: 2.5) }
 
-        before do
-          create(:canonical_armor, name: armor.name, unit_weight: 1)
-        end
+        before { create(:canonical_armor, name: armor.name, unit_weight: 1) }
 
         it 'returns only the items for which all values match' do
           expect(canonical_models).to contain_exactly(*matching_canonicals)
@@ -515,41 +387,21 @@ RSpec.describe Armor, type: :model do
         let(:armor) { create(:armor) }
         let(:shared_enchantment) { create(:enchantment) }
 
-        let!(:matching_canonicals) do
-          create_list(:canonical_armor, 2, enchantable: false)
-        end
+        let!(:matching_canonicals) { create_list(:canonical_armor, 2, enchantable: false) }
 
         before do
-          create(
-            :enchantables_enchantment,
-            enchantable: matching_canonicals.first,
-            enchantment: shared_enchantment,
-          )
+          create(:enchantables_enchantment, enchantable: matching_canonicals.first, enchantment: shared_enchantment)
 
-          create(
-            :enchantables_enchantment,
-            enchantable: matching_canonicals.last,
-            enchantment: shared_enchantment,
-          )
+          create(:enchantables_enchantment, enchantable: matching_canonicals.last, enchantment: shared_enchantment)
 
           create(:enchantables_enchantment, enchantable: matching_canonicals.first)
           create(:enchantables_enchantment, enchantable: matching_canonicals.last)
 
           matching_canonicals.each {|canonical| canonical.enchantables_enchantments.reload }
 
-          create(
-            :enchantables_enchantment,
-            enchantable: armor,
-            enchantment: shared_enchantment,
-            added_automatically: false,
-          )
+          create(:enchantables_enchantment, enchantable: armor, enchantment: shared_enchantment, added_automatically: false)
 
-          create(
-            :enchantables_enchantment,
-            enchantable: armor,
-            enchantment: matching_canonicals.first.enchantments.last,
-            added_automatically: true,
-          )
+          create(:enchantables_enchantment, enchantable: armor, enchantment: matching_canonicals.first.enchantments.last, added_automatically: true)
 
           armor.enchantables_enchantments.reload
         end
@@ -563,15 +415,7 @@ RSpec.describe Armor, type: :model do
     context 'when changed attributes lead to a changed canonical' do
       let(:armor) { create(:armor, :with_matching_canonical) }
 
-      let!(:new_canonical) do
-        create(
-          :canonical_armor,
-          name: "Ahzidal's Boots of Waterwalking",
-          unit_weight: 9,
-          weight: 'heavy armor',
-          magical_effects: 'Waterwalking. If you wear any four Relics of Ahzidal, +10 Enchanting.',
-        )
-      end
+      let!(:new_canonical) { create(:canonical_armor, name: "Ahzidal's Boots of Waterwalking", unit_weight: 9, weight: 'heavy armor', magical_effects: 'Waterwalking. If you wear any four Relics of Ahzidal, +10 Enchanting.') }
 
       it 'returns the new canonical' do
         armor.name = "Ahzidal's Boots of Waterwalking"
@@ -587,15 +431,7 @@ RSpec.describe Armor, type: :model do
   describe 'adding enchantments' do
     let(:armor) { create(:armor, name: 'foobar') }
 
-    before do
-      create_list(
-        :canonical_armor,
-        2,
-        :with_enchantments,
-        name: 'Foobar',
-        enchantable:,
-      )
-    end
+    before { create_list(:canonical_armor, 2, :with_enchantments, name: 'Foobar', enchantable:) }
 
     context 'when the added enchantment eliminates all canonical matches' do
       subject(:add_enchantment) { create(:enchantables_enchantment, enchantable: armor) }
@@ -611,14 +447,7 @@ RSpec.describe Armor, type: :model do
     end
 
     context 'when the added enchantment narrows it down to one canonical match' do
-      subject(:add_enchantment) do
-        create(
-          :enchantables_enchantment,
-          enchantable: armor,
-          enchantment: Canonical::Armor.last.enchantments.first,
-          strength: Canonical::Armor.last.enchantments.first.strength,
-        )
-      end
+      subject(:add_enchantment) { create(:enchantables_enchantment, enchantable: armor, enchantment: Canonical::Armor.last.enchantments.first, strength: Canonical::Armor.last.enchantments.first.strength) }
 
       let(:enchantable) { false }
 

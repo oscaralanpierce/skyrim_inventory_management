@@ -22,31 +22,19 @@ class HomesteadValidator < ActiveModel::Validator
   attr_reader :record
 
   def validate_west_wing
-    west_wing_rooms = [
-      record.has_enchanters_tower,
-      record.has_bedrooms,
-      record.has_greenhouse,
-    ]
+    west_wing_rooms = [record.has_enchanters_tower, record.has_bedrooms, record.has_greenhouse]
 
     record.errors.add(:west_wing, WEST_WING_MESSAGE) if west_wing_rooms.count(true) > 1
   end
 
   def validate_east_wing
-    east_wing_rooms = [
-      record.has_library,
-      record.has_armory,
-      record.has_kitchen,
-    ]
+    east_wing_rooms = [record.has_library, record.has_armory, record.has_kitchen]
 
     record.errors.add(:east_wing, EAST_WING_MESSAGE) if east_wing_rooms.count(true) > 1
   end
 
   def validate_north_wing
-    north_wing_rooms = [
-      record.has_alchemy_tower,
-      record.has_storage_room,
-      record.has_trophy_room,
-    ]
+    north_wing_rooms = [record.has_alchemy_tower, record.has_storage_room, record.has_trophy_room]
 
     record.errors.add(:north_wing, NORTH_WING_MESSAGE) if north_wing_rooms.count(true) > 1
   end

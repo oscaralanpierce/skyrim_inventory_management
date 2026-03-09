@@ -36,15 +36,7 @@ RSpec.describe Canonical::IngredientsAlchemicalProperty, type: :model do
           context 'when the new ingredient has less than 4 alchemical properties' do
             let!(:new_ingredient) { create(:canonical_ingredient) }
 
-            before do
-              3.times do |n|
-                create(
-                  :canonical_ingredients_alchemical_property,
-                  ingredient: new_ingredient,
-                  priority: n + 1,
-                )
-              end
-            end
+            before { 3.times {|n| create(:canonical_ingredients_alchemical_property, ingredient: new_ingredient, priority: n + 1) } }
 
             it 'is valid' do
               model = ingredient.canonical_ingredients_alchemical_properties.first
@@ -58,9 +50,7 @@ RSpec.describe Canonical::IngredientsAlchemicalProperty, type: :model do
           context 'when the new ingredient already has exactly 4 alchemical properties' do
             let!(:new_ingredient) { create(:canonical_ingredient, :with_alchemical_properties) }
 
-            before do
-              new_ingredient.reload
-            end
+            before { new_ingredient.reload }
 
             it 'adds an error' do
               model = ingredient.canonical_ingredients_alchemical_properties.first
@@ -78,20 +68,10 @@ RSpec.describe Canonical::IngredientsAlchemicalProperty, type: :model do
       describe 'uniqueness' do
         let(:ingredient) { create(:canonical_ingredient) }
 
-        before do
-          create(
-            :canonical_ingredients_alchemical_property,
-            priority: 1,
-            ingredient:,
-          )
-        end
+        before { create(:canonical_ingredients_alchemical_property, priority: 1, ingredient:) }
 
         it 'must be unique per ingredient' do
-          model = build(
-            :canonical_ingredients_alchemical_property,
-            priority: 1,
-            ingredient:,
-          )
+          model = build(:canonical_ingredients_alchemical_property, priority: 1, ingredient:)
 
           model.validate
           expect(model.errors[:priority]).to include 'must be unique per ingredient'
@@ -147,12 +127,7 @@ RSpec.describe Canonical::IngredientsAlchemicalProperty, type: :model do
     describe 'alchemical_property_id' do
       it 'must be unique per ingredient' do
         existing_model = create(:canonical_ingredients_alchemical_property)
-        model = build(
-          :canonical_ingredients_alchemical_property,
-          ingredient: existing_model.ingredient,
-          alchemical_property: existing_model.alchemical_property,
-          priority: 1,
-        )
+        model = build(:canonical_ingredients_alchemical_property, ingredient: existing_model.ingredient, alchemical_property: existing_model.alchemical_property, priority: 1)
 
         model.validate
         expect(model.errors[:alchemical_property_id]).to include 'must form a unique combination with canonical ingredient'

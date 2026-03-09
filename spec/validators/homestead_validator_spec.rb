@@ -6,18 +6,12 @@ RSpec.describe HomesteadValidator do
   subject(:validate) { described_class.new.validate(property) }
 
   # rubocop:disable RSpec/BeforeAfterAll
-  before(:all) do
-    Rails.application.load_tasks
-  end
+  before(:all) { Rails.application.load_tasks }
   # rubocop:enable RSpec/BeforeAfterAll
 
-  before do
-    Rake::Task['canonical_models:sync:properties'].invoke
-  end
+  before { Rake::Task['canonical_models:sync:properties'].invoke }
 
-  after do
-    Rake::Task['canonical_models:sync:properties'].reenable
-  end
+  after { Rake::Task['canonical_models:sync:properties'].reenable }
 
   context 'when the property is not a homestead' do
     let(:property) { build(:property, name: 'Breezehome') }

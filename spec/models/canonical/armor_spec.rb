@@ -221,9 +221,7 @@ RSpec.describe Canonical::Armor, type: :model do
       let(:armor) { create(:canonical_armor) }
       let(:enchantment) { create(:enchantment) }
 
-      before do
-        armor.enchantables_enchantments.create!(enchantment:, strength: 40)
-      end
+      before { armor.enchantables_enchantments.create!(enchantment:, strength: 40) }
 
       it 'gives the enchantment strength' do
         expect(armor.enchantments.first.strength).to eq 40
@@ -235,24 +233,12 @@ RSpec.describe Canonical::Armor, type: :model do
 
       let(:armor) { create(:canonical_armor) }
 
-      let!(:material1) do
-        create(
-          :canonical_material,
-          craftable: armor,
-        ).source_material
-      end
+      let!(:material1) { create(:canonical_material, craftable: armor).source_material }
 
-      let!(:material2) do
-        create(
-          :canonical_material,
-          craftable: armor,
-          source_material: create(:canonical_ingredient),
-        ).source_material
-      end
+      let!(:material2) { create(:canonical_material, craftable: armor, source_material: create(:canonical_ingredient)).source_material }
 
       it 'returns all crafting materials regardless of class' do
-        expect(crafting_materials)
-          .to contain_exactly(material1, material2)
+        expect(crafting_materials).to contain_exactly(material1, material2)
       end
     end
 
@@ -261,24 +247,12 @@ RSpec.describe Canonical::Armor, type: :model do
 
       let(:armor) { create(:canonical_armor) }
 
-      let!(:material1) do
-        create(
-          :canonical_material,
-          temperable: armor,
-        ).source_material
-      end
+      let!(:material1) { create(:canonical_material, temperable: armor).source_material }
 
-      let!(:material2) do
-        create(
-          :canonical_material,
-          temperable: armor,
-          source_material: create(:canonical_ingredient),
-        ).source_material
-      end
+      let!(:material2) { create(:canonical_material, temperable: armor, source_material: create(:canonical_ingredient)).source_material }
 
       it 'returns all crafting materials regardless of class' do
-        expect(tempering_materials)
-          .to contain_exactly(material1, material2)
+        expect(tempering_materials).to contain_exactly(material1, material2)
       end
     end
   end

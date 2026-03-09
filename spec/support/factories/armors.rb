@@ -7,9 +7,7 @@ FactoryBot.define do
     name { 'Steel Plate Armor' }
 
     trait :with_enchantments do
-      after(:create) do |armor|
-        create_list(:enchantables_enchantment, 2, enchantable: armor)
-      end
+      after(:create) {|armor| create_list(:enchantables_enchantment, 2, enchantable: armor) }
     end
 
     trait :with_matching_canonical do
@@ -17,9 +15,7 @@ FactoryBot.define do
     end
 
     trait :with_enchanted_canonical do
-      association :canonical_armor,
-                  factory: %i[canonical_armor with_enchantments],
-                  strategy: :create
+      association :canonical_armor, factory: %i[canonical_armor with_enchantments], strategy: :create
     end
   end
 end

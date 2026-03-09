@@ -2,15 +2,9 @@
 
 class AddAddedAutomaticallyToJoinModels < ActiveRecord::Migration[7.1]
   def up
-    add_column :enchantables_enchantments,
-               :added_automatically,
-               :boolean,
-               default: false
+    add_column :enchantables_enchantments, :added_automatically, :boolean, default: false
 
-    add_column :potions_alchemical_properties,
-               :added_automatically,
-               :boolean,
-               default: false
+    add_column :potions_alchemical_properties, :added_automatically, :boolean, default: false
 
     # rubocop:disable Rails/SkipsModelValidations
     EnchantablesEnchantment.update_all(added_automatically: true)

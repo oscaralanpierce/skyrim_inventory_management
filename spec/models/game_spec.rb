@@ -101,9 +101,7 @@ RSpec.describe Game, type: :model do
       subject(:name) { user.games.create!.name }
 
       context 'when the user has all default-named games' do
-        before do
-          create_list(:game, 2, name: nil, user:)
-        end
+        before { create_list(:game, 2, name: nil, user:) }
 
         it 'sets the title based on the highest numbered default title' do
           expect(name).to eq 'My Game 3'
@@ -145,9 +143,7 @@ RSpec.describe Game, type: :model do
       end
 
       context 'when there is a game called "My Game <negative integer>"' do
-        before do
-          create(:game, user:, name: 'My Game -4')
-        end
+        before { create(:game, user:, name: 'My Game -4') }
 
         it 'ignores the game name with the negative integer' do
           expect(name).to eq 'My Game 1'
@@ -174,9 +170,7 @@ RSpec.describe Game, type: :model do
     let(:game) { create(:game) }
     let!(:aggregate_list) { create(:aggregate_wish_list, game:) }
 
-    before do
-      create_list(:wish_list, 2, game:)
-    end
+    before { create_list(:wish_list, 2, game:) }
 
     it "returns that game's aggregate wish list" do
       expect(aggregate_wish_list).to eq aggregate_list
@@ -189,9 +183,7 @@ RSpec.describe Game, type: :model do
     let(:game) { create(:game) }
     let!(:aggregate_list) { create(:aggregate_inventory_list, game:) }
 
-    before do
-      create_list(:inventory_list, 2, game:)
-    end
+    before { create_list(:inventory_list, 2, game:) }
 
     it "returns that game's aggregate inventory list" do
       expect(aggregate_inventory_list).to eq aggregate_list

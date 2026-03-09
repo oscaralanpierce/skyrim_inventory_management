@@ -3,30 +3,17 @@
 require 'rails_helper'
 
 RSpec.describe Canonical::Material, type: :model do
-  let(:source_material) do
-    create(:canonical_raw_material, name: 'Iron Ingot')
-  end
+  let(:source_material) { create(:canonical_raw_material, name: 'Iron Ingot') }
 
   describe 'validations' do
     subject(:validate) { material.validate }
 
     let(:item) { create(:canonical_armor) }
-    let(:material) do
-      build(
-        :canonical_material,
-        source_material:,
-        temperable: item,
-      )
-    end
+    let(:material) { build(:canonical_material, source_material:, temperable: item) }
 
     describe 'source_material' do
       it 'must form a unique combination with craftable, if present' do
-        create(
-          :canonical_material,
-          source_material:,
-          temperable: nil,
-          craftable: item,
-        )
+        create(:canonical_material, source_material:, temperable: nil, craftable: item)
 
         material.temperable = nil
         material.craftable = item
@@ -37,11 +24,7 @@ RSpec.describe Canonical::Material, type: :model do
       end
 
       it 'must form a unique combination with temperable, if present' do
-        create(
-          :canonical_material,
-          source_material:,
-          temperable: item,
-        )
+        create(:canonical_material, source_material:, temperable: item)
 
         validate
 
@@ -107,9 +90,7 @@ RSpec.describe Canonical::Material, type: :model do
 
       let!(:included_models) { create_list(:canonical_material, 2, :with_temperable) }
 
-      before do
-        create(:canonical_material, :with_craftable)
-      end
+      before { create(:canonical_material, :with_craftable) }
 
       it 'includes models with a "temperable" association defined' do
         expect(with_temperable).to contain_exactly(*included_models)
@@ -123,13 +104,7 @@ RSpec.describe Canonical::Material, type: :model do
 
       let(:craftable) { create(:canonical_weapon) }
 
-      let(:material) do
-        create(
-          :canonical_material,
-          source_material:,
-          craftable:,
-        )
-      end
+      let(:material) { create(:canonical_material, source_material:, craftable:) }
 
       it 'is delegated to the source material' do
         expect(name).to eq 'Iron Ingot'

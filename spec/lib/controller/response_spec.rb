@@ -38,15 +38,7 @@ RSpec.describe Controller::Response do
       let(:options) { {} }
       let(:result) { Service::OkResult.new(resource:) }
 
-      let(:resource) do
-        {
-          id: 927,
-          user_id: 72,
-          title: 'My List 2',
-          created_at: Time.zone.now - 2.days,
-          updated_at: Time.zone.now,
-        }
-      end
+      let(:resource) { { id: 927, user_id: 72, title: 'My List 2', created_at: Time.zone.now - 2.days, updated_at: Time.zone.now } }
 
       it 'renders the resource with the result status' do
         execute

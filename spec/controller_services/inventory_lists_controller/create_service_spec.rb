@@ -50,9 +50,7 @@ RSpec.describe InventoryListsController::CreateService do
       end
 
       context 'when the game has an aggregate inventory list' do
-        before do
-          create(:aggregate_inventory_list, game:)
-        end
+        before { create(:aggregate_inventory_list, game:) }
 
         it 'creates an inventory list for the given game' do
           expect { perform }
@@ -122,12 +120,7 @@ RSpec.describe InventoryListsController::CreateService do
 
     context 'when the request tries to create an aggregate list' do
       let(:game) { create(:game, user:) }
-      let(:params) do
-        {
-          title: 'All Items',
-          aggregate: true,
-        }
-      end
+      let(:params) { { title: 'All Items', aggregate: true } }
 
       it 'returns a Service::UnprocessableEntityResult' do
         expect(perform).to be_a(Service::UnprocessableEntityResult)
@@ -142,9 +135,7 @@ RSpec.describe InventoryListsController::CreateService do
       let(:game) { create(:game, user:) }
       let(:params) { { title: 'Foobar' } }
 
-      before do
-        allow_any_instance_of(InventoryList).to receive(:save).and_raise(StandardError, 'Something went horribly wrong')
-      end
+      before { allow_any_instance_of(InventoryList).to receive(:save).and_raise(StandardError, 'Something went horribly wrong') }
 
       it 'returns a Service::InternalServerErrorResult' do
         expect(perform).to be_a(Service::InternalServerErrorResult)

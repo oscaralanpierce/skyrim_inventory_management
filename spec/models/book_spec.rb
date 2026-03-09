@@ -29,14 +29,7 @@ RSpec.describe Book, type: :model do
       context 'when the canonical model is not unique' do
         let(:canonical_book) { create(:canonical_book) }
 
-        before do
-          create_list(
-            :book,
-            3,
-            canonical_book:,
-            game:,
-          )
-        end
+        before { create_list(:book, 3, canonical_book:, game:) }
 
         it 'is valid' do
           expect(book).to be_valid
@@ -44,14 +37,7 @@ RSpec.describe Book, type: :model do
       end
 
       context 'when the canonical model is unique' do
-        let(:canonical_book) do
-          create(
-            :canonical_book,
-            max_quantity: 1,
-            unique_item: true,
-            rare_item: true,
-          )
-        end
+        let(:canonical_book) { create(:canonical_book, max_quantity: 1, unique_item: true, rare_item: true) }
 
         context 'when the canonical model has no books' do
           it 'is valid' do
@@ -60,9 +46,7 @@ RSpec.describe Book, type: :model do
         end
 
         context 'when the canonical model has a book for another game' do
-          before do
-            create(:book, canonical_book:)
-          end
+          before { create(:book, canonical_book:) }
 
           it 'is valid' do
             expect(book).to be_valid
@@ -70,9 +54,7 @@ RSpec.describe Book, type: :model do
         end
 
         context 'when the canonical model has a book for the same game' do
-          before do
-            create(:book, canonical_book:, game:)
-          end
+          before { create(:book, canonical_book:, game:) }
 
           it 'is invalid' do
             validate
@@ -136,15 +118,7 @@ RSpec.describe Book, type: :model do
     context 'when the matching canonical changes' do
       let(:book) { create(:book, :with_matching_canonical) }
 
-      let!(:new_canonical) do
-        create(
-          :canonical_book,
-          title: 'Black Book: Epistolary Acumen',
-          unit_weight: 1,
-          book_type: 'Black Book',
-          authors: ['The Transparent One'],
-        )
-      end
+      let!(:new_canonical) { create(:canonical_book, title: 'Black Book: Epistolary Acumen', unit_weight: 1, book_type: 'Black Book', authors: ['The Transparent One']) }
 
       it 'identifies the new canonical model' do
         book.title = 'Black book: epistolary acumen'
@@ -162,11 +136,7 @@ RSpec.describe Book, type: :model do
         create(:canonical_recipe, title: 'Foo')
         create(:canonical_recipe, title: 'Bar', title_variants: %w[Foo Baz])
 
-        create(
-          :recipes_canonical_ingredient,
-          recipe: book,
-          ingredient: Canonical::Book.last.canonical_ingredients.first,
-        )
+        create(:recipes_canonical_ingredient, recipe: book, ingredient: Canonical::Book.last.canonical_ingredients.first)
 
         book.canonical_ingredients.reload
       end
@@ -183,13 +153,7 @@ RSpec.describe Book, type: :model do
     let(:book) { create(:book, title: 'foo') }
 
     context 'when all matching canonicals are recipes' do
-      before do
-        create_list(
-          :canonical_recipe,
-          2,
-          title: 'Foo',
-        )
-      end
+      before { create_list(:canonical_recipe, 2, title: 'Foo') }
 
       it 'returns true' do
         expect(recipe).to be true
@@ -208,9 +172,7 @@ RSpec.describe Book, type: :model do
     end
 
     context 'when no matching canonicals are recipes' do
-      before do
-        create_list(:canonical_book, 2, title: 'Foo', book_type: 'lore book')
-      end
+      before { create_list(:canonical_book, 2, title: 'Foo', book_type: 'lore book') }
 
       it 'returns false' do
         expect(recipe).to be false
@@ -226,15 +188,7 @@ RSpec.describe Book, type: :model do
 
       before do
         create(:canonical_book, title: 'Bar')
-        create(
-          :canonical_book,
-          title: 'Baz',
-          title_variants: %w[Foo],
-          unit_weight: 13,
-          authors: ['Toni Morrison', 'Maya Angelou'],
-          book_type: 'skill book',
-          skill_name: 'Alteration',
-        )
+        create(:canonical_book, title: 'Baz', title_variants: %w[Foo], unit_weight: 13, authors: ['Toni Morrison', 'Maya Angelou'], book_type: 'skill book', skill_name: 'Alteration')
       end
 
       it 'assigns the matching canonical as the canonical book' do
@@ -254,18 +208,7 @@ RSpec.describe Book, type: :model do
     context 'when there are multiple matching canonical books' do
       let(:book) { build(:book, title: 'foo') }
 
-      before do
-        create_list(
-          :canonical_book,
-          2,
-          title: 'Baz',
-          title_variants: %w[Foo],
-          unit_weight: 13,
-          authors: ['Toni Morrison', 'Maya Angelou'],
-          book_type: 'skill book',
-          skill_name: 'Alteration',
-        )
-      end
+      before { create_list(:canonical_book, 2, title: 'Baz', title_variants: %w[Foo], unit_weight: 13, authors: ['Toni Morrison', 'Maya Angelou'], book_type: 'skill book', skill_name: 'Alteration') }
 
       it "doesn't assign a canonical book" do
         validate
@@ -285,12 +228,7 @@ RSpec.describe Book, type: :model do
       let(:book) { create(:book, :with_matching_canonical) }
 
       context 'when the update results in a new canonical match' do
-        let!(:new_canonical) do
-          create(
-            :canonical_book,
-            title: "Sinderion's Field Journal",
-          )
-        end
+        let!(:new_canonical) { create(:canonical_book, title: "Sinderion's Field Journal") }
 
         it 'changes the canonical association' do
           book.title = "sinderion's field journal"
@@ -310,13 +248,7 @@ RSpec.describe Book, type: :model do
       end
 
       context 'when the update results in an ambiguous match' do
-        before do
-          create_list(
-            :canonical_book,
-            2,
-            title: "Sinderion's Field Journal",
-          )
-        end
+        before { create_list(:canonical_book, 2, title: "Sinderion's Field Journal") }
 
         it 'sets the canonical_book to nil' do
           book.title = "sinderion's field journal"

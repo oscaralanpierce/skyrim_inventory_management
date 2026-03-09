@@ -5,9 +5,7 @@ require 'service/no_content_result'
 RSpec.describe Service::NoContentResult do
   subject(:result) { described_class.new(options) }
 
-  let(:options) do
-    {}
-  end
+  let(:options) { {} }
 
   describe '#status' do
     it 'is :no_content' do

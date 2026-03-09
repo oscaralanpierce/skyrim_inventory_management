@@ -82,9 +82,7 @@ RSpec.describe WishListItem, type: :model do
 
       let(:list) { create(:wish_list, game:) }
 
-      before do
-        list_item2.update!(quantity: 3)
-      end
+      before { list_item2.update!(quantity: 3) }
 
       it 'returns the list items in descending chronological order by updated_at' do
         expect(list.list_items.index_order.to_a).to eq([list_item2, list_item3, list_item1])
@@ -105,11 +103,7 @@ RSpec.describe WishListItem, type: :model do
       it 'returns all list items from all the lists for the given game' do
         # We don't actually care what order these are in since we currently only use this
         # scope to determine whether a given item belongs to a particular game
-        items = [
-          list1.list_items.to_a,
-          list2.list_items.to_a,
-          list3.list_items.to_a,
-        ].flatten!
+        items = [list1.list_items.to_a, list2.list_items.to_a, list3.list_items.to_a].flatten!
 
         expect(described_class.belonging_to_game(game).to_a.sort).to eq(items.sort)
       end
@@ -140,25 +134,9 @@ RSpec.describe WishListItem, type: :model do
 
   describe '::combine_or_create!' do
     context 'when there is an existing item on the same list with the same (case-insensitive) description' do
-      subject(:combine_or_create) do
-        described_class.combine_or_create!(
-          description: 'existing item',
-          quantity: 1,
-          list: wish_list,
-          notes: notes2,
-        )
-      end
+      subject(:combine_or_create) { described_class.combine_or_create!(description: 'existing item', quantity: 1, list: wish_list, notes: notes2) }
 
-      let!(:existing_item) do
-        create(
-          :wish_list_item,
-          description: 'ExIsTiNg ItEm',
-          quantity: 2,
-          unit_weight: 0.3,
-          list: wish_list,
-          notes: notes1,
-        )
-      end
+      let!(:existing_item) { create(:wish_list_item, description: 'ExIsTiNg ItEm', quantity: 2, unit_weight: 0.3, list: wish_list, notes: notes1) }
 
       let(:notes1) { 'notes 1' }
       let(:notes2) { 'notes 2' }
@@ -186,15 +164,7 @@ RSpec.describe WishListItem, type: :model do
       end
 
       context 'when the new item has a unit_weight' do
-        subject(:combine_or_create) do
-          described_class.combine_or_create!(
-            description: 'existing item',
-            quantity: 1,
-            list: wish_list,
-            unit_weight: 0.2,
-            notes: notes2,
-          )
-        end
+        subject(:combine_or_create) { described_class.combine_or_create!(description: 'existing item', quantity: 1, list: wish_list, unit_weight: 0.2, notes: notes2) }
 
         it 'uses the unit_weight from the new item' do
           combine_or_create
@@ -215,29 +185,13 @@ RSpec.describe WishListItem, type: :model do
     end
 
     context 'when there is an existing item on a different list with the same (case-insensitive) description' do
-      subject(:combine_or_create) do
-        described_class.combine_or_create!(
-          description: 'New Item',
-          quantity: 1,
-          list: wish_list,
-          unit_weight:,
-        )
-      end
+      subject(:combine_or_create) { described_class.combine_or_create!(description: 'New Item', quantity: 1, list: wish_list, unit_weight:) }
 
-      let!(:other_item) do
-        create(
-          :wish_list_item,
-          description: 'New Item',
-          list: other_list,
-          unit_weight: 1,
-        )
-      end
+      let!(:other_item) { create(:wish_list_item, description: 'New Item', list: other_list, unit_weight: 1) }
 
       let(:other_list) { create(:wish_list, game:, aggregate_list:) }
 
-      before do
-        aggregate_list.add_item_from_child_list(other_item)
-      end
+      before { aggregate_list.add_item_from_child_list(other_item) }
 
       context 'when unit_weight is nil' do
         let(:unit_weight) { nil }
@@ -251,29 +205,11 @@ RSpec.describe WishListItem, type: :model do
 
   describe '::combine_or_new' do
     context 'when there is an existing item on the same list with the same (case-insensitive) description' do
-      subject(:combine_or_new) do
-        described_class.combine_or_new(
-          description: 'existing item',
-          quantity: 1,
-          list: wish_list,
-          notes: 'notes 2',
-        )
-      end
+      subject(:combine_or_new) { described_class.combine_or_new(description: 'existing item', quantity: 1, list: wish_list, notes: 'notes 2') }
 
-      let!(:existing_item) do
-        create(
-          :wish_list_item,
-          description: 'ExIsTiNg ItEm',
-          quantity: 2,
-          unit_weight: 0.3,
-          list: wish_list,
-          notes: 'notes 1',
-        )
-      end
+      let!(:existing_item) { create(:wish_list_item, description: 'ExIsTiNg ItEm', quantity: 2, unit_weight: 0.3, list: wish_list, notes: 'notes 1') }
 
-      before do
-        allow(described_class).to receive(:new)
-      end
+      before { allow(described_class).to receive(:new) }
 
       it "doesn't instantiate a new item" do
         combine_or_new
@@ -306,17 +242,9 @@ RSpec.describe WishListItem, type: :model do
     end
 
     context 'when there is not an existing item on the same list with that description' do
-      subject(:combine_or_new) do
-        described_class.combine_or_new(
-          description: 'new item',
-          quantity: 1,
-          list: wish_list,
-        )
-      end
+      subject(:combine_or_new) { described_class.combine_or_new(description: 'new item', quantity: 1, list: wish_list) }
 
-      before do
-        allow(described_class).to receive(:new).and_call_original
-      end
+      before { allow(described_class).to receive(:new).and_call_original }
 
       it 'instantiates a new wish list item' do
         combine_or_new
@@ -332,9 +260,7 @@ RSpec.describe WishListItem, type: :model do
         let!(:other_list) { create(:wish_list, game:, aggregate_list:) }
         let!(:other_item) { create(:wish_list_item, description: 'new item', list: other_list, unit_weight: 1) }
 
-        before do
-          aggregate_list.add_item_from_child_list(other_item)
-        end
+        before { aggregate_list.add_item_from_child_list(other_item) }
 
         it "sets the new item's unit weight to match the existing items" do
           expect(combine_or_new.unit_weight).to eq 1
@@ -343,14 +269,7 @@ RSpec.describe WishListItem, type: :model do
     end
 
     context 'when the new item is on an aggregate list' do
-      subject(:combine_or_new) do
-        described_class.combine_or_new(
-          description: 'new item',
-          quantity: 3,
-          list: aggregate_list,
-          notes: 'foobar',
-        )
-      end
+      subject(:combine_or_new) { described_class.combine_or_new(description: 'new item', quantity: 3, list: aggregate_list, notes: 'foobar') }
 
       it "doesn't set a 'notes' value on the aggregate list item" do
         expect(combine_or_new.notes).to be_nil
@@ -358,18 +277,9 @@ RSpec.describe WishListItem, type: :model do
     end
 
     context 'when the existing item is on an aggregate list' do
-      subject(:combine_or_new) do
-        described_class.combine_or_new(
-          description: 'new item',
-          quantity: 3,
-          list: aggregate_list,
-          notes: 'foobar',
-        )
-      end
+      subject(:combine_or_new) { described_class.combine_or_new(description: 'new item', quantity: 3, list: aggregate_list, notes: 'foobar') }
 
-      before do
-        aggregate_list.list_items.create!(description: 'new item', quantity: 1)
-      end
+      before { aggregate_list.list_items.create!(description: 'new item', quantity: 1) }
 
       it "doesn't set a 'notes' value on the aggregate list item", :aggregate_failures do
         new_item = combine_or_new

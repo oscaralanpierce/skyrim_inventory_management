@@ -7,18 +7,12 @@ RSpec.describe Property, type: :model do
   let(:property) { described_class.new }
 
   # rubocop:disable RSpec/BeforeAfterAll
-  before(:all) do
-    Rails.application.load_tasks
-  end
+  before(:all) { Rails.application.load_tasks }
   # rubocop:enable RSpec/BeforeAfterAll
 
-  before do
-    Rake::Task['canonical_models:sync:properties'].invoke
-  end
+  before { Rake::Task['canonical_models:sync:properties'].invoke }
 
-  after do
-    Rake::Task['canonical_models:sync:properties'].reenable
-  end
+  after { Rake::Task['canonical_models:sync:properties'].reenable }
 
   describe 'validations' do
     subject(:validate) { property.validate }
@@ -27,9 +21,7 @@ RSpec.describe Property, type: :model do
 
     before do
       allow(Rails.logger).to receive(:error)
-      allow_any_instance_of(HomesteadValidator)
-        .to receive(:validate)
-              .and_call_original
+      allow_any_instance_of(HomesteadValidator).to receive(:validate).and_call_original
     end
 
     it 'is invalid without a game' do
@@ -65,30 +57,18 @@ RSpec.describe Property, type: :model do
     end
 
     it 'only allows up to 10 per game', :aggregate_failures do
-      Canonical::Property.all.find_each do |canonical_property|
-        game.properties.create!(
-          canonical_property:,
-          name: canonical_property.name,
-          hold: canonical_property.hold,
-          city: canonical_property.city,
-        )
-      end
+      Canonical::Property.all.find_each {|canonical_property| game.properties.create!(canonical_property:, name: canonical_property.name, hold: canonical_property.hold, city: canonical_property.city) }
 
       property.game = game
       property.name = 'Vlindrel Hall'
       property.hold = 'The Reach'
       validate
       expect(property.errors[:game]).to include 'already has max number of ownable properties'
-      expect(Rails.logger)
-        .to have_received(:error)
-              .with('Cannot create property "Vlindrel Hall" in hold "The Reach": this game already has 10 properties')
+      expect(Rails.logger).to have_received(:error).with('Cannot create property "Vlindrel Hall" in hold "The Reach": this game already has 10 properties')
     end
 
     it 'calls the HomesteadValidator' do
-      expect_any_instance_of(HomesteadValidator)
-        .to receive(:validate)
-              .with(property)
-              .and_call_original
+      expect_any_instance_of(HomesteadValidator).to receive(:validate).with(property).and_call_original
 
       validate
     end
@@ -97,14 +77,7 @@ RSpec.describe Property, type: :model do
       let(:property) { build(:property, name: "arch-mage's quarters", game:) }
       let(:canonical_property) { Canonical::Property.find_by(name: "Arch-Mage's Quarters") }
 
-      before do
-        game.properties.create!(
-          canonical_property:,
-          name: canonical_property.name,
-          hold: canonical_property.hold,
-          city: canonical_property.city,
-        )
-      end
+      before { game.properties.create!(canonical_property:, name: canonical_property.name, hold: canonical_property.hold, city: canonical_property.city) }
 
       it 'has a unique combination of game and canonical property' do
         validate

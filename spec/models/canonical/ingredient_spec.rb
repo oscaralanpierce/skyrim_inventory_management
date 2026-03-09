@@ -9,18 +9,7 @@ RSpec.describe Canonical::Ingredient, type: :model do
     let(:model) { build(:canonical_ingredient) }
 
     it 'is valid with valid attributes' do
-      ingredient = described_class.new(
-        name: 'Skeever Tail',
-        item_code: 'foo',
-        ingredient_type: 'common',
-        unit_weight: 1,
-        add_on: 'base',
-        collectible: true,
-        purchasable: true,
-        purchase_requires_perk: false,
-        unique_item: false,
-        rare_item: true,
-      )
+      ingredient = described_class.new(name: 'Skeever Tail', item_code: 'foo', ingredient_type: 'common', unit_weight: 1, add_on: 'base', collectible: true, purchasable: true, purchase_requires_perk: false, unique_item: false, rare_item: true)
 
       expect(ingredient).to be_valid
     end

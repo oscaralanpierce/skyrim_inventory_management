@@ -9,9 +9,7 @@ RSpec.describe Canonical::Sync::Books do
   let(:json_path) { Rails.root.join('spec', 'support', 'fixtures', 'canonical', 'sync', 'books.json') }
   let!(:json_data) { File.read(json_path) }
 
-  before do
-    allow(File).to receive(:read).and_return(json_data)
-  end
+  before { allow(File).to receive(:read).and_return(json_data) }
 
   describe '::perform' do
     subject(:perform) { described_class.perform(preserve_existing_records) }
@@ -48,13 +46,7 @@ RSpec.describe Canonical::Sync::Books do
       end
 
       context 'when there are existing book records in the database' do
-        let!(:book_in_json) do
-          create(
-            :canonical_recipe,
-            item_code: '000F5CB8',
-            title: 'The Seven Habits of Highly Successful People',
-          )
-        end
+        let!(:book_in_json) { create(:canonical_recipe, item_code: '000F5CB8', title: 'The Seven Habits of Highly Successful People') }
 
         let!(:book_not_in_json) { create(:canonical_book, item_code: '12345678') }
         let(:syncer) { described_class.new(preserve_existing_records) }
@@ -88,17 +80,7 @@ RSpec.describe Canonical::Sync::Books do
         end
 
         it "removes canonical ingredient associations that don't exist in the JSON data" do
-          book_in_json
-            .canonical_ingredients
-            .create!(
-              item_code: '12345678',
-              name: 'Venus Fly Trap',
-              unit_weight: 1,
-              add_on: 'base',
-              collectible: true,
-              purchasable: false,
-              rare_item: true,
-            )
+          book_in_json.canonical_ingredients.create!(item_code: '12345678', name: 'Venus Fly Trap', unit_weight: 1, add_on: 'base', collectible: true, purchasable: false, rare_item: true)
 
           perform
 
@@ -112,17 +94,13 @@ RSpec.describe Canonical::Sync::Books do
       end
 
       context 'when there are no canonical ingredients in the database' do
-        before do
-          allow(Rails.logger).to receive(:error)
-        end
+        before { allow(Rails.logger).to receive(:error) }
 
         it "logs an error and doesn't create models", :aggregate_failures do
           expect { perform }
             .to raise_error(Canonical::Sync::PrerequisiteNotMetError)
 
-          expect(Rails.logger)
-            .to have_received(:error)
-                  .with('Prerequisite(s) not met: sync Canonical::Ingredient before canonical books')
+          expect(Rails.logger).to have_received(:error).with('Prerequisite(s) not met: sync Canonical::Ingredient before canonical books')
 
           expect(Canonical::Book.count).to eq 0
         end
@@ -140,9 +118,7 @@ RSpec.describe Canonical::Sync::Books do
           expect { perform }
             .to raise_error ActiveRecord::RecordInvalid
 
-          expect(Rails.logger)
-            .to have_received(:error)
-                  .with('Validation error saving associations for canonical book "000F5CB8": Validation failed: Ingredient must exist')
+          expect(Rails.logger).to have_received(:error).with('Validation error saving associations for canonical book "000F5CB8": Validation failed: Ingredient must exist')
         end
       end
     end
@@ -192,20 +168,14 @@ RSpec.describe Canonical::Sync::Books do
       let(:preserve_existing_records) { false }
 
       context 'when an ActiveRecord::RecordInvalid error is raised' do
-        let(:errored_model) do
-          instance_double Canonical::Book,
-                          errors:,
-                          class: class_double(Canonical::Book, i18n_scope: :activerecord)
-        end
+        let(:errored_model) { instance_double Canonical::Book, errors:, class: class_double(Canonical::Book, i18n_scope: :activerecord) }
 
         let(:errors) { double('errors', full_messages: ["Title can't be blank"]) }
 
         before do
           create(:canonical_ingredient)
 
-          allow_any_instance_of(Canonical::Book)
-            .to receive(:save!)
-                  .and_raise(ActiveRecord::RecordInvalid, errored_model)
+          allow_any_instance_of(Canonical::Book).to receive(:save!).and_raise(ActiveRecord::RecordInvalid, errored_model)
 
           allow(Rails.logger).to receive(:error)
         end
@@ -214,9 +184,7 @@ RSpec.describe Canonical::Sync::Books do
           expect { perform }
             .to raise_error(ActiveRecord::RecordInvalid)
 
-          expect(Rails.logger)
-            .to have_received(:error)
-                  .with("Error saving canonical book \"000F5CB8\": Validation failed: Title can't be blank")
+          expect(Rails.logger).to have_received(:error).with("Error saving canonical book \"000F5CB8\": Validation failed: Title can't be blank")
         end
       end
 
@@ -224,9 +192,7 @@ RSpec.describe Canonical::Sync::Books do
         before do
           create(:canonical_ingredient)
 
-          allow(Canonical::Book)
-            .to receive(:find_or_initialize_by)
-                  .and_raise(StandardError, 'foobar')
+          allow(Canonical::Book).to receive(:find_or_initialize_by).and_raise(StandardError, 'foobar')
 
           allow(Rails.logger).to receive(:error)
         end
@@ -235,9 +201,7 @@ RSpec.describe Canonical::Sync::Books do
           expect { perform }
             .to raise_error(StandardError)
 
-          expect(Rails.logger)
-            .to have_received(:error)
-                  .with('Unexpected error StandardError saving canonical book "000F5CB8": foobar')
+          expect(Rails.logger).to have_received(:error).with('Unexpected error StandardError saving canonical book "000F5CB8": foobar')
         end
       end
 
@@ -245,9 +209,7 @@ RSpec.describe Canonical::Sync::Books do
         before do
           create(:canonical_ingredient)
 
-          allow(Canonical::Book)
-            .to receive(:where)
-                  .and_raise(StandardError, 'foobar')
+          allow(Canonical::Book).to receive(:where).and_raise(StandardError, 'foobar')
 
           allow(Rails.logger).to receive(:error)
         end
@@ -256,9 +218,7 @@ RSpec.describe Canonical::Sync::Books do
           expect { perform }
             .to raise_error(StandardError)
 
-          expect(Rails.logger)
-            .to have_received(:error)
-                  .with('Unexpected error StandardError while syncing canonical books: foobar')
+          expect(Rails.logger).to have_received(:error).with('Unexpected error StandardError while syncing canonical books: foobar')
         end
       end
     end

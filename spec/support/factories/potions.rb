@@ -11,9 +11,7 @@ FactoryBot.define do
     end
 
     trait :with_canonical_and_alchemical_properties do
-      association :canonical_potion,
-                  factory: %i[canonical_potion with_associations],
-                  strategy: :create
+      association :canonical_potion, factory: %i[canonical_potion with_associations], strategy: :create
     end
   end
 end

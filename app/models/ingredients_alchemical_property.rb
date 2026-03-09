@@ -4,22 +4,8 @@ class IngredientsAlchemicalProperty < ApplicationRecord
   belongs_to :ingredient
   belongs_to :alchemical_property
 
-  validates :alchemical_property_id,
-            uniqueness: {
-              scope: :ingredient_id,
-              message: 'must form a unique combination with ingredient',
-            }
-  validates :priority,
-            allow_blank: true,
-            uniqueness: {
-              scope: :ingredient_id,
-              message: 'must be unique per ingredient',
-            },
-            numericality: {
-              greater_than_or_equal_to: 1,
-              less_than_or_equal_to: 4,
-              only_integer: true,
-            }
+  validates :alchemical_property_id, uniqueness: { scope: :ingredient_id, message: 'must form a unique combination with ingredient' }
+  validates :priority, allow_blank: true, uniqueness: { scope: :ingredient_id, message: 'must be unique per ingredient' }, numericality: { greater_than_or_equal_to: 1, less_than_or_equal_to: 4, only_integer: true }
   validate :ensure_match_exists
   validate :ensure_max_per_ingredient
 
@@ -58,10 +44,7 @@ class IngredientsAlchemicalProperty < ApplicationRecord
       !ingredient_id_changed? &&
       ingredient.alchemical_properties.length == Canonical::IngredientsAlchemicalProperty::MAX_PER_INGREDIENT
 
-    errors.add(
-      :ingredient,
-      "already has #{Canonical::IngredientsAlchemicalProperty::MAX_PER_INGREDIENT} alchemical properties",
-    )
+    errors.add(:ingredient, "already has #{Canonical::IngredientsAlchemicalProperty::MAX_PER_INGREDIENT} alchemical properties")
   end
 
   def set_attributes_from_canonical
@@ -77,10 +60,6 @@ class IngredientsAlchemicalProperty < ApplicationRecord
   end
 
   def attributes_to_match
-    {
-      alchemical_property_id:,
-      ingredient_id: ingredient.canonical_models.ids,
-      priority:,
-    }.compact
+    { alchemical_property_id:, ingredient_id: ingredient.canonical_models.ids, priority: }.compact
   end
 end

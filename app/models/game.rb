@@ -32,12 +32,7 @@ class Game < ApplicationRecord
   has_many :wish_lists, -> { index_order }, dependent: :destroy, inverse_of: :game
   has_many :inventory_lists, -> { index_order }, dependent: :destroy, inverse_of: :game
 
-  validates :name,
-            uniqueness: { scope: :user_id, message: 'must be unique', case_sensitive: false },
-            format: {
-              with: /\A\s*[a-z0-9 \-',]*\s*\z/i,
-              message: "can only contain alphanumeric characters, spaces, commas (,), hyphens (-), and apostrophes (')",
-            }
+  validates :name, uniqueness: { scope: :user_id, message: 'must be unique', case_sensitive: false }, format: { with: /\A\s*[a-z0-9 \-',]*\s*\z/i, message: "can only contain alphanumeric characters, spaces, commas (,), hyphens (-), and apostrophes (')" }
 
   scope :index_order, -> { order(updated_at: :desc) }
 

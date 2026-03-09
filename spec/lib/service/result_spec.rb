@@ -16,26 +16,10 @@ RSpec.describe Service::Result do
     end
 
     context 'when a resource is given' do
-      let(:options) do
-        {
-          resource: {
-            id: 32,
-            uid: 'foobar',
-            email: 'jane.doe@gmail.com',
-            display_name: 'Jane Doe',
-            photo_url: nil,
-          },
-        }
-      end
+      let(:options) { { resource: { id: 32, uid: 'foobar', email: 'jane.doe@gmail.com', display_name: 'Jane Doe', photo_url: nil } } }
 
       it 'sets the resource if one is given' do
-        expect(result.resource).to eq({
-          id: 32,
-          uid: 'foobar',
-          email: 'jane.doe@gmail.com',
-          display_name: 'Jane Doe',
-          photo_url: nil,
-        })
+        expect(result.resource).to eq({ id: 32, uid: 'foobar', email: 'jane.doe@gmail.com', display_name: 'Jane Doe', photo_url: nil })
       end
     end
 
@@ -48,11 +32,7 @@ RSpec.describe Service::Result do
     end
 
     context 'when there are errors' do
-      let(:options) do
-        {
-          errors: ['foo', ['bar', %w[baz qux]]],
-        }
-      end
+      let(:options) { { errors: ['foo', ['bar', %w[baz qux]]] } }
 
       it 'sets the errors array to a flattened value' do
         expect(result.errors).to eq %w[foo bar baz qux]
@@ -60,11 +40,7 @@ RSpec.describe Service::Result do
     end
 
     context 'when there is one error' do
-      let(:options) do
-        {
-          error: 'foobar',
-        }
-      end
+      let(:options) { { error: 'foobar' } }
 
       it 'sets the errors to an array' do
         expect(result.errors).to eq %w[foobar]

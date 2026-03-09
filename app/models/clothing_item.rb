@@ -1,18 +1,11 @@
 # frozen_string_literal: true
 
 class ClothingItem < EnchantableInGameItem
-  belongs_to :canonical_clothing_item,
-             optional: true,
-             inverse_of: :clothing_items,
-             class_name: 'Canonical::ClothingItem'
+  belongs_to :canonical_clothing_item, optional: true, inverse_of: :clothing_items, class_name: 'Canonical::ClothingItem'
 
   validates :name, presence: true
 
-  validates :unit_weight,
-            numericality: {
-              greater_than_or_equal_to: 0,
-              allow_nil: true,
-            }
+  validates :unit_weight, numericality: { greater_than_or_equal_to: 0, allow_nil: true }
 
   def canonical_model
     canonical_clothing_item
@@ -58,12 +51,7 @@ class ClothingItem < EnchantableInGameItem
 
     remove_automatically_added_enchantments!
 
-    canonical_clothing_item.enchantables_enchantments.each do |model|
-      enchantables_enchantments.find_or_create_by!(
-        enchantment_id: model.enchantment_id,
-        strength: model.strength,
-      ) {|new_model| new_model.added_automatically = true }
-    end
+    canonical_clothing_item.enchantables_enchantments.each {|model| enchantables_enchantments.find_or_create_by!(enchantment_id: model.enchantment_id, strength: model.strength) {|new_model| new_model.added_automatically = true } }
   end
 
   def clear_canonical_clothing_item

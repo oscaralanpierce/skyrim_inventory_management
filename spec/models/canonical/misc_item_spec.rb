@@ -73,10 +73,7 @@ RSpec.describe Canonical::MiscItem, type: :model do
       end
 
       it 'must include only valid types' do
-        model.item_types = [
-          'Dwemer artifact',
-          'industrial equipment',
-        ]
+        model.item_types = ['Dwemer artifact', 'industrial equipment']
         validate
 
         expect(model.errors[:item_types]).to include 'can only include valid item types'

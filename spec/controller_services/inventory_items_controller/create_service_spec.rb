@@ -44,9 +44,7 @@ RSpec.describe InventoryItemsController::CreateService do
           let(:other_list) { create(:inventory_list, game: aggregate_list.game, aggregate_list:) }
           let!(:other_item) { create(:inventory_item, list: other_list, description: 'Necklace', quantity: 1) }
 
-          before do
-            aggregate_list.add_item_from_child_list(other_item)
-          end
+          before { aggregate_list.add_item_from_child_list(other_item) }
 
           context 'when the unit_weight is not set' do
             it 'creates a new item on the list' do
@@ -241,9 +239,7 @@ RSpec.describe InventoryItemsController::CreateService do
     context 'when something unexpected goes wrong' do
       let!(:params) { { description: 'Necklace', quantity: 2 } }
 
-      before do
-        allow(InventoryList).to receive(:find).and_raise(StandardError.new('Something went horribly wrong'))
-      end
+      before { allow(InventoryList).to receive(:find).and_raise(StandardError.new('Something went horribly wrong')) }
 
       it 'returns a Service::InternalServerErrorResponse' do
         expect(perform).to be_a(Service::InternalServerErrorResult)

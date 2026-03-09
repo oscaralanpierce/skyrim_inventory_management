@@ -17,6 +17,4 @@
 #   inflect.acronym 'RESTful'
 # end
 
-ActiveSupport::Inflector.inflections(:en) do |inflect|
-  inflect.irregular 'staff', 'staves'
-end
+ActiveSupport::Inflector.inflections(:en) {|inflect| inflect.irregular 'staff', 'staves' }

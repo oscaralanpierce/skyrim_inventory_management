@@ -37,14 +37,7 @@ RSpec.describe JewelryItem, type: :model do
       context 'when the canonical jewelry item is not unique' do
         let(:canonical_jewelry_item) { create(:canonical_jewelry_item) }
 
-        before do
-          create_list(
-            :jewelry_item,
-            3,
-            canonical_jewelry_item:,
-            game:,
-          )
-        end
+        before { create_list(:jewelry_item, 3, canonical_jewelry_item:, game:) }
 
         it 'is valid' do
           expect(item).to be_valid
@@ -52,14 +45,7 @@ RSpec.describe JewelryItem, type: :model do
       end
 
       context 'when the canonical jewelry item is unique' do
-        let(:canonical_jewelry_item) do
-          create(
-            :canonical_jewelry_item,
-            max_quantity: 1,
-            unique_item: true,
-            rare_item: true,
-          )
-        end
+        let(:canonical_jewelry_item) { create(:canonical_jewelry_item, max_quantity: 1, unique_item: true, rare_item: true) }
 
         context 'when there are no other matching jewelry items' do
           it 'is valid' do
@@ -68,9 +54,7 @@ RSpec.describe JewelryItem, type: :model do
         end
 
         context 'when there is another matching jewelry item for another game' do
-          before do
-            create(:jewelry_item, canonical_jewelry_item:)
-          end
+          before { create(:jewelry_item, canonical_jewelry_item:) }
 
           it 'is valid' do
             expect(item).to be_valid
@@ -78,9 +62,7 @@ RSpec.describe JewelryItem, type: :model do
         end
 
         context 'when there is another matching jewelry item for the same game' do
-          before do
-            create(:jewelry_item, canonical_jewelry_item:, game:)
-          end
+          before { create(:jewelry_item, canonical_jewelry_item:, game:) }
 
           it 'is invalid' do
             validate
@@ -100,13 +82,7 @@ RSpec.describe JewelryItem, type: :model do
       end
 
       context 'when there are multiple matching canonical jewelry items' do
-        before do
-          create_list(
-            :canonical_jewelry_item,
-            2,
-            name: item.name,
-          )
-        end
+        before { create_list(:canonical_jewelry_item, 2, name: item.name) }
 
         it 'is valid' do
           expect(item).to be_valid
@@ -137,14 +113,7 @@ RSpec.describe JewelryItem, type: :model do
     end
 
     context 'when canonical_jewelry_item is not set' do
-      let!(:canonical_models) do
-        create_list(
-          :canonical_jewelry_item,
-          2,
-          :with_crafting_materials,
-          name: 'Gold Diamond Ring',
-        )
-      end
+      let!(:canonical_models) { create_list(:canonical_jewelry_item, 2, :with_crafting_materials, name: 'Gold Diamond Ring') }
 
       let(:item) { create(:jewelry_item, name: 'Gold Diamond Ring') }
 
@@ -161,13 +130,7 @@ RSpec.describe JewelryItem, type: :model do
       let(:item) { create(:jewelry_item, name: 'Gold diamond ring') }
 
       context 'when only the name has to match' do
-        let!(:matching_canonicals) do
-          create_list(
-            :canonical_jewelry_item,
-            3,
-            name: 'Gold Diamond Ring',
-          )
-        end
+        let!(:matching_canonicals) { create_list(:canonical_jewelry_item, 3, name: 'Gold Diamond Ring') }
 
         it 'matches case-insensitively' do
           expect(canonical_models).to contain_exactly(*matching_canonicals)
@@ -175,20 +138,11 @@ RSpec.describe JewelryItem, type: :model do
       end
 
       context 'when multiple attributes have to match' do
-        let!(:matching_canonicals) do
-          create_list(
-            :canonical_jewelry_item,
-            2,
-            name: 'Gold Diamond Ring',
-            unit_weight: 0.2,
-          )
-        end
+        let!(:matching_canonicals) { create_list(:canonical_jewelry_item, 2, name: 'Gold Diamond Ring', unit_weight: 0.2) }
 
         let(:item) { create(:jewelry_item, name: 'Gold diamond ring', unit_weight: 0.2) }
 
-        before do
-          create(:canonical_jewelry_item, name: 'Gold Diamond Ring', unit_weight: 3)
-        end
+        before { create(:canonical_jewelry_item, name: 'Gold Diamond Ring', unit_weight: 3) }
 
         it 'returns the matching models' do
           expect(canonical_models).to contain_exactly(*matching_canonicals)
@@ -199,41 +153,21 @@ RSpec.describe JewelryItem, type: :model do
         let(:item) { create(:jewelry_item) }
         let(:shared_enchantment) { create(:enchantment) }
 
-        let!(:matching_canonicals) do
-          create_list(:canonical_jewelry_item, 2, enchantable: false)
-        end
+        let!(:matching_canonicals) { create_list(:canonical_jewelry_item, 2, enchantable: false) }
 
         before do
-          create(
-            :enchantables_enchantment,
-            enchantable: matching_canonicals.first,
-            enchantment: shared_enchantment,
-          )
+          create(:enchantables_enchantment, enchantable: matching_canonicals.first, enchantment: shared_enchantment)
 
-          create(
-            :enchantables_enchantment,
-            enchantable: matching_canonicals.last,
-            enchantment: shared_enchantment,
-          )
+          create(:enchantables_enchantment, enchantable: matching_canonicals.last, enchantment: shared_enchantment)
 
           create(:enchantables_enchantment, enchantable: matching_canonicals.first)
           create(:enchantables_enchantment, enchantable: matching_canonicals.last)
 
           matching_canonicals.each {|canonical| canonical.enchantables_enchantments.reload }
 
-          create(
-            :enchantables_enchantment,
-            enchantable: item,
-            enchantment: shared_enchantment,
-            added_automatically: false,
-          )
+          create(:enchantables_enchantment, enchantable: item, enchantment: shared_enchantment, added_automatically: false)
 
-          create(
-            :enchantables_enchantment,
-            enchantable: item,
-            enchantment: matching_canonicals.first.enchantments.last,
-            added_automatically: true,
-          )
+          create(:enchantables_enchantment, enchantable: item, enchantment: matching_canonicals.first.enchantments.last, added_automatically: true)
 
           item.enchantables_enchantments.reload
         end
@@ -255,15 +189,7 @@ RSpec.describe JewelryItem, type: :model do
     context 'when the canonical model changes' do
       let(:item) { create(:jewelry_item, :with_matching_canonical) }
 
-      let!(:new_canonical) do
-        create(
-          :canonical_jewelry_item,
-          name: "Neloth's Ring of Tracking",
-          jewelry_type: 'ring',
-          unit_weight: 0.3,
-          magical_effects: 'When close enough, identifies the source of the ash spawn attacks on Tel Mithryn',
-        )
-      end
+      let!(:new_canonical) { create(:canonical_jewelry_item, name: "Neloth's Ring of Tracking", jewelry_type: 'ring', unit_weight: 0.3, magical_effects: 'When close enough, identifies the source of the ash spawn attacks on Tel Mithryn') }
 
       it 'returns the new canonical' do
         item.name = "Neloth's Ring of Tracking"
@@ -278,15 +204,7 @@ RSpec.describe JewelryItem, type: :model do
   describe 'adding enchantments' do
     let(:item) { create(:jewelry_item, name: 'foobar') }
 
-    before do
-      create_list(
-        :canonical_jewelry_item,
-        2,
-        :with_enchantments,
-        name: 'Foobar',
-        enchantable:,
-      )
-    end
+    before { create_list(:canonical_jewelry_item, 2, :with_enchantments, name: 'Foobar', enchantable:) }
 
     context 'when the added enchantment eliminates all canonical matches' do
       subject(:add_enchantment) { create(:enchantables_enchantment, enchantable: item) }
@@ -302,14 +220,7 @@ RSpec.describe JewelryItem, type: :model do
     end
 
     context 'when the added enchantment narrows it down to one canonical match' do
-      subject(:add_enchantment) do
-        create(
-          :enchantables_enchantment,
-          enchantable: item,
-          enchantment: Canonical::JewelryItem.last.enchantments.first,
-          strength: Canonical::JewelryItem.last.enchantments.first.strength,
-        )
-      end
+      subject(:add_enchantment) { create(:enchantables_enchantment, enchantable: item, enchantment: Canonical::JewelryItem.last.enchantments.first, strength: Canonical::JewelryItem.last.enchantments.first.strength) }
 
       let(:enchantable) { false }
 
@@ -368,28 +279,11 @@ RSpec.describe JewelryItem, type: :model do
     subject(:validate) { item.validate }
 
     context 'when there is a single matching canonical model' do
-      let!(:matching_canonical) do
-        create(
-          :canonical_jewelry_item,
-          :with_enchantments,
-          name: 'Gold Diamond Ring',
-          unit_weight: 0.2,
-          jewelry_type: 'ring',
-          magical_effects: 'Some magical effects to differentiate',
-        )
-      end
+      let!(:matching_canonical) { create(:canonical_jewelry_item, :with_enchantments, name: 'Gold Diamond Ring', unit_weight: 0.2, jewelry_type: 'ring', magical_effects: 'Some magical effects to differentiate') }
 
-      let(:item) do
-        build(
-          :jewelry_item,
-          name: 'Gold diamond ring',
-          unit_weight: 0.2,
-        )
-      end
+      let(:item) { build(:jewelry_item, name: 'Gold diamond ring', unit_weight: 0.2) }
 
-      before do
-        create(:canonical_jewelry_item, name: 'Gold Diamond Ring', unit_weight: 1)
-      end
+      before { create(:canonical_jewelry_item, name: 'Gold Diamond Ring', unit_weight: 1) }
 
       it 'assigns the canonical jewelry item' do
         validate
@@ -405,15 +299,7 @@ RSpec.describe JewelryItem, type: :model do
     end
 
     context 'when there are multiple matching canonical models' do
-      let!(:matching_canonicals) do
-        create_list(
-          :canonical_jewelry_item,
-          2,
-          :with_enchantments,
-          name: 'Gold Diamond Ring',
-          unit_weight: 0.2,
-        )
-      end
+      let!(:matching_canonicals) { create_list(:canonical_jewelry_item, 2, :with_enchantments, name: 'Gold Diamond Ring', unit_weight: 0.2) }
 
       let(:item) { create(:jewelry_item, name: 'Gold Diamond Ring', unit_weight: 0.2) }
 
@@ -429,30 +315,16 @@ RSpec.describe JewelryItem, type: :model do
       before do
         item.canonical_jewelry_item.update!(enchantable: true)
 
-        create(
-          :enchantables_enchantment,
-          enchantable: item,
-          added_automatically: false,
-        )
+        create(:enchantables_enchantment, enchantable: item, added_automatically: false)
 
         item.enchantables_enchantments.reload
       end
 
       context 'when the update changes the canonical association' do
-        let!(:new_canonical) do
-          create(
-            :canonical_jewelry_item,
-            name: 'Silver Jeweled Necklace',
-            unit_weight: 3.0,
-          )
-        end
+        let!(:new_canonical) { create(:canonical_jewelry_item, name: 'Silver Jeweled Necklace', unit_weight: 3.0) }
 
         before do
-          create(
-            :enchantables_enchantment,
-            enchantable: new_canonical,
-            enchantment: item.enchantables_enchantments.added_manually.first.enchantment,
-          )
+          create(:enchantables_enchantment, enchantable: new_canonical, enchantment: item.enchantables_enchantments.added_manually.first.enchantment)
 
           new_canonical.enchantables_enchantments.reload
         end
@@ -489,14 +361,7 @@ RSpec.describe JewelryItem, type: :model do
       end
 
       context 'when the update results in an ambiguous match' do
-        before do
-          create_list(
-            :canonical_jewelry_item,
-            2,
-            name: 'Silver Jeweled Necklace',
-            unit_weight: 3.0,
-          )
-        end
+        before { create_list(:canonical_jewelry_item, 2, name: 'Silver Jeweled Necklace', unit_weight: 3.0) }
 
         it 'removes the associated canonical jewelry item' do
           item.name = 'silver jeweled necklace'
@@ -556,21 +421,10 @@ RSpec.describe JewelryItem, type: :model do
     let(:item) { create(:jewelry_item, name: 'Gold Diamond Ring') }
 
     context 'when there is a single matching canonical model' do
-      let!(:matching_canonical) do
-        create(
-          :canonical_jewelry_item,
-          :with_enchantments,
-          name: 'Gold Diamond Ring',
-        )
-      end
+      let!(:matching_canonical) { create(:canonical_jewelry_item, :with_enchantments, name: 'Gold Diamond Ring') }
 
       context "when the new item doesn't have its own enchantments" do
-        let(:item) do
-          build(
-            :jewelry_item,
-            name: 'Gold diamond ring',
-          )
-        end
+        let(:item) { build(:jewelry_item, name: 'Gold diamond ring') }
 
         it 'adds enchantments from the canonical model' do
           item.save!
@@ -579,17 +433,14 @@ RSpec.describe JewelryItem, type: :model do
 
         it 'sets "added_automatically" to true on new associations' do
           item.save!
-          expect(item.enchantables_enchantments.pluck(:added_automatically))
-            .to be_all(true)
+          expect(item.enchantables_enchantments.pluck(:added_automatically)).to be_all(true)
         end
 
         it 'sets the correct strengths', :aggregate_failures do
           item.save!
 
           matching_canonical.enchantables_enchantments.each do |join_model|
-            has_matching = item.enchantables_enchantments.any? do |model|
-              model.enchantment == join_model.enchantment && model.strength == join_model.strength
-            end
+            has_matching = item.enchantables_enchantments.any? {|model| model.enchantment == join_model.enchantment && model.strength == join_model.strength }
 
             expect(has_matching).to be true
           end
@@ -597,13 +448,7 @@ RSpec.describe JewelryItem, type: :model do
       end
 
       context 'when the new item has its own enchantments' do
-        let(:item) do
-          create(
-            :jewelry_item,
-            :with_enchantments,
-            name: 'Gold diamond ring',
-          )
-        end
+        let(:item) { create(:jewelry_item, :with_enchantments, name: 'Gold diamond ring') }
 
         it "doesn't remove the existing enchantments" do
           item.save!
@@ -613,21 +458,13 @@ RSpec.describe JewelryItem, type: :model do
         it 'sets "added_automatically" only on the new associations' do
           item.save!
 
-          expect(item.enchantables_enchantments.pluck(:added_automatically))
-            .to eq [true, true, false, false]
+          expect(item.enchantables_enchantments.pluck(:added_automatically)).to eq [true, true, false, false]
         end
       end
     end
 
     context 'when there are multiple matching canonical models' do
-      before do
-        create_list(
-          :canonical_jewelry_item,
-          2,
-          :with_enchantments,
-          name: 'Gold Diamond Ring',
-        )
-      end
+      before { create_list(:canonical_jewelry_item, 2, :with_enchantments, name: 'Gold Diamond Ring') }
 
       it "doesn't set enchantments" do
         expect(item.enchantables_enchantments.length).to eq 0

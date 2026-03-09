@@ -9,9 +9,7 @@ RSpec.describe Canonical::Sync::AlchemicalProperties do
   let(:json_path) { Rails.root.join('spec', 'support', 'fixtures', 'canonical', 'sync', 'alchemical_properties.json') }
   let!(:json_data) { File.read(json_path) }
 
-  before do
-    allow(File).to receive(:read).and_return(json_data)
-  end
+  before { allow(File).to receive(:read).and_return(json_data) }
 
   describe '::perform' do
     subject(:perform) { described_class.perform(preserve_existing_records) }
@@ -20,9 +18,7 @@ RSpec.describe Canonical::Sync::AlchemicalProperties do
       let(:preserve_existing_records) { false }
       let(:syncer) { described_class.new(preserve_existing_records) }
 
-      before do
-        allow(described_class).to receive(:new).and_return(syncer)
-      end
+      before { allow(described_class).to receive(:new).and_return(syncer) }
 
       it 'instantiates itself' do
         perform
@@ -68,9 +64,7 @@ RSpec.describe Canonical::Sync::AlchemicalProperties do
       let!(:property_in_json) { create(:alchemical_property, name: 'Cure Disease', strength_unit: 'percentage') }
       let!(:property_not_in_json) { create(:alchemical_property, name: 'Restore Health') }
 
-      before do
-        allow(described_class).to receive(:new).and_return(syncer)
-      end
+      before { allow(described_class).to receive(:new).and_return(syncer) }
 
       it 'instantiates itself' do
         perform
@@ -99,18 +93,12 @@ RSpec.describe Canonical::Sync::AlchemicalProperties do
       let(:preserve_existing_records) { false }
 
       context 'when an ActiveRecord::RecordInvalid error is raised' do
-        let(:errored_model) do
-          instance_double AlchemicalProperty,
-                          errors:,
-                          class: class_double(AlchemicalProperty, i18n_scope: :activerecord)
-        end
+        let(:errored_model) { instance_double AlchemicalProperty, errors:, class: class_double(AlchemicalProperty, i18n_scope: :activerecord) }
 
         let(:errors) { double('errors', full_messages: ["Name can't be blank"]) }
 
         before do
-          allow_any_instance_of(AlchemicalProperty)
-            .to receive(:save!)
-                  .and_raise(ActiveRecord::RecordInvalid, errored_model)
+          allow_any_instance_of(AlchemicalProperty).to receive(:save!).and_raise(ActiveRecord::RecordInvalid, errored_model)
           allow(Rails.logger).to receive(:error)
         end
 

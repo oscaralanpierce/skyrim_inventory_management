@@ -24,9 +24,7 @@ namespace :csv do
 
       headers = "name,description,strength_unit,effects_cumulative\n"
 
-      csv_data = CSV.generate(headers) do |csv|
-        json_data.each {|property| csv << property[:attributes].values }
-      end
+      csv_data = CSV.generate(headers) {|csv| json_data.each {|property| csv << property[:attributes].values } }
 
       File.write(csv_path, csv_data)
     end
@@ -66,8 +64,7 @@ namespace :csv do
 
       csv_data = CSV.generate(headers) do |csv|
         json_data.each do |item|
-          ingredients = item[:canonical_ingredients].pluck(:item_code)
-                          .join(',')
+          ingredients = item[:canonical_ingredients].pluck(:item_code).join(',')
           csv << [
             item.dig(:attributes, :title),
             item.dig(:attributes, :title_variants)&.join(';'),
@@ -97,11 +94,7 @@ namespace :csv do
       own_property_headers = json_data.first[:attributes].keys.map(&:to_s).join(',')
       headers = "#{own_property_headers},enchantment_names,enchantment_strengths\n"
 
-      csv_data = CSV.generate(headers) do |csv|
-        json_data.each do |item|
-          csv << item[:attributes].values + concatenate_values(item[:enchantments], :name, :strength)
-        end
-      end
+      csv_data = CSV.generate(headers) {|csv| json_data.each {|item| csv << item[:attributes].values + concatenate_values(item[:enchantments], :name, :strength) } }
 
       File.write(csv_path, csv_data)
     end
@@ -115,11 +108,7 @@ namespace :csv do
       own_property_headers = json_data.first[:attributes].keys.map(&:to_s).join(',')
       headers = "#{own_property_headers},alchemical_property_names,alchemical_property_priorities\n"
 
-      csv_data = CSV.generate(headers) do |csv|
-        json_data.each do |item|
-          csv << item[:attributes].values + concatenate_values(item[:alchemical_properties], :name, :priority)
-        end
-      end
+      csv_data = CSV.generate(headers) {|csv| json_data.each {|item| csv << item[:attributes].values + concatenate_values(item[:alchemical_properties], :name, :priority) } }
 
       File.write(csv_path, csv_data)
     end
@@ -133,11 +122,7 @@ namespace :csv do
       own_property_headers = json_data.first[:attributes].keys.map(&:to_s).join(',')
       headers = "#{own_property_headers},enchantment_names,enchantment_strengths,crafting_material_codes,crafting_material_quantities\n"
 
-      csv_data = CSV.generate(headers) do |csv|
-        json_data.each do |item|
-          csv << item[:attributes].values + concatenate_values(item[:enchantments], :name, :strength) + concatenate_values(item[:crafting_materials], :item_code, :quantity)
-        end
-      end
+      csv_data = CSV.generate(headers) {|csv| json_data.each {|item| csv << item[:attributes].values + concatenate_values(item[:enchantments], :name, :strength) + concatenate_values(item[:crafting_materials], :item_code, :quantity) } }
 
       File.write(csv_path, csv_data)
     end
@@ -150,9 +135,7 @@ namespace :csv do
 
       headers = "name,item_code,building_material,smithing_material,unit_weight\n"
 
-      csv_data = CSV.generate(headers) do |csv|
-        json_data.each {|property| csv << property[:attributes].values }
-      end
+      csv_data = CSV.generate(headers) {|csv| json_data.each {|property| csv << property[:attributes].values } }
 
       File.write(csv_path, csv_data)
     end
@@ -165,9 +148,7 @@ namespace :csv do
 
       headers = "name,hold,city,alchemy_lab_available,arcane_enchanter_available,forge_available\n"
 
-      csv_data = CSV.generate(headers) do |csv|
-        json_data.each {|property| csv << property[:attributes].values }
-      end
+      csv_data = CSV.generate(headers) {|csv| json_data.each {|property| csv << property[:attributes].values } }
 
       File.write(csv_path, csv_data)
     end
@@ -183,8 +164,7 @@ namespace :csv do
 
       csv_data = CSV.generate(headers) do |csv|
         json_data.each do |item|
-          power_names = item[:powers].pluck(:name)
-                          .join(',')
+          power_names = item[:powers].pluck(:name).join(',')
 
           csv << item[:attributes].values + concatenate_values(item[:spells], :name, :strength) + [power_names.empty? ? nil : power_names]
         end
@@ -244,9 +224,7 @@ namespace :csv do
 
       headers = "#{json_data.first[:attributes].keys.map(&:to_s).join(',')}\n"
 
-      csv_data = CSV.generate(headers) do |csv|
-        json_data.each {|power| csv << power[:attributes].values }
-      end
+      csv_data = CSV.generate(headers) {|csv| json_data.each {|power| csv << power[:attributes].values } }
 
       File.write(csv_path, csv_data)
     end
@@ -259,9 +237,7 @@ namespace :csv do
 
       headers = "#{json_data.first[:attributes].keys.map(&:to_s).join(',')}\n"
 
-      csv_data = CSV.generate(headers) do |csv|
-        json_data.each {|spell| csv << spell[:attributes].values }
-      end
+      csv_data = CSV.generate(headers) {|csv| json_data.each {|spell| csv << spell[:attributes].values } }
 
       File.write(csv_path, csv_data)
     end
@@ -294,11 +270,7 @@ namespace :csv do
       own_property_headers = json_data.first[:attributes].keys.map(&:to_s).join(',')
       headers = "#{own_property_headers},alchemical_property_names,alchemical_property_strengths,alchemical_property_durations\n"
 
-      csv_data = CSV.generate(headers) do |csv|
-        json_data.each do |item|
-          csv << item[:attributes].values + concatenate_values(item[:alchemical_properties], :name, :strength, :duration)
-        end
-      end
+      csv_data = CSV.generate(headers) {|csv| json_data.each {|item| csv << item[:attributes].values + concatenate_values(item[:alchemical_properties], :name, :strength, :duration) } }
 
       File.write(csv_path, csv_data)
     end

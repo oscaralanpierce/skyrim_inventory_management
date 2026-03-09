@@ -77,11 +77,7 @@ RSpec.describe Canonical::PotionsAlchemicalProperty, type: :model do
 
       context 'when there are fewer than 4' do
         before do
-          create_list(
-            :canonical_potions_alchemical_property,
-            3,
-            potion:,
-          )
+          create_list(:canonical_potions_alchemical_property, 3, potion:)
 
           potion.reload
         end
@@ -94,11 +90,7 @@ RSpec.describe Canonical::PotionsAlchemicalProperty, type: :model do
 
       context 'when there are already 4' do
         before do
-          create_list(
-            :canonical_potions_alchemical_property,
-            4,
-            potion:,
-          )
+          create_list(:canonical_potions_alchemical_property, 4, potion:)
 
           potion.reload
         end

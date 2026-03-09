@@ -3,12 +3,7 @@
 require 'rails_helper'
 
 RSpec.describe 'WishLists', type: :request do
-  let(:headers) do
-    {
-      'Content-Type' => 'application/json',
-      'Authorization' => 'Bearer xxxxxxx',
-    }
-  end
+  let(:headers) { { 'Content-Type' => 'application/json', 'Authorization' => 'Bearer xxxxxxx' } }
 
   describe 'POST games/:game_id/wish_lists' do
     subject(:create_wish_list) { post "/games/#{game.id}/wish_lists", params: { wish_list: {} }.to_json, headers: }
@@ -16,9 +11,7 @@ RSpec.describe 'WishLists', type: :request do
     context 'when authenticated' do
       let!(:user) { create(:authenticated_user) }
 
-      before do
-        stub_successful_login
-      end
+      before { stub_successful_login }
 
       context 'when all goes well' do
         let(:game) { create(:game, user:) }
@@ -41,9 +34,7 @@ RSpec.describe 'WishLists', type: :request do
         end
 
         context 'when only the new wish list has been created' do
-          before do
-            create(:wish_list, game:)
-          end
+          before { create(:wish_list, game:) }
 
           it 'creates one list' do
             expect { create_wish_list }
@@ -115,13 +106,7 @@ RSpec.describe 'WishLists', type: :request do
       end
 
       context 'when the params are invalid' do
-        subject(:create_wish_list) do
-          post "/games/#{game.id}/wish_lists",
-               params: {
-                 wish_list: { title: existing_list.title },
-               }.to_json,
-               headers:
-        end
+        subject(:create_wish_list) { post "/games/#{game.id}/wish_lists", params: { wish_list: { title: existing_list.title } }.to_json, headers: }
 
         let(:game) { create(:game, user:) }
         let(:existing_list) { create(:wish_list, game:) }
@@ -138,13 +123,7 @@ RSpec.describe 'WishLists', type: :request do
       end
 
       context 'when the client attempts to create an aggregate list' do
-        subject(:create_wish_list) do
-          post "/games/#{game.id}/wish_lists",
-               params: {
-                 wish_list: { aggregate: true },
-               }.to_json,
-               headers:
-        end
+        subject(:create_wish_list) { post "/games/#{game.id}/wish_lists", params: { wish_list: { aggregate: true } }.to_json, headers: }
 
         let(:game) { create(:game, user:) }
 
@@ -168,9 +147,7 @@ RSpec.describe 'WishLists', type: :request do
     context 'when unauthenticated' do
       let!(:game) { create(:game) }
 
-      before do
-        stub_unsuccessful_login
-      end
+      before { stub_unsuccessful_login }
 
       it "doesn't create a wish list" do
         expect { create_wish_list }
@@ -197,9 +174,7 @@ RSpec.describe 'WishLists', type: :request do
     context 'when authenticated' do
       let!(:user) { create(:authenticated_user) }
 
-      before do
-        stub_successful_login
-      end
+      before { stub_successful_login }
 
       context 'when all goes well' do
         let!(:wish_list) { create(:wish_list, game:) }
@@ -294,13 +269,7 @@ RSpec.describe 'WishLists', type: :request do
       end
 
       context 'when the params are invalid' do
-        subject(:update_wish_list) do
-          put "/wish_lists/#{list_id}",
-              params: {
-                wish_list: { title: other_list.title },
-              }.to_json,
-              headers:
-        end
+        subject(:update_wish_list) { put "/wish_lists/#{list_id}", params: { wish_list: { title: other_list.title } }.to_json, headers: }
 
         let!(:wish_list) { create(:wish_list, game:) }
         let(:game) { create(:game, user:) }
@@ -353,13 +322,7 @@ RSpec.describe 'WishLists', type: :request do
       end
 
       context 'when the client attempts to update an aggregate list' do
-        subject(:update_wish_list) do
-          put "/wish_lists/#{wish_list.id}",
-              params: {
-                wish_list: { title: 'Foo' },
-              }.to_json,
-              headers:
-        end
+        subject(:update_wish_list) { put "/wish_lists/#{wish_list.id}", params: { wish_list: { title: 'Foo' } }.to_json, headers: }
 
         let!(:wish_list) { create(:aggregate_wish_list, game:) }
         let(:game) { create(:game, user:) }
@@ -381,13 +344,7 @@ RSpec.describe 'WishLists', type: :request do
       end
 
       context 'when the client attempts to change a regular list to an aggregate list' do
-        subject(:update_wish_list) do
-          put "/wish_lists/#{wish_list.id}",
-              params: {
-                wish_list: { aggregate: true },
-              }.to_json,
-              headers:
-        end
+        subject(:update_wish_list) { put "/wish_lists/#{wish_list.id}", params: { wish_list: { aggregate: true } }.to_json, headers: }
 
         let!(:wish_list) { create(:wish_list, game:) }
         let(:game) { create(:game, user:) }
@@ -409,22 +366,12 @@ RSpec.describe 'WishLists', type: :request do
       end
 
       context 'when something unexpected goes wrong' do
-        subject(:update_wish_list) do
-          put "/wish_lists/#{wish_list.id}",
-              params: {
-                wish_list: { title: 'Some New Title' },
-              }.to_json,
-              headers:
-        end
+        subject(:update_wish_list) { put "/wish_lists/#{wish_list.id}", params: { wish_list: { title: 'Some New Title' } }.to_json, headers: }
 
         let!(:wish_list) { create(:wish_list, game:) }
         let(:game) { create(:game, user:) }
 
-        before do
-          allow_any_instance_of(User)
-            .to receive(:wish_lists)
-                  .and_raise(StandardError, 'Something went catastrophically wrong')
-        end
+        before { allow_any_instance_of(User).to receive(:wish_lists).and_raise(StandardError, 'Something went catastrophically wrong') }
 
         it 'returns status 500' do
           update_wish_list
@@ -442,9 +389,7 @@ RSpec.describe 'WishLists', type: :request do
       let!(:wish_list) { create(:wish_list) }
       let(:list_id) { wish_list.id }
 
-      before do
-        stub_unsuccessful_login
-      end
+      before { stub_unsuccessful_login }
 
       it "doesn't update the wish list" do
         expect { update_wish_list }
@@ -471,9 +416,7 @@ RSpec.describe 'WishLists', type: :request do
     context 'when authenticated' do
       let!(:user) { create(:authenticated_user) }
 
-      before do
-        stub_successful_login
-      end
+      before { stub_successful_login }
 
       context 'when all goes well' do
         let!(:wish_list) { create(:wish_list, game:) }
@@ -568,13 +511,7 @@ RSpec.describe 'WishLists', type: :request do
       end
 
       context 'when the params are invalid' do
-        subject(:update_wish_list) do
-          patch "/wish_lists/#{list_id}",
-                params: {
-                  wish_list: { title: other_list.title },
-                }.to_json,
-                headers:
-        end
+        subject(:update_wish_list) { patch "/wish_lists/#{list_id}", params: { wish_list: { title: other_list.title } }.to_json, headers: }
 
         let!(:wish_list) { create(:wish_list, game:) }
         let(:game) { create(:game, user:) }
@@ -627,11 +564,7 @@ RSpec.describe 'WishLists', type: :request do
       end
 
       context 'when the client attempts to update an aggregate list' do
-        subject(:update_wish_list) do
-          patch "/wish_lists/#{wish_list.id}",
-                params: { wish_list: { title: 'Foo' } }.to_json,
-                headers:
-        end
+        subject(:update_wish_list) { patch "/wish_lists/#{wish_list.id}", params: { wish_list: { title: 'Foo' } }.to_json, headers: }
 
         let!(:wish_list) { create(:aggregate_wish_list, game:) }
         let(:game) { create(:game, user:) }
@@ -653,11 +586,7 @@ RSpec.describe 'WishLists', type: :request do
       end
 
       context 'when the client attempts to change a regular list to an aggregate list' do
-        subject(:update_wish_list) do
-          patch "/wish_lists/#{wish_list.id}",
-                params: { wish_list: { aggregate: true } }.to_json,
-                headers:
-        end
+        subject(:update_wish_list) { patch "/wish_lists/#{wish_list.id}", params: { wish_list: { aggregate: true } }.to_json, headers: }
 
         let!(:wish_list) { create(:wish_list, game:) }
         let(:game) { create(:game, user:) }
@@ -679,20 +608,12 @@ RSpec.describe 'WishLists', type: :request do
       end
 
       context 'when something unexpected goes wrong' do
-        subject(:update_wish_list) do
-          patch "/wish_lists/#{wish_list.id}",
-                params: { wish_list: { title: 'Some New Title' } }.to_json,
-                headers:
-        end
+        subject(:update_wish_list) { patch "/wish_lists/#{wish_list.id}", params: { wish_list: { title: 'Some New Title' } }.to_json, headers: }
 
         let!(:wish_list) { create(:wish_list, game:) }
         let(:game) { create(:game, user:) }
 
-        before do
-          allow_any_instance_of(User)
-            .to receive(:wish_lists)
-                  .and_raise(StandardError, 'Something went catastrophically wrong')
-        end
+        before { allow_any_instance_of(User).to receive(:wish_lists).and_raise(StandardError, 'Something went catastrophically wrong') }
 
         it 'returns status 500' do
           update_wish_list
@@ -710,9 +631,7 @@ RSpec.describe 'WishLists', type: :request do
       let!(:wish_list) { create(:wish_list) }
       let(:list_id) { wish_list.id }
 
-      before do
-        stub_unsuccessful_login
-      end
+      before { stub_unsuccessful_login }
 
       it "doesn't update the wish list" do
         expect { update_wish_list }
@@ -737,9 +656,7 @@ RSpec.describe 'WishLists', type: :request do
     context 'when authenticated' do
       let!(:user) { create(:authenticated_user) }
 
-      before do
-        stub_successful_login
-      end
+      before { stub_successful_login }
 
       context 'when the game is not found' do
         let(:game) { double(id: 491_349_759) }
@@ -801,9 +718,7 @@ RSpec.describe 'WishLists', type: :request do
     context 'when unauthenticated' do
       let!(:game) { create(:game) }
 
-      before do
-        stub_unsuccessful_login
-      end
+      before { stub_unsuccessful_login }
 
       it 'returns status 401' do
         get_index
@@ -824,9 +739,7 @@ RSpec.describe 'WishLists', type: :request do
       let!(:user) { create(:authenticated_user) }
       let(:game) { create(:game, user:) }
 
-      before do
-        stub_successful_login
-      end
+      before { stub_successful_login }
 
       context 'when the wish list exists' do
         let!(:wish_list) { create(:wish_list, game:) }
@@ -835,11 +748,7 @@ RSpec.describe 'WishLists', type: :request do
         context "when this is the game's last regular wish list" do
           let!(:aggregate_list_id) { game.aggregate_wish_list.id }
 
-          let(:expected_response_body) do
-            {
-              deleted: [aggregate_list_id, wish_list_id],
-            }.to_json
-          end
+          let(:expected_response_body) { { deleted: [aggregate_list_id, wish_list_id] }.to_json }
 
           it 'deletes the wish list and the aggregate list' do
             expect { delete_wish_list }
@@ -858,16 +767,9 @@ RSpec.describe 'WishLists', type: :request do
         end
 
         context "when this is not the game's last regular wish list" do
-          let(:expected_response_body) do
-            {
-              'deleted': [wish_list_id],
-              'aggregate': game.aggregate_wish_list,
-            }.to_json
-          end
+          let(:expected_response_body) { { 'deleted': [wish_list_id], 'aggregate': game.aggregate_wish_list }.to_json }
 
-          before do
-            create(:wish_list, game:)
-          end
+          before { create(:wish_list, game:) }
 
           it 'deletes the requested wish list' do
             expect { delete_wish_list }
@@ -942,9 +844,7 @@ RSpec.describe 'WishLists', type: :request do
     context 'when unauthenticated' do
       let!(:wish_list) { create(:wish_list) }
 
-      before do
-        stub_unsuccessful_login
-      end
+      before { stub_unsuccessful_login }
 
       it "doesn't destroy the wish list" do
         expect { delete_wish_list }

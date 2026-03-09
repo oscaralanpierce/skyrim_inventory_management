@@ -47,9 +47,7 @@ RSpec.describe GamesController::CreateService do
   context 'when something unexpected goes wrong' do
     let(:params) { { name: 'My Game' } }
 
-    before do
-      allow_any_instance_of(Game).to receive(:save).and_raise(StandardError, 'Something has gone horribly wrong')
-    end
+    before { allow_any_instance_of(Game).to receive(:save).and_raise(StandardError, 'Something has gone horribly wrong') }
 
     it 'returns a Service::InternalServerErrorResult' do
       expect(perform).to be_a(Service::InternalServerErrorResult)

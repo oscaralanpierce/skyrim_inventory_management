@@ -3,12 +3,7 @@
 require 'rails_helper'
 
 RSpec.describe 'Games', type: :request do
-  let(:headers) do
-    {
-      'Content-Type' => 'application/json',
-      'Authorization' => 'Bearer xxxxxxx',
-    }
-  end
+  let(:headers) { { 'Content-Type' => 'application/json', 'Authorization' => 'Bearer xxxxxxx' } }
 
   describe 'GET /games' do
     subject(:get_games) { get '/games', headers: }
@@ -16,9 +11,7 @@ RSpec.describe 'Games', type: :request do
     context 'when authenticated' do
       let!(:user) { create(:authenticated_user) }
 
-      before do
-        stub_successful_login
-      end
+      before { stub_successful_login }
 
       context 'when the user has no games' do
         it 'returns status 200' do
@@ -50,9 +43,7 @@ RSpec.describe 'Games', type: :request do
       end
 
       context 'when something unexpected goes wrong' do
-        before do
-          allow_any_instance_of(User).to receive(:games).and_raise(StandardError, 'Something went horribly wrong')
-        end
+        before { allow_any_instance_of(User).to receive(:games).and_raise(StandardError, 'Something went horribly wrong') }
 
         it 'returns status 500' do
           get_games
@@ -90,9 +81,7 @@ RSpec.describe 'Games', type: :request do
     context 'when authenticated' do
       let!(:user) { create(:authenticated_user) }
 
-      before do
-        stub_successful_login
-      end
+      before { stub_successful_login }
 
       context 'when all goes well' do
         let(:params) { { game: { name: 'My Game' } }.to_json }
@@ -135,9 +124,7 @@ RSpec.describe 'Games', type: :request do
       context 'when something unexpected goes wrong' do
         let(:params) { { name: 'My Game' }.to_json }
 
-        before do
-          allow_any_instance_of(Game).to receive(:save).and_raise(StandardError, 'Something has gone horribly wrong')
-        end
+        before { allow_any_instance_of(Game).to receive(:save).and_raise(StandardError, 'Something has gone horribly wrong') }
 
         it 'returns a 500 status' do
           create_game
@@ -156,9 +143,7 @@ RSpec.describe 'Games', type: :request do
       let!(:game) { create(:game, user:) }
       let(:params) { { game: { name: 'Skyrim Game 1' } } }
 
-      before do
-        stub_unsuccessful_login
-      end
+      before { stub_unsuccessful_login }
 
       it "doesn't create a game" do
         expect { create_game }
@@ -183,9 +168,7 @@ RSpec.describe 'Games', type: :request do
     context 'when authenticated' do
       let!(:user) { create(:authenticated_user) }
 
-      before do
-        stub_successful_login
-      end
+      before { stub_successful_login }
 
       context 'when all goes well' do
         let(:game) { create(:game, user:) }
@@ -264,9 +247,7 @@ RSpec.describe 'Games', type: :request do
         let(:game) { create(:game, user:) }
         let(:params) { { game: { description: 'New description' } }.to_json }
 
-        before do
-          allow_any_instance_of(Game).to receive(:update).and_raise(StandardError, 'Something went horribly wrong')
-        end
+        before { allow_any_instance_of(Game).to receive(:update).and_raise(StandardError, 'Something went horribly wrong') }
 
         it 'returns a 500 status' do
           update_game
@@ -285,9 +266,7 @@ RSpec.describe 'Games', type: :request do
       let!(:game) { create(:game, user:) }
       let(:params) { { game: { name: 'Changed Name' } } }
 
-      before do
-        stub_unsuccessful_login
-      end
+      before { stub_unsuccessful_login }
 
       it "doesn't update the game" do
         update_game
@@ -312,9 +291,7 @@ RSpec.describe 'Games', type: :request do
     context 'when authenticated' do
       let!(:user) { create(:authenticated_user) }
 
-      before do
-        stub_successful_login
-      end
+      before { stub_successful_login }
 
       context 'when all goes well' do
         let(:game) { create(:game, user:) }
@@ -393,9 +370,7 @@ RSpec.describe 'Games', type: :request do
         let(:game) { create(:game, user:) }
         let(:params) { { game: { description: 'New description' } }.to_json }
 
-        before do
-          allow_any_instance_of(Game).to receive(:update).and_raise(StandardError, 'Something went horribly wrong')
-        end
+        before { allow_any_instance_of(Game).to receive(:update).and_raise(StandardError, 'Something went horribly wrong') }
 
         it 'returns a 500 status' do
           update_game
@@ -414,9 +389,7 @@ RSpec.describe 'Games', type: :request do
       let(:user) { create(:authenticated_user) }
       let(:params) { { game: { name: 'Changed Name' } } }
 
-      before do
-        stub_unsuccessful_login
-      end
+      before { stub_unsuccessful_login }
 
       it "doesn't update the game" do
         update_game
@@ -441,9 +414,7 @@ RSpec.describe 'Games', type: :request do
     context 'when authenticated' do
       let!(:user) { create(:authenticated_user) }
 
-      before do
-        stub_successful_login
-      end
+      before { stub_successful_login }
 
       context 'when all goes well' do
         let!(:game) { create(:game, user:) }
@@ -495,9 +466,7 @@ RSpec.describe 'Games', type: :request do
       context 'when something unexpected goes wrong' do
         let!(:game) { create(:game, user:) }
 
-        before do
-          allow_any_instance_of(Game).to receive(:destroy!).and_raise(StandardError, 'Something went horribly wrong')
-        end
+        before { allow_any_instance_of(Game).to receive(:destroy!).and_raise(StandardError, 'Something went horribly wrong') }
 
         it 'returns status 500' do
           destroy_game
@@ -515,9 +484,7 @@ RSpec.describe 'Games', type: :request do
       let!(:user) { create(:authenticated_user) }
       let!(:game) { create(:game, user:) }
 
-      before do
-        stub_unsuccessful_login
-      end
+      before { stub_unsuccessful_login }
 
       it "doesn't destroy the game" do
         expect { destroy_game }

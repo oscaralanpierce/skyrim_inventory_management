@@ -1,26 +1,13 @@
 # frozen_string_literal: true
 
 class Weapon < EnchantableInGameItem
-  belongs_to :canonical_weapon,
-             optional: true,
-             class_name: 'Canonical::Weapon',
-             inverse_of: :weapons
+  belongs_to :canonical_weapon, optional: true, class_name: 'Canonical::Weapon', inverse_of: :weapons
 
   validates :name, presence: true
 
-  validates :category,
-            inclusion: {
-              in: Canonical::Weapon::VALID_WEAPON_TYPES.keys,
-              message: 'must be "one-handed", "two-handed", or "archery"',
-              allow_blank: true,
-            }
+  validates :category, inclusion: { in: Canonical::Weapon::VALID_WEAPON_TYPES.keys, message: 'must be "one-handed", "two-handed", or "archery"', allow_blank: true }
 
-  validates :weapon_type,
-            inclusion: {
-              in: Canonical::Weapon::VALID_WEAPON_TYPES.values.flatten,
-              message: 'must be a valid type of weapon that occurs in Skyrim',
-              allow_blank: true,
-            }
+  validates :weapon_type, inclusion: { in: Canonical::Weapon::VALID_WEAPON_TYPES.values.flatten, message: 'must be a valid type of weapon that occurs in Skyrim', allow_blank: true }
 
   DOES_NOT_MATCH = "doesn't match a weapon that exists in Skyrim"
   DUPLICATE_MATCH = 'is a duplicate of a unique in-game item'
@@ -86,10 +73,6 @@ class Weapon < EnchantableInGameItem
   end
 
   def attributes_to_match
-    {
-      unit_weight:,
-      category:,
-      weapon_type:,
-    }.compact
+    { unit_weight:, category:, weapon_type: }.compact
   end
 end

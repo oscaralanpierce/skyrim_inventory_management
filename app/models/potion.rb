@@ -2,10 +2,7 @@
 
 class Potion < ApplicationRecord
   belongs_to :game
-  belongs_to :canonical_potion,
-             optional: true,
-             class_name: 'Canonical::Potion',
-             inverse_of: :potions
+  belongs_to :canonical_potion, optional: true, class_name: 'Canonical::Potion', inverse_of: :potions
 
   has_many :potions_alchemical_properties, dependent: :destroy, inverse_of: :potion
   has_many :alchemical_properties, through: :potions_alchemical_properties
@@ -33,12 +30,7 @@ class Potion < ApplicationRecord
 
     return canonicals if canonicals.blank? || alchemical_properties.none?
 
-    ids = canonicals
-            .joins(:canonical_potions_alchemical_properties)
-            .where(association_query)
-            .group('canonical_potions.id')
-            .having('COUNT(*) >= ?', potions_alchemical_properties.added_manually.length)
-            .ids
+    ids = canonicals.joins(:canonical_potions_alchemical_properties).where(association_query).group('canonical_potions.id').having('COUNT(*) >= ?', potions_alchemical_properties.added_manually.length).ids
 
     Canonical::Potion.where(id: ids)
   end
@@ -96,34 +88,15 @@ class Potion < ApplicationRecord
 
     remove_automatically_added_alchemical_properties!
 
-    canonical_model.canonical_potions_alchemical_properties.each do |join_model|
-      potions_alchemical_properties.find_or_create_by!(
-        alchemical_property_id: join_model.alchemical_property_id,
-        strength: join_model.strength,
-        duration: join_model.duration,
-      ) {|new_model| new_model.added_automatically = true }
-    end
+    canonical_model.canonical_potions_alchemical_properties.each {|join_model| potions_alchemical_properties.find_or_create_by!(alchemical_property_id: join_model.alchemical_property_id, strength: join_model.strength, duration: join_model.duration) {|new_model| new_model.added_automatically = true } }
   end
 
   def canonical_has_matching_property?(join_model)
-    canonical_model
-      .canonical_potions_alchemical_properties
-      .find_by(
-        alchemical_property_id: join_model.alchemical_property_id,
-        strength: join_model.strength,
-        duration: join_model.duration,
-      )
-      .present?
+    canonical_model.canonical_potions_alchemical_properties.find_by(alchemical_property_id: join_model.alchemical_property_id, strength: join_model.strength, duration: join_model.duration).present?
   end
 
   def association_query
-    properties_to_match = potions_alchemical_properties.added_manually.map do |prop|
-      {
-        strength: prop.strength,
-        duration: prop.duration,
-        alchemical_property_id: prop.alchemical_property_id,
-      }
-    end
+    properties_to_match = potions_alchemical_properties.added_manually.map {|prop| { strength: prop.strength, duration: prop.duration, alchemical_property_id: prop.alchemical_property_id } }
 
     conditions = properties_to_match.map do |prop|
       strength_condition = if prop[:strength].nil?
@@ -138,11 +111,7 @@ class Potion < ApplicationRecord
                              "canonical_potions_alchemical_properties.duration = #{prop[:duration]}"
                            end
 
-      conditions_array = [
-        strength_condition,
-        duration_condition,
-        "canonical_potions_alchemical_properties.alchemical_property_id = #{prop[:alchemical_property_id]}",
-      ]
+      conditions_array = [strength_condition, duration_condition, "canonical_potions_alchemical_properties.alchemical_property_id = #{prop[:alchemical_property_id]}"]
 
       "(#{conditions_array.join(' AND ')})"
     end
@@ -160,9 +129,7 @@ class Potion < ApplicationRecord
 
   def player_created_potion_names
     @player_created_potion_names ||= begin
-      strings = AlchemicalProperty.pluck(:effect_type, :name).map do |effect_type, name|
-        "#{effect_type} of #{name.downcase}"
-      end
+      strings = AlchemicalProperty.pluck(:effect_type, :name).map {|effect_type, name| "#{effect_type} of #{name.downcase}" }
 
       strings.uniq
     end

@@ -3,17 +3,10 @@
 require 'rails_helper'
 
 RSpec.describe 'WishListItems', type: :request do
-  let(:headers) do
-    {
-      'Content-Type' => 'application/json',
-      'Authorization' => 'Bearer xxxxxxx',
-    }
-  end
+  let(:headers) { { 'Content-Type' => 'application/json', 'Authorization' => 'Bearer xxxxxxx' } }
 
   describe 'POST /wish_lists/:wish_list_id/wish_list_items' do
-    subject(:create_item) do
-      post "/wish_lists/#{wish_list.id}/wish_list_items", params:, headers:
-    end
+    subject(:create_item) { post "/wish_lists/#{wish_list.id}/wish_list_items", params:, headers: }
 
     let!(:user) { create(:authenticated_user) }
     let(:game) { create(:game, user:) }
@@ -21,9 +14,7 @@ RSpec.describe 'WishListItems', type: :request do
     let!(:wish_list) { create(:wish_list, aggregate_list:, game:) }
 
     context 'when authenticated' do
-      before do
-        stub_successful_login
-      end
+      before { stub_successful_login }
 
       context 'when all goes well' do
         let(:params) { { wish_list_item: { description: 'Corundum ingot', quantity: 5, notes: 'To make locks' } }.to_json }
@@ -140,12 +131,7 @@ RSpec.describe 'WishListItems', type: :request do
 
               it 'returns all changed wish lists for the same game' do
                 create_item
-                expect(response.body).to eq(
-                  game
-                    .wish_lists
-                    .where(id: [aggregate_list.id, wish_list.id, other_list.id])
-                    .to_json,
-                )
+                expect(response.body).to eq(game.wish_lists.where(id: [aggregate_list.id, wish_list.id, other_list.id]).to_json)
               end
             end
           end
@@ -225,12 +211,7 @@ RSpec.describe 'WishListItems', type: :request do
 
             it 'returns all changed wish lists for the same game' do
               create_item
-              expect(response.body).to eq(
-                game
-                  .wish_lists
-                  .where(id: [aggregate_list.id, wish_list.id, other_list.id])
-                  .to_json,
-              )
+              expect(response.body).to eq(game.wish_lists.where(id: [aggregate_list.id, wish_list.id, other_list.id]).to_json)
             end
           end
         end
@@ -306,19 +287,14 @@ RSpec.describe 'WishListItems', type: :request do
 
         it 'returns the error' do
           create_item
-          expect(JSON.parse(response.body))
-            .to eq({ 'errors' => ['Cannot manually manage items on an aggregate wish list'] })
+          expect(JSON.parse(response.body)).to eq({ 'errors' => ['Cannot manually manage items on an aggregate wish list'] })
         end
       end
 
       context 'when something unexpected goes wrong' do
         let(:params) { { wish_list_item: { description: 'Corundum ingot', quantity: 4 } }.to_json }
 
-        before do
-          allow(WishList)
-            .to receive(:find)
-                  .and_raise(StandardError.new('Something went horribly wrong'))
-        end
+        before { allow(WishList).to receive(:find).and_raise(StandardError.new('Something went horribly wrong')) }
 
         it 'returns status 500' do
           create_item
@@ -335,9 +311,7 @@ RSpec.describe 'WishListItems', type: :request do
     context 'when unauthenticated' do
       let(:params) { { wish_list_item: { description: 'Dwarven Metal Ingot', quantity: 1 } } }
 
-      before do
-        stub_unsuccessful_login
-      end
+      before { stub_unsuccessful_login }
 
       it "doesn't create a wish list item" do
         expect { create_item }
@@ -365,9 +339,7 @@ RSpec.describe 'WishListItems', type: :request do
     let!(:wish_list) { create(:wish_list, game:, aggregate_list:) }
 
     context 'when authenticated' do
-      before do
-        stub_successful_login
-      end
+      before { stub_successful_login }
 
       context 'when all goes well' do
         context 'when there is no matching item on another list' do
@@ -375,9 +347,7 @@ RSpec.describe 'WishListItems', type: :request do
           let(:aggregate_list_item) { aggregate_list.list_items.first }
           let(:params) { { wish_list_item: { description: 'Dwarven metal ingot', quantity: 10 } }.to_json }
 
-          before do
-            aggregate_list.add_item_from_child_list(list_item)
-          end
+          before { aggregate_list.add_item_from_child_list(list_item) }
 
           it 'updates the list item' do
             update_item
@@ -703,9 +673,7 @@ RSpec.describe 'WishListItems', type: :request do
 
         before do
           aggregate_list.add_item_from_child_list(list_item)
-          allow_any_instance_of(WishList)
-            .to receive(:aggregate)
-                  .and_raise(StandardError.new('Something went horribly wrong'))
+          allow_any_instance_of(WishList).to receive(:aggregate).and_raise(StandardError.new('Something went horribly wrong'))
         end
 
         it 'returns status 500' do
@@ -724,9 +692,7 @@ RSpec.describe 'WishListItems', type: :request do
       let!(:list_item) { create(:wish_list_item, list: wish_list) }
       let(:params) { { wish_list_item: { quantity: 16 } } }
 
-      before do
-        stub_unsuccessful_login
-      end
+      before { stub_unsuccessful_login }
 
       it "doesn't update the wish list item" do
         expect { update_item }
@@ -754,9 +720,7 @@ RSpec.describe 'WishListItems', type: :request do
     let!(:wish_list) { create(:wish_list, game:, aggregate_list:) }
 
     context 'when authenticated' do
-      before do
-        stub_successful_login
-      end
+      before { stub_successful_login }
 
       context 'when all goes well' do
         context 'when there is no matching item on another list' do
@@ -764,9 +728,7 @@ RSpec.describe 'WishListItems', type: :request do
           let(:aggregate_list_item) { aggregate_list.list_items.first }
           let(:params) { { wish_list_item: { description: 'Dwarven metal ingot', quantity: 10 } }.to_json }
 
-          before do
-            aggregate_list.add_item_from_child_list(list_item)
-          end
+          before { aggregate_list.add_item_from_child_list(list_item) }
 
           it 'updates the list item' do
             update_item
@@ -1092,9 +1054,7 @@ RSpec.describe 'WishListItems', type: :request do
 
         before do
           aggregate_list.add_item_from_child_list(list_item)
-          allow_any_instance_of(WishList)
-            .to receive(:aggregate)
-                  .and_raise(StandardError.new('Something went horribly wrong'))
+          allow_any_instance_of(WishList).to receive(:aggregate).and_raise(StandardError.new('Something went horribly wrong'))
         end
 
         it 'returns status 500' do
@@ -1113,9 +1073,7 @@ RSpec.describe 'WishListItems', type: :request do
       let!(:list_item) { create(:wish_list_item, list: wish_list) }
       let(:params) { { wish_list_item: { quantity: 16 } } }
 
-      before do
-        stub_unsuccessful_login
-      end
+      before { stub_unsuccessful_login }
 
       it "doesn't update the wish list item" do
         expect { update_item }
@@ -1143,16 +1101,12 @@ RSpec.describe 'WishListItems', type: :request do
       let!(:wish_list) { create(:wish_list, game:, aggregate_list:) }
       let(:game) { create(:game, user:) }
 
-      before do
-        stub_successful_login
-      end
+      before { stub_successful_login }
 
       context 'when all goes well' do
         let(:list_item) { create(:wish_list_item, list: wish_list, quantity: 3, notes: 'foo') }
 
-        before do
-          aggregate_list.add_item_from_child_list(list_item)
-        end
+        before { aggregate_list.add_item_from_child_list(list_item) }
 
         context 'when the quantity on the regular list equals that on the aggregate list' do
           it 'destroys the item on the regular list' do
@@ -1204,19 +1158,9 @@ RSpec.describe 'WishListItems', type: :request do
         context 'when the quantity on the aggregate list exceeds that on the regular list' do
           let(:second_list) { create(:wish_list, game:) }
 
-          let(:second_item) do
-            create(
-              :wish_list_item,
-              list: second_list,
-              description: list_item.description,
-              quantity: 2,
-              notes: 'bar',
-            )
-          end
+          let(:second_item) { create(:wish_list_item, list: second_list, description: list_item.description, quantity: 2, notes: 'bar') }
 
-          before do
-            aggregate_list.add_item_from_child_list(second_item)
-          end
+          before { aggregate_list.add_item_from_child_list(second_item) }
 
           it 'destroys the item on the regular list' do
             destroy_item
@@ -1315,11 +1259,7 @@ RSpec.describe 'WishListItems', type: :request do
       context 'when something unexpected goes wrong' do
         let!(:list_item) { create(:wish_list_item, list: wish_list) }
 
-        before do
-          allow_any_instance_of(WishList)
-            .to receive(:aggregate)
-                  .and_raise(StandardError.new('Something went horribly wrong'))
-        end
+        before { allow_any_instance_of(WishList).to receive(:aggregate).and_raise(StandardError.new('Something went horribly wrong')) }
 
         it 'returns status 500' do
           destroy_item
@@ -1336,9 +1276,7 @@ RSpec.describe 'WishListItems', type: :request do
     context 'when unauthenticated' do
       let!(:list_item) { create(:wish_list_item) }
 
-      before do
-        stub_unsuccessful_login
-      end
+      before { stub_unsuccessful_login }
 
       it "doesn't destroy the list item" do
         expect { destroy_item }

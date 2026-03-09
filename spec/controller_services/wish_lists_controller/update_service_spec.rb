@@ -123,11 +123,7 @@ RSpec.describe WishListsController::UpdateService do
       let(:game) { create(:game, user:) }
       let(:params) { { title: 'New Title' } }
 
-      before do
-        allow_any_instance_of(WishList)
-          .to receive(:update)
-                .and_raise(StandardError, 'Something went horribly wrong')
-      end
+      before { allow_any_instance_of(WishList).to receive(:update).and_raise(StandardError, 'Something went horribly wrong') }
 
       it 'returns a Service::InternalServerErrorResult' do
         expect(perform).to be_a(Service::InternalServerErrorResult)

@@ -13,13 +13,9 @@ FactoryBot.define do
     end
 
     factory :inventory_list_with_list_items do
-      transient do
-        list_item_count { 2 }
-      end
+      transient { list_item_count { 2 } }
 
-      after(:create) do |list, evaluator|
-        create_list(:inventory_item, evaluator.list_item_count, list:)
-      end
+      after(:create) {|list, evaluator| create_list(:inventory_item, evaluator.list_item_count, list:) }
     end
   end
 end

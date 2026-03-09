@@ -4,28 +4,10 @@ class PotionsAlchemicalProperty < ApplicationRecord
   belongs_to :potion
   belongs_to :alchemical_property
 
-  validates :alchemical_property_id,
-            uniqueness: {
-              scope: :potion_id,
-              message: 'must form a unique combination with potion',
-            }
-  validates :strength,
-            numericality: {
-              greater_than: 0,
-              only_integer: true,
-              allow_nil: true,
-            }
-  validates :duration,
-            numericality: {
-              greater_than: 0,
-              only_integer: true,
-              allow_nil: true,
-            }
-  validates :added_automatically,
-            inclusion: {
-              in: [true, false],
-              message: 'must be true or false',
-            }
+  validates :alchemical_property_id, uniqueness: { scope: :potion_id, message: 'must form a unique combination with potion' }
+  validates :strength, numericality: { greater_than: 0, only_integer: true, allow_nil: true }
+  validates :duration, numericality: { greater_than: 0, only_integer: true, allow_nil: true }
+  validates :added_automatically, inclusion: { in: [true, false], message: 'must be true or false' }
 
   validate :ensure_max_per_potion
 
@@ -56,9 +38,6 @@ class PotionsAlchemicalProperty < ApplicationRecord
       !potion_id_changed? &&
       potion.alchemical_properties.length == MAX_PER_POTION
 
-    errors.add(
-      :potion,
-      "can have a maximum of #{MAX_PER_POTION} effects",
-    )
+    errors.add(:potion, "can have a maximum of #{MAX_PER_POTION} effects")
   end
 end

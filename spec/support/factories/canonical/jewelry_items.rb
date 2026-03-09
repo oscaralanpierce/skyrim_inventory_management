@@ -15,20 +15,11 @@ FactoryBot.define do
     quest_reward { false }
 
     trait :with_crafting_materials do
-      after(:create) do |model|
-        create_list(
-          :canonical_material,
-          2,
-          craftable: model,
-          quantity: 1,
-        )
-      end
+      after(:create) {|model| create_list(:canonical_material, 2, craftable: model, quantity: 1) }
     end
 
     trait :with_enchantments do
-      after(:create) do |model|
-        create_list(:enchantables_enchantment, 2, :with_strength, enchantable: model)
-      end
+      after(:create) {|model| create_list(:enchantables_enchantment, 2, :with_strength, enchantable: model) }
     end
   end
 end

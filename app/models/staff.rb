@@ -1,10 +1,7 @@
 # frozen_string_literal: true
 
 class Staff < InGameItem
-  belongs_to :canonical_staff,
-             optional: true,
-             class_name: 'Canonical::Staff',
-             inverse_of: :staves
+  belongs_to :canonical_staff, optional: true, class_name: 'Canonical::Staff', inverse_of: :staves
 
   validates :name, presence: true
 

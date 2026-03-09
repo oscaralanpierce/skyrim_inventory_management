@@ -60,9 +60,7 @@ RSpec.describe GamesController::DestroyService do
       let!(:user) { create(:user) }
       let!(:game) { create(:game, user:) }
 
-      before do
-        allow_any_instance_of(Game).to receive(:destroy!).and_raise(StandardError, 'Something went horribly wrong')
-      end
+      before { allow_any_instance_of(Game).to receive(:destroy!).and_raise(StandardError, 'Something went horribly wrong') }
 
       it 'returns a Service::InternalServerErrorResult' do
         expect(perform).to be_a(Service::InternalServerErrorResult)

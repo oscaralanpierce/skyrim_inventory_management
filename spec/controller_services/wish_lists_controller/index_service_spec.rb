@@ -66,9 +66,7 @@ RSpec.describe WishListsController::IndexService do
       let(:game) { create(:game, user:) }
       let(:game_id) { game.id }
 
-      before do
-        allow_any_instance_of(Game).to receive(:wish_lists).and_raise(StandardError, 'Something went horribly wrong')
-      end
+      before { allow_any_instance_of(Game).to receive(:wish_lists).and_raise(StandardError, 'Something went horribly wrong') }
 
       it 'returns a Service::InternalServerErrorResult' do
         expect(perform).to be_a(Service::InternalServerErrorResult)

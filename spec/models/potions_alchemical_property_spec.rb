@@ -8,18 +8,11 @@ RSpec.describe PotionsAlchemicalProperty, type: :model do
 
     describe 'unique combination of potion and alchemical property' do
       let(:model) { create(:potions_alchemical_property) }
-      let(:non_unique_model) do
-        build(
-          :potions_alchemical_property,
-          potion: model.potion,
-          alchemical_property: model.alchemical_property,
-        )
-      end
+      let(:non_unique_model) { build(:potions_alchemical_property, potion: model.potion, alchemical_property: model.alchemical_property) }
 
       it 'is invalid with a non-unique combination of potion and alchemical property' do
         non_unique_model.validate
-        expect(non_unique_model.errors[:alchemical_property_id])
-          .to include 'must form a unique combination with potion'
+        expect(non_unique_model.errors[:alchemical_property_id]).to include 'must form a unique combination with potion'
       end
     end
 
@@ -35,24 +28,21 @@ RSpec.describe PotionsAlchemicalProperty, type: :model do
         model.strength = 'foobar'
         model.validate
 
-        expect(model.errors[:strength])
-          .to include 'is not a number'
+        expect(model.errors[:strength]).to include 'is not a number'
       end
 
       it 'is invalid with a non-integer strength' do
         model.strength = 2.3
         model.validate
 
-        expect(model.errors[:strength])
-          .to include 'must be an integer'
+        expect(model.errors[:strength]).to include 'must be an integer'
       end
 
       it 'is invalid with a strength of 0 or less' do
         model.strength = -1
         model.validate
 
-        expect(model.errors[:strength])
-          .to include 'must be greater than 0'
+        expect(model.errors[:strength]).to include 'must be greater than 0'
       end
     end
 
@@ -68,24 +58,21 @@ RSpec.describe PotionsAlchemicalProperty, type: :model do
         model.duration = 'foobar'
         model.validate
 
-        expect(model.errors[:duration])
-          .to include 'is not a number'
+        expect(model.errors[:duration]).to include 'is not a number'
       end
 
       it 'is invalid with a non-integer duration' do
         model.duration = 2.3
         model.validate
 
-        expect(model.errors[:duration])
-          .to include 'must be an integer'
+        expect(model.errors[:duration]).to include 'must be an integer'
       end
 
       it 'is invalid with a duration of 0 or less' do
         model.duration = -1
         model.validate
 
-        expect(model.errors[:duration])
-          .to include 'must be greater than 0'
+        expect(model.errors[:duration]).to include 'must be greater than 0'
       end
     end
 
@@ -131,11 +118,7 @@ RSpec.describe PotionsAlchemicalProperty, type: :model do
 
       context 'when the potion has fewer than 4 effects' do
         before do
-          create_list(
-            :potions_alchemical_property,
-            3,
-            potion:,
-          )
+          create_list(:potions_alchemical_property, 3, potion:)
 
           potion.reload
         end
@@ -147,11 +130,7 @@ RSpec.describe PotionsAlchemicalProperty, type: :model do
 
       context 'when the potion already has 4 or more effects' do
         before do
-          create_list(
-            :potions_alchemical_property,
-            4,
-            potion:,
-          )
+          create_list(:potions_alchemical_property, 4, potion:)
 
           potion.reload
         end
@@ -168,17 +147,9 @@ RSpec.describe PotionsAlchemicalProperty, type: :model do
   describe '::added_automatically scope' do
     subject(:added_automatically) { described_class.added_automatically }
 
-    let!(:included_models) do
-      create_list(
-        :potions_alchemical_property,
-        2,
-        added_automatically: true,
-      )
-    end
+    let!(:included_models) { create_list(:potions_alchemical_property, 2, added_automatically: true) }
 
-    before do
-      create(:potions_alchemical_property, added_automatically: false)
-    end
+    before { create(:potions_alchemical_property, added_automatically: false) }
 
     it 'includes automatically created models only' do
       expect(added_automatically).to contain_exactly(*included_models)
@@ -188,17 +159,9 @@ RSpec.describe PotionsAlchemicalProperty, type: :model do
   describe '::added_manually scope' do
     subject(:added_manually) { described_class.added_manually }
 
-    let!(:included_models) do
-      create_list(
-        :potions_alchemical_property,
-        2,
-        added_automatically: false,
-      )
-    end
+    let!(:included_models) { create_list(:potions_alchemical_property, 2, added_automatically: false) }
 
-    before do
-      create(:potions_alchemical_property, added_automatically: true)
-    end
+    before { create(:potions_alchemical_property, added_automatically: true) }
 
     it 'includes manually created models only' do
       expect(added_manually).to contain_exactly(*included_models)

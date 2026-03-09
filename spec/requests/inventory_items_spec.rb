@@ -4,26 +4,17 @@ require 'rails_helper'
 
 RSpec.describe 'InventoryItems', type: :request do
   let!(:user) { create(:authenticated_user) }
-  let(:headers) do
-    {
-      'Content-Type' => 'application/json',
-      'Authorization' => 'Bearer xxxxxxxxx',
-    }
-  end
+  let(:headers) { { 'Content-Type' => 'application/json', 'Authorization' => 'Bearer xxxxxxxxx' } }
 
   describe 'POST /inventory_lists/:inventory_list_id/inventory_items' do
-    subject(:create_item) do
-      post "/inventory_lists/#{inventory_list.id}/inventory_items", params:, headers:
-    end
+    subject(:create_item) { post "/inventory_lists/#{inventory_list.id}/inventory_items", params:, headers: }
 
     let!(:game) { create(:game, user:) }
     let!(:inventory_list) { create(:inventory_list, game:) }
     let!(:aggregate_list) { game.aggregate_inventory_list }
 
     context 'when authenticated' do
-      before do
-        stub_successful_login
-      end
+      before { stub_successful_login }
 
       context 'when all goes well' do
         let(:params) { { inventory_item: { description: 'Corundum ingot', quantity: 5, notes: 'To make locks' } }.to_json }
@@ -47,8 +38,7 @@ RSpec.describe 'InventoryItems', type: :request do
 
             it 'returns the regular list item and the aggregate list item' do
               create_item
-              expect(JSON.parse(response.body))
-                .to eq(JSON.parse([aggregate_list.reload.list_items.last, inventory_list.reload.list_items.last].to_json))
+              expect(JSON.parse(response.body)).to eq(JSON.parse([aggregate_list.reload.list_items.last, inventory_list.reload.list_items.last].to_json))
             end
           end
 
@@ -56,9 +46,7 @@ RSpec.describe 'InventoryItems', type: :request do
             let!(:other_item) { create(:inventory_item, list: other_list, description: 'Corundum ingot', quantity: 2) }
             let(:other_list) { create(:inventory_list, game:) }
 
-            before do
-              aggregate_list.add_item_from_child_list(other_item)
-            end
+            before { aggregate_list.add_item_from_child_list(other_item) }
 
             context "when unit weight isn't set" do
               let(:params) { { inventory_item: { description: 'Corundum ingot', quantity: 5 } }.to_json }
@@ -80,8 +68,7 @@ RSpec.describe 'InventoryItems', type: :request do
 
               it 'returns the aggregate list item and the regular list item' do
                 create_item
-                expect(JSON.parse(response.body))
-                  .to eq(JSON.parse([aggregate_list.reload.list_items.first, inventory_list.reload.list_items.first].to_json))
+                expect(JSON.parse(response.body)).to eq(JSON.parse([aggregate_list.reload.list_items.first, inventory_list.reload.list_items.first].to_json))
               end
             end
 
@@ -112,8 +99,7 @@ RSpec.describe 'InventoryItems', type: :request do
 
               it 'returns all items that were created or updated' do
                 create_item
-                expect(JSON.parse(response.body))
-                  .to eq(JSON.parse([aggregate_list.reload.list_items.first, other_item.reload, inventory_list.reload.list_items.first].to_json))
+                expect(JSON.parse(response.body)).to eq(JSON.parse([aggregate_list.reload.list_items.first, other_item.reload, inventory_list.reload.list_items.first].to_json))
               end
             end
           end
@@ -152,8 +138,7 @@ RSpec.describe 'InventoryItems', type: :request do
 
             it 'returns the requested item and the aggregate list item' do
               create_item
-              expect(JSON.parse(response.body))
-                .to eq(JSON.parse([aggregate_list.reload.list_items.first, list_item.reload].to_json))
+              expect(JSON.parse(response.body)).to eq(JSON.parse([aggregate_list.reload.list_items.first, list_item.reload].to_json))
             end
           end
 
@@ -190,8 +175,7 @@ RSpec.describe 'InventoryItems', type: :request do
 
             it 'returns all items that have been updated' do
               create_item
-              expect(JSON.parse(response.body))
-                .to eq(JSON.parse([aggregate_list.reload.list_items.first, other_item.reload, list_item.reload].to_json))
+              expect(JSON.parse(response.body)).to eq(JSON.parse([aggregate_list.reload.list_items.first, other_item.reload, list_item.reload].to_json))
             end
           end
         end
@@ -267,17 +251,14 @@ RSpec.describe 'InventoryItems', type: :request do
 
         it 'returns the error' do
           create_item
-          expect(JSON.parse(response.body))
-            .to eq({ 'errors' => ['Cannot manually manage items on an aggregate inventory list'] })
+          expect(JSON.parse(response.body)).to eq({ 'errors' => ['Cannot manually manage items on an aggregate inventory list'] })
         end
       end
 
       context 'when something unexpected goes wrong' do
         let(:params) { { inventory_item: { description: 'Corundum ingot', quantity: 4 } }.to_json }
 
-        before do
-          allow(InventoryList).to receive(:find).and_raise(StandardError.new('Something went horribly wrong'))
-        end
+        before { allow(InventoryList).to receive(:find).and_raise(StandardError.new('Something went horribly wrong')) }
 
         it 'returns status 500' do
           create_item
@@ -294,9 +275,7 @@ RSpec.describe 'InventoryItems', type: :request do
     context 'when not authenticated' do
       let(:params) { { inventory_item: { description: 'Corundum ingot', quantity: 5, notes: 'To make locks' } }.to_json }
 
-      before do
-        stub_unsuccessful_login
-      end
+      before { stub_unsuccessful_login }
 
       it "doesn't create any inventory items" do
         expect { create_item }
@@ -325,9 +304,7 @@ RSpec.describe 'InventoryItems', type: :request do
     let!(:inventory_list) { create(:inventory_list, game:, aggregate_list:) }
 
     context 'when authenticated' do
-      before do
-        stub_successful_login
-      end
+      before { stub_successful_login }
 
       context 'when all goes well' do
         context 'when there is no matching item on another list' do
@@ -335,9 +312,7 @@ RSpec.describe 'InventoryItems', type: :request do
           let(:aggregate_list_item) { aggregate_list.list_items.first }
           let(:params) { { inventory_item: { description: 'Dwarven metal ingot', quantity: 10 } }.to_json }
 
-          before do
-            aggregate_list.add_item_from_child_list(list_item)
-          end
+          before { aggregate_list.add_item_from_child_list(list_item) }
 
           it 'updates the list item' do
             update_item
@@ -575,9 +550,7 @@ RSpec.describe 'InventoryItems', type: :request do
 
         before do
           aggregate_list.add_item_from_child_list(list_item)
-          allow_any_instance_of(InventoryList)
-            .to receive(:aggregate)
-                  .and_raise(StandardError.new('Something went horribly wrong'))
+          allow_any_instance_of(InventoryList).to receive(:aggregate).and_raise(StandardError.new('Something went horribly wrong'))
         end
 
         it 'returns status 500' do
@@ -596,9 +569,7 @@ RSpec.describe 'InventoryItems', type: :request do
       let!(:list_item) { create(:inventory_item) }
       let(:params) { { inventory_item: { description: 'Dwarven metal ingot' } }.to_json }
 
-      before do
-        stub_unsuccessful_login
-      end
+      before { stub_unsuccessful_login }
 
       it "doesn't update the item" do
         expect { update_item }
@@ -626,9 +597,7 @@ RSpec.describe 'InventoryItems', type: :request do
     let!(:inventory_list) { create(:inventory_list, game:, aggregate_list:) }
 
     context 'when authenticated' do
-      before do
-        stub_successful_login
-      end
+      before { stub_successful_login }
 
       context 'when all goes well' do
         context 'when there is no matching item on another list' do
@@ -636,9 +605,7 @@ RSpec.describe 'InventoryItems', type: :request do
           let(:aggregate_list_item) { aggregate_list.list_items.first }
           let(:params) { { inventory_item: { description: 'Dwarven metal ingot', quantity: 10 } }.to_json }
 
-          before do
-            aggregate_list.add_item_from_child_list(list_item)
-          end
+          before { aggregate_list.add_item_from_child_list(list_item) }
 
           it 'updates the list item' do
             update_item
@@ -876,9 +843,7 @@ RSpec.describe 'InventoryItems', type: :request do
 
         before do
           aggregate_list.add_item_from_child_list(list_item)
-          allow_any_instance_of(InventoryList)
-            .to receive(:aggregate)
-                  .and_raise(StandardError.new('Something went horribly wrong'))
+          allow_any_instance_of(InventoryList).to receive(:aggregate).and_raise(StandardError.new('Something went horribly wrong'))
         end
 
         it 'returns status 500' do
@@ -897,9 +862,7 @@ RSpec.describe 'InventoryItems', type: :request do
       let!(:list_item) { create(:inventory_item) }
       let(:params) { { inventory_item: { description: 'Dwarven metal ingot' } }.to_json }
 
-      before do
-        stub_unsuccessful_login
-      end
+      before { stub_unsuccessful_login }
 
       it "doesn't update the item" do
         expect { update_item }
@@ -927,17 +890,13 @@ RSpec.describe 'InventoryItems', type: :request do
     let!(:inventory_list) { create(:inventory_list, game:, aggregate_list:) }
 
     context 'when authenticated' do
-      before do
-        stub_successful_login
-      end
+      before { stub_successful_login }
 
       context 'when all goes well' do
         context 'when there is no matching list item on another list' do
           let!(:list_item) { create(:inventory_item, list: inventory_list) }
 
-          before do
-            aggregate_list.add_item_from_child_list(list_item)
-          end
+          before { aggregate_list.add_item_from_child_list(list_item) }
 
           it 'deletes the item on the regular list and the aggregate list' do
             expect { destroy_item }
@@ -1080,9 +1039,7 @@ RSpec.describe 'InventoryItems', type: :request do
       context 'when something unexpected goes wrong' do
         let!(:list_item) { create(:inventory_item, list: inventory_list) }
 
-        before do
-          allow_any_instance_of(InventoryList).to receive(:aggregate).and_raise(StandardError.new('Something went horribly wrong'))
-        end
+        before { allow_any_instance_of(InventoryList).to receive(:aggregate).and_raise(StandardError.new('Something went horribly wrong')) }
 
         it 'returns status 500' do
           destroy_item
@@ -1099,9 +1056,7 @@ RSpec.describe 'InventoryItems', type: :request do
     context 'when not authenticated' do
       let!(:list_item) { create(:inventory_item) }
 
-      before do
-        stub_unsuccessful_login
-      end
+      before { stub_unsuccessful_login }
 
       it "doesn't destroy any inventory items" do
         expect { destroy_item }

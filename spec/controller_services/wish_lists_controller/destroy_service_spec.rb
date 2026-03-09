@@ -18,21 +18,12 @@ RSpec.describe WishListsController::DestroyService do
       context 'when the game has additional regular lists' do
         let!(:third_list) { create(:wish_list_with_list_items, game:) }
 
-        let(:expected_resource) do
-          {
-            deleted: [wish_list.id],
-            aggregate: game.aggregate_wish_list,
-          }
-        end
+        let(:expected_resource) { { deleted: [wish_list.id], aggregate: game.aggregate_wish_list } }
 
         before do
-          wish_list.list_items.each do |list_item|
-            game.aggregate_wish_list.add_item_from_child_list(list_item)
-          end
+          wish_list.list_items.each {|list_item| game.aggregate_wish_list.add_item_from_child_list(list_item) }
 
-          third_list.list_items.each do |list_item|
-            game.aggregate_wish_list.add_item_from_child_list(list_item)
-          end
+          third_list.list_items.each {|list_item| game.aggregate_wish_list.add_item_from_child_list(list_item) }
         end
 
         it 'destroys the wish list' do
@@ -74,25 +65,15 @@ RSpec.describe WishListsController::DestroyService do
           it 'calls #remove_item_from_child_list for each item', :aggregate_failures do
             perform
 
-            wish_list.list_items.each do |item|
-              expect(aggregate_list).to have_received(:remove_item_from_child_list).with(item.attributes)
-            end
+            wish_list.list_items.each {|item| expect(aggregate_list).to have_received(:remove_item_from_child_list).with(item.attributes) }
           end
         end
       end
 
       context "when this is the game's last regular list" do
-        let(:expected_resource) do
-          {
-            deleted: [wish_list.aggregate_list_id, wish_list.id],
-          }
-        end
+        let(:expected_resource) { { deleted: [wish_list.aggregate_list_id, wish_list.id] } }
 
-        before do
-          wish_list.list_items.each do |item|
-            game.aggregate_wish_list.add_item_from_child_list(item)
-          end
-        end
+        before { wish_list.list_items.each {|item| game.aggregate_wish_list.add_item_from_child_list(item) } }
 
         it 'destroys the aggregate list too' do
           expect { perform }
@@ -165,11 +146,7 @@ RSpec.describe WishListsController::DestroyService do
       let!(:wish_list) { create(:wish_list, game:) }
       let(:game) { create(:game, user:) }
 
-      before do
-        allow_any_instance_of(WishList)
-          .to receive(:aggregate_list)
-                .and_raise(StandardError.new('Something went horribly wrong'))
-      end
+      before { allow_any_instance_of(WishList).to receive(:aggregate_list).and_raise(StandardError.new('Something went horribly wrong')) }
 
       it 'returns a Service::InternalServerErrorResult' do
         expect(perform).to be_a(Service::InternalServerErrorResult)

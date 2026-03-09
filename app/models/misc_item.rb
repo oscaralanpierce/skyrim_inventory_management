@@ -1,10 +1,7 @@
 # frozen_string_literal: true
 
 class MiscItem < InGameItem
-  belongs_to :canonical_misc_item,
-             optional: true,
-             inverse_of: :misc_items,
-             class_name: 'Canonical::MiscItem'
+  belongs_to :canonical_misc_item, optional: true, inverse_of: :misc_items, class_name: 'Canonical::MiscItem'
 
   validates :name, presence: true
 

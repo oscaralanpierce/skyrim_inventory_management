@@ -277,9 +277,7 @@ RSpec.describe WishListItemsController::CreateService do
     context 'when something unexpected goes wrong' do
       let!(:params) { { description: 'Necklace', quantity: 2 } }
 
-      before do
-        allow(WishList).to receive(:find).and_raise(StandardError.new('Something went horribly wrong'))
-      end
+      before { allow(WishList).to receive(:find).and_raise(StandardError.new('Something went horribly wrong')) }
 
       it 'returns a Service::InternalServerErrorResponse' do
         expect(perform).to be_a(Service::InternalServerErrorResult)

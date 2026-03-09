@@ -100,11 +100,7 @@ RSpec.describe Canonical::RawMaterial, type: :model do
       before do
         create(:canonical_material, temperable: temperables.first, source_material: raw_material)
         create(:canonical_material, temperable: temperables.last, source_material: raw_material)
-        create(
-          :canonical_material,
-          craftable: create(:canonical_weapon),
-          source_material: raw_material,
-        )
+        create(:canonical_material, craftable: create(:canonical_weapon), source_material: raw_material)
 
         raw_material.reload
       end
@@ -172,29 +168,9 @@ RSpec.describe Canonical::RawMaterial, type: :model do
 
       let(:source_material) { create(:canonical_raw_material) }
 
-      let!(:canonical_materials) do
-        [
-          create(
-            :canonical_material,
-            source_material:,
-            craftable: create(:canonical_armor),
-          ),
-          create(
-            :canonical_material,
-            source_material:,
-            craftable: create(:canonical_weapon),
-          ),
-          create(
-            :canonical_material,
-            source_material:,
-            craftable: create(:canonical_jewelry_item),
-          ),
-        ]
-      end
+      let!(:canonical_materials) { [create(:canonical_material, source_material:, craftable: create(:canonical_armor)), create(:canonical_material, source_material:, craftable: create(:canonical_weapon)), create(:canonical_material, source_material:, craftable: create(:canonical_jewelry_item))] }
 
-      before do
-        source_material.reload
-      end
+      before { source_material.reload }
 
       it 'includes all craftable items regardless of class' do
         craftables = canonical_materials.map(&:craftable)
@@ -208,16 +184,9 @@ RSpec.describe Canonical::RawMaterial, type: :model do
 
       let(:source_material) { create(:canonical_raw_material) }
 
-      let!(:canonical_materials) do
-        [
-          create(:canonical_material, source_material:, temperable: create(:canonical_armor)),
-          create(:canonical_material, source_material:, temperable: create(:canonical_weapon)),
-        ]
-      end
+      let!(:canonical_materials) { [create(:canonical_material, source_material:, temperable: create(:canonical_armor)), create(:canonical_material, source_material:, temperable: create(:canonical_weapon))] }
 
-      before do
-        source_material.reload
-      end
+      before { source_material.reload }
 
       it 'includes all temperable items regardless of class' do
         temperables = canonical_materials.map(&:temperable)

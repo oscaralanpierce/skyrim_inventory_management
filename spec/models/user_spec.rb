@@ -6,14 +6,7 @@ RSpec.describe User, type: :model do
   describe '::create_or_update_for_google' do
     subject(:create_or_update) { described_class.create_or_update_for_google(payload) }
 
-    let(:payload) do
-      {
-        'localId' => 'foobar',
-        'email' => 'jane.doe@gmail.com',
-        'displayName' => 'Jane Doe',
-        'photoUrl' => 'https://example.com/user_images/89',
-      }
-    end
+    let(:payload) { { 'localId' => 'foobar', 'email' => 'jane.doe@gmail.com', 'displayName' => 'Jane Doe', 'photoUrl' => 'https://example.com/user_images/89' } }
 
     context 'when a user with that uid does not exist' do
       it 'creates a user' do
@@ -23,12 +16,7 @@ RSpec.describe User, type: :model do
 
       it 'sets the attributes' do
         create_or_update
-        expect(described_class.last.attributes).to include(
-          'uid' => 'foobar',
-          'email' => 'jane.doe@gmail.com',
-          'display_name' => 'Jane Doe',
-          'photo_url' => 'https://example.com/user_images/89',
-        )
+        expect(described_class.last.attributes).to include('uid' => 'foobar', 'email' => 'jane.doe@gmail.com', 'display_name' => 'Jane Doe', 'photo_url' => 'https://example.com/user_images/89')
       end
     end
 
@@ -61,12 +49,7 @@ RSpec.describe User, type: :model do
     let!(:wish_list4) { create(:wish_list, game: game2) }
 
     it "returns all the wish lists for the user's games" do
-      expect(user1.wish_lists).to eq([
-        wish_list4,
-        wish_list3,
-        wish_list2,
-        wish_list1,
-      ])
+      expect(user1.wish_lists).to eq([wish_list4, wish_list3, wish_list2, wish_list1])
     end
   end
 
@@ -84,12 +67,7 @@ RSpec.describe User, type: :model do
     let!(:inventory_list4) { create(:inventory_list, game: game2) }
 
     it "returns all the inventory lists for the user's games" do
-      expect(user1.inventory_lists).to eq([
-        inventory_list4,
-        inventory_list3,
-        inventory_list2,
-        inventory_list1,
-      ])
+      expect(user1.inventory_lists).to eq([inventory_list4, inventory_list3, inventory_list2, inventory_list1])
     end
   end
 

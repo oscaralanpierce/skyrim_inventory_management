@@ -251,9 +251,7 @@ RSpec.describe Canonical::Weapon, type: :model do
       let(:weapon) { create(:canonical_weapon) }
       let(:enchantment) { create(:enchantment) }
 
-      before do
-        weapon.enchantables_enchantments.create!(enchantment:, strength: 40)
-      end
+      before { weapon.enchantables_enchantments.create!(enchantment:, strength: 40) }
 
       it 'gives the enchantment strength' do
         expect(weapon.enchantments.first.strength).to eq 40
@@ -264,9 +262,7 @@ RSpec.describe Canonical::Weapon, type: :model do
       let(:weapon) { create(:canonical_weapon) }
       let(:power) { create(:power) }
 
-      before do
-        weapon.canonical_powerables_powers.create!(power:)
-      end
+      before { weapon.canonical_powerables_powers.create!(power:) }
 
       it 'retrieves the power' do
         expect(weapon.powers.first).to eq power
@@ -278,32 +274,9 @@ RSpec.describe Canonical::Weapon, type: :model do
 
       let(:weapon) { create(:canonical_weapon) }
 
-      let!(:canonical_materials) do
-        [
-          create(
-            :canonical_material,
-            craftable: weapon,
-            source_material: create(:canonical_weapon, name: 'Dwarven Crossbow'),
-            quantity: 2,
-          ).source_material,
-          create(
-            :canonical_material,
-            craftable: weapon,
-            source_material: create(:canonical_raw_material, name: 'Dwarven Metal Ingot'),
-            quantity: 3,
-          ).source_material,
-          create(
-            :canonical_material,
-            craftable: weapon,
-            source_material: create(:canonical_ingredient, name: 'Deathbell'),
-            quantity: 3,
-          ).source_material,
-        ]
-      end
+      let!(:canonical_materials) { [create(:canonical_material, craftable: weapon, source_material: create(:canonical_weapon, name: 'Dwarven Crossbow'), quantity: 2).source_material, create(:canonical_material, craftable: weapon, source_material: create(:canonical_raw_material, name: 'Dwarven Metal Ingot'), quantity: 3).source_material, create(:canonical_material, craftable: weapon, source_material: create(:canonical_ingredient, name: 'Deathbell'), quantity: 3).source_material] }
 
-      before do
-        weapon.reload
-      end
+      before { weapon.reload }
 
       it 'returns all crafting materials regardless of class' do
         expect(crafting_materials).to contain_exactly(*canonical_materials)
@@ -314,24 +287,9 @@ RSpec.describe Canonical::Weapon, type: :model do
       subject(:tempering_materials) { weapon.tempering_materials }
 
       let(:weapon) { create(:canonical_weapon) }
-      let!(:materials) do
-        [
-          create(
-            :canonical_material,
-            temperable: weapon,
-            source_material: create(:canonical_raw_material),
-          ).source_material,
-          create(
-            :canonical_material,
-            temperable: weapon,
-            source_material: create(:canonical_ingredient),
-          ).source_material,
-        ]
-      end
+      let!(:materials) { [create(:canonical_material, temperable: weapon, source_material: create(:canonical_raw_material)).source_material, create(:canonical_material, temperable: weapon, source_material: create(:canonical_ingredient)).source_material] }
 
-      before do
-        weapon.reload
-      end
+      before { weapon.reload }
 
       it 'gives the quantity needed' do
         expect(tempering_materials).to contain_exactly(*materials)

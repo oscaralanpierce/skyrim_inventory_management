@@ -37,14 +37,7 @@ RSpec.describe Staff, type: :model do
       context 'when the canonical staff is not unique' do
         let(:canonical_staff) { create(:canonical_staff) }
 
-        before do
-          create_list(
-            :staff,
-            3,
-            canonical_staff:,
-            game:,
-          )
-        end
+        before { create_list(:staff, 3, canonical_staff:, game:) }
 
         it 'is valid' do
           expect(staff).to be_valid
@@ -52,14 +45,7 @@ RSpec.describe Staff, type: :model do
       end
 
       context 'when the canonical staff is unique' do
-        let(:canonical_staff) do
-          create(
-            :canonical_staff,
-            max_quantity: 1,
-            unique_item: true,
-            rare_item: true,
-          )
-        end
+        let(:canonical_staff) { create(:canonical_staff, max_quantity: 1, unique_item: true, rare_item: true) }
 
         context 'when there are no other matches for the canonical staff' do
           it 'is valid' do
@@ -68,9 +54,7 @@ RSpec.describe Staff, type: :model do
         end
 
         context 'when the canonical staff has other matches in another game' do
-          before do
-            create(:staff, canonical_staff:)
-          end
+          before { create(:staff, canonical_staff:) }
 
           it 'is valid' do
             expect(staff).to be_valid
@@ -78,9 +62,7 @@ RSpec.describe Staff, type: :model do
         end
 
         context 'when the canonical staff has other matches in the same game' do
-          before do
-            create(:staff, canonical_staff:, game:)
-          end
+          before { create(:staff, canonical_staff:, game:) }
 
           it 'is invalid' do
             validate
@@ -104,13 +86,7 @@ RSpec.describe Staff, type: :model do
         let(:staff) { build(:staff, game:, name: 'my staff') }
 
         context 'when there are multiple matching canonical staves' do
-          before do
-            create_list(
-              :canonical_staff,
-              2,
-              name: staff.name,
-            )
-          end
+          before { create_list(:canonical_staff, 2, name: staff.name) }
 
           it 'is valid' do
             expect(staff).to be_valid
@@ -119,13 +95,7 @@ RSpec.describe Staff, type: :model do
 
         context 'when the matching canonical staff is unique and has an existing association' do
           before do
-            canonical_staff = create(
-              :canonical_staff,
-              name: 'My Staff',
-              max_quantity: 1,
-              unique_item: true,
-              rare_item: true,
-            )
+            canonical_staff = create(:canonical_staff, name: 'My Staff', max_quantity: 1, unique_item: true, rare_item: true)
 
             create(:staff, name: 'My Staff', game:, canonical_staff:)
           end
@@ -181,18 +151,9 @@ RSpec.describe Staff, type: :model do
     context 'when there are multiple matching canonical models' do
       let(:staff) { build(:staff, magical_effects: 'This staff has magical effects') }
 
-      let!(:matching_canonicals) do
-        create_list(
-          :canonical_staff,
-          2,
-          name: staff.name,
-          magical_effects: 'This staff has magical effects',
-        )
-      end
+      let!(:matching_canonicals) { create_list(:canonical_staff, 2, name: staff.name, magical_effects: 'This staff has magical effects') }
 
-      before do
-        create(:canonical_staff, name: staff.name)
-      end
+      before { create(:canonical_staff, name: staff.name) }
 
       it 'returns all the matching canonical models in an ActiveRecord relation', :aggregate_failures do
         expect(canonical_models).to be_an(ActiveRecord::Relation)
@@ -228,18 +189,9 @@ RSpec.describe Staff, type: :model do
       let(:game) { create(:game) }
       let(:staff) { build(:staff, name: 'my staff', unit_weight: nil, game:) }
 
-      let!(:canonical_staff) do
-        create(
-          :canonical_staff,
-          name: 'My Staff',
-          unit_weight: 8,
-          magical_effects: 'Does stuff',
-        )
-      end
+      let!(:canonical_staff) { create(:canonical_staff, name: 'My Staff', unit_weight: 8, magical_effects: 'Does stuff') }
 
-      before do
-        create(:staff, name: 'My Staff', canonical_staff:, game:)
-      end
+      before { create(:staff, name: 'My Staff', canonical_staff:, game:) }
 
       it 'associates the canonical staff' do
         validate
@@ -284,13 +236,7 @@ RSpec.describe Staff, type: :model do
       end
 
       context 'when updating the in-game item results in an ambiguous match' do
-        before do
-          create_list(
-            :canonical_staff,
-            2,
-            name: 'Awesome Staff of Hipness',
-          )
-        end
+        before { create_list(:canonical_staff, 2, name: 'Awesome Staff of Hipness') }
 
         it 'removes the associated canonical model' do
           staff.name = 'Awesome Staff of Hipness'
@@ -352,13 +298,7 @@ RSpec.describe Staff, type: :model do
     context 'when there is no associated canonical model' do
       let(:staff) { create(:staff, name: 'My Staff') }
 
-      before do
-        create_list(
-          :canonical_staff,
-          2,
-          name: 'My Staff',
-        )
-      end
+      before { create_list(:canonical_staff, 2, name: 'My Staff') }
 
       it 'returns an empty ActiveRecord::Relation', :aggregate_failures do
         expect(spells).to be_an(ActiveRecord::Relation)
@@ -406,13 +346,7 @@ RSpec.describe Staff, type: :model do
     context 'when there is no associated canonical model' do
       let(:staff) { create(:staff, name: 'My Staff') }
 
-      before do
-        create_list(
-          :canonical_staff,
-          2,
-          name: 'My Staff',
-        )
-      end
+      before { create_list(:canonical_staff, 2, name: 'My Staff') }
 
       it 'returns an empty ActiveRecord::Relation', :aggregate_failures do
         expect(powers).to be_an(ActiveRecord::Relation)

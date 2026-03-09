@@ -9,9 +9,7 @@ RSpec.describe Canonical::Sync::Properties do
   let(:json_path) { Rails.root.join('spec', 'support', 'fixtures', 'canonical', 'sync', 'properties.json') }
   let!(:json_data) { File.read(json_path) }
 
-  before do
-    allow(File).to receive(:read).and_return(json_data)
-  end
+  before { allow(File).to receive(:read).and_return(json_data) }
 
   describe '::perform' do
     subject(:perform) { described_class.perform(preserve_existing_records) }
@@ -20,9 +18,7 @@ RSpec.describe Canonical::Sync::Properties do
       let(:preserve_existing_records) { false }
       let(:syncer) { described_class.new(preserve_existing_records) }
 
-      before do
-        allow(described_class).to receive(:new).and_return(syncer)
-      end
+      before { allow(described_class).to receive(:new).and_return(syncer) }
 
       it 'instantiates itself' do
         perform
@@ -37,26 +33,9 @@ RSpec.describe Canonical::Sync::Properties do
       end
 
       context 'when there are existing records in the database' do
-        let!(:property_in_json) do
-          create(
-            :canonical_property,
-            name: 'Hjerim',
-            city: 'Windhelm',
-            hold: 'Eastmarch',
-            add_on: 'base',
-            alchemy_lab_available: false,
-          )
-        end
+        let!(:property_in_json) { create(:canonical_property, name: 'Hjerim', city: 'Windhelm', hold: 'Eastmarch', add_on: 'base', alchemy_lab_available: false) }
 
-        let!(:property_not_in_json) do
-          create(
-            :canonical_property,
-            name: 'Breezehome',
-            city: 'Whiterun',
-            hold: 'Whiterun',
-            add_on: 'base',
-          )
-        end
+        let!(:property_not_in_json) { create(:canonical_property, name: 'Breezehome', city: 'Whiterun', hold: 'Whiterun', add_on: 'base') }
 
         let(:syncer) { described_class.new(preserve_existing_records) }
 
@@ -89,30 +68,11 @@ RSpec.describe Canonical::Sync::Properties do
       let(:preserve_existing_records) { true }
       let(:syncer) { described_class.new(preserve_existing_records) }
 
-      let!(:property_in_json) do
-        create(
-          :canonical_property,
-          name: 'Hjerim',
-          city: 'Windhelm',
-          hold: 'Eastmarch',
-          add_on: 'base',
-          forge_available: true,
-        )
-      end
+      let!(:property_in_json) { create(:canonical_property, name: 'Hjerim', city: 'Windhelm', hold: 'Eastmarch', add_on: 'base', forge_available: true) }
 
-      let!(:property_not_in_json) do
-        create(
-          :canonical_property,
-          name: 'Breezehome',
-          city: 'Whiterun',
-          hold: 'Whiterun',
-          add_on: 'base',
-        )
-      end
+      let!(:property_not_in_json) { create(:canonical_property, name: 'Breezehome', city: 'Whiterun', hold: 'Whiterun', add_on: 'base') }
 
-      before do
-        allow(described_class).to receive(:new).and_return(syncer)
-      end
+      before { allow(described_class).to receive(:new).and_return(syncer) }
 
       it 'instantiates itself' do
         perform
@@ -141,18 +101,12 @@ RSpec.describe Canonical::Sync::Properties do
       let(:preserve_existing_records) { false }
 
       context 'when an ActiveRecord::RecordInvalid error is raised' do
-        let(:errored_model) do
-          instance_double Canonical::Property,
-                          errors:,
-                          class: class_double(Spell, i18n_scope: :activerecord)
-        end
+        let(:errored_model) { instance_double Canonical::Property, errors:, class: class_double(Spell, i18n_scope: :activerecord) }
 
         let(:errors) { double('errors', full_messages: ["Name can't be blank"]) }
 
         before do
-          allow_any_instance_of(Canonical::Property)
-            .to receive(:save!)
-                  .and_raise(ActiveRecord::RecordInvalid, errored_model)
+          allow_any_instance_of(Canonical::Property).to receive(:save!).and_raise(ActiveRecord::RecordInvalid, errored_model)
           allow(Rails.logger).to receive(:error)
         end
 
@@ -160,9 +114,7 @@ RSpec.describe Canonical::Sync::Properties do
           expect { perform }
             .to raise_error(ActiveRecord::RecordInvalid)
 
-          expect(Rails.logger)
-            .to have_received(:error)
-                  .with("Error saving canonical property \"Hjerim\": Validation failed: Name can't be blank")
+          expect(Rails.logger).to have_received(:error).with("Error saving canonical property \"Hjerim\": Validation failed: Name can't be blank")
         end
       end
 
@@ -176,9 +128,7 @@ RSpec.describe Canonical::Sync::Properties do
           expect { perform }
             .to raise_error(StandardError)
 
-          expect(Rails.logger)
-            .to have_received(:error)
-                  .with('Unexpected error StandardError saving canonical property "Hjerim": foobar')
+          expect(Rails.logger).to have_received(:error).with('Unexpected error StandardError saving canonical property "Hjerim": foobar')
         end
       end
 
@@ -192,9 +142,7 @@ RSpec.describe Canonical::Sync::Properties do
           expect { perform }
             .to raise_error(StandardError)
 
-          expect(Rails.logger)
-            .to have_received(:error)
-                  .with('Unexpected error StandardError while syncing canonical properties: foobar')
+          expect(Rails.logger).to have_received(:error).with('Unexpected error StandardError while syncing canonical properties: foobar')
         end
       end
     end

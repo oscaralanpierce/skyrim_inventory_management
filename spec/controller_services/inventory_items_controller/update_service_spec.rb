@@ -22,9 +22,7 @@ RSpec.describe InventoryItemsController::UpdateService do
         let(:aggregate_list_item) { aggregate_list.list_items.first }
         let(:params) { { quantity: 9, notes: 'To make bolts with' } }
 
-        before do
-          aggregate_list.add_item_from_child_list(list_item)
-        end
+        before { aggregate_list.add_item_from_child_list(list_item) }
 
         it 'updates the list item', :aggregate_failures do
           perform
@@ -196,9 +194,7 @@ RSpec.describe InventoryItemsController::UpdateService do
 
       before do
         aggregate_list.add_item_from_child_list(list_item)
-        allow_any_instance_of(InventoryList)
-          .to receive(:aggregate)
-                .and_raise(StandardError.new('Something went horribly wrong'))
+        allow_any_instance_of(InventoryList).to receive(:aggregate).and_raise(StandardError.new('Something went horribly wrong'))
       end
 
       it 'returns a Service::InternalServerErrorResult' do

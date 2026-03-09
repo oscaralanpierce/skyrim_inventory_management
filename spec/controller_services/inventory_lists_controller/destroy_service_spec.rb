@@ -17,20 +17,12 @@ RSpec.describe InventoryListsController::DestroyService do
       let!(:aggregate_list) { create(:aggregate_inventory_list, game:) }
       let!(:inventory_list) { create(:inventory_list_with_list_items, game:) }
 
-      before do
-        inventory_list.list_items.each do |list_item|
-          aggregate_list.add_item_from_child_list(list_item)
-        end
-      end
+      before { inventory_list.list_items.each {|list_item| aggregate_list.add_item_from_child_list(list_item) } }
 
       context 'when the game has additional regular lists' do
         let!(:third_list) { create(:inventory_list_with_list_items, game:, aggregate_list:) }
 
-        before do
-          third_list.list_items.each do |list_item|
-            aggregate_list.add_item_from_child_list(list_item)
-          end
-        end
+        before { third_list.list_items.each {|list_item| aggregate_list.add_item_from_child_list(list_item) } }
 
         it 'destroys the inventory list' do
           expect { perform }
@@ -130,9 +122,7 @@ RSpec.describe InventoryListsController::DestroyService do
     context 'when something unexpected goes wrong' do
       let!(:inventory_list) { create(:inventory_list, game:) }
 
-      before do
-        allow_any_instance_of(InventoryList).to receive(:aggregate_list).and_raise(StandardError.new('Something went horribly wrong'))
-      end
+      before { allow_any_instance_of(InventoryList).to receive(:aggregate_list).and_raise(StandardError.new('Something went horribly wrong')) }
 
       it 'returns a Service::InternalServerErrorResult' do
         expect(perform).to be_a(Service::InternalServerErrorResult)

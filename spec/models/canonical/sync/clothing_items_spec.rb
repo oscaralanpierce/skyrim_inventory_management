@@ -11,9 +11,7 @@ RSpec.describe Canonical::Sync::ClothingItems do
 
   let(:enchantment_names) { ['Fortify Magicka', 'Fortify Destruction', 'Fortify Magicka Regen'] }
 
-  before do
-    allow(File).to receive(:read).and_return(json_data)
-  end
+  before { allow(File).to receive(:read).and_return(json_data) }
 
   describe '::perform' do
     subject(:perform) { described_class.perform(preserve_existing_records) }
@@ -54,9 +52,7 @@ RSpec.describe Canonical::Sync::ClothingItems do
         let!(:item_not_in_json) { create(:canonical_clothing_item, item_code: '12345678') }
         let(:syncer) { described_class.new(preserve_existing_records) }
 
-        before do
-          enchantment_names.each {|name| create(:enchantment, name:) }
-        end
+        before { enchantment_names.each {|name| create(:enchantment, name:) } }
 
         it 'instantiates itself' do
           allow(described_class).to receive(:new).and_return(syncer)
@@ -82,10 +78,7 @@ RSpec.describe Canonical::Sync::ClothingItems do
         end
 
         it "removes enchantments that don't exist in the JSON data" do
-          item_in_json.enchantables_enchantments.create!(
-            enchantment: Enchantment.find_by(name: 'Fortify Destruction'),
-            strength: 2,
-          )
+          item_in_json.enchantables_enchantments.create!(enchantment: Enchantment.find_by(name: 'Fortify Destruction'), strength: 2)
           perform
           expect(item_in_json.enchantments.find_by(name: 'Fortify Destruction')).to be_nil
         end
@@ -98,17 +91,13 @@ RSpec.describe Canonical::Sync::ClothingItems do
       end
 
       context 'when there are no enchantments in the database' do
-        before do
-          allow(Rails.logger).to receive(:error)
-        end
+        before { allow(Rails.logger).to receive(:error) }
 
         it "logs an error and doesn't create models", :aggregate_failures do
           expect { perform }
             .to raise_error(Canonical::Sync::PrerequisiteNotMetError)
 
-          expect(Rails.logger)
-            .to have_received(:error)
-                  .with('Prerequisite(s) not met: sync Enchantment before canonical clothing items')
+          expect(Rails.logger).to have_received(:error).with('Prerequisite(s) not met: sync Enchantment before canonical clothing items')
 
           expect(Canonical::ClothingItem.count).to eq 0
         end
@@ -127,9 +116,7 @@ RSpec.describe Canonical::Sync::ClothingItems do
           expect { perform }
             .to raise_error ActiveRecord::RecordInvalid
 
-          expect(Rails.logger)
-            .to have_received(:error)
-                  .with('Validation error saving associations for canonical clothing item "0010DD3C": Validation failed: Enchantment must exist')
+          expect(Rails.logger).to have_received(:error).with('Validation error saving associations for canonical clothing item "0010DD3C": Validation failed: Enchantment must exist')
         end
       end
     end
@@ -142,12 +129,7 @@ RSpec.describe Canonical::Sync::ClothingItems do
 
       before do
         enchantment_names.each {|name| create(:enchantment, name:) }
-        create(
-          :enchantables_enchantment,
-          :for_canonical_clothing,
-          enchantable: item_in_json,
-          enchantment: create(:enchantment, name: 'Resist Magic'),
-        )
+        create(:enchantables_enchantment, :for_canonical_clothing, enchantable: item_in_json, enchantment: create(:enchantment, name: 'Resist Magic'))
       end
 
       it 'instantiates itself' do
@@ -188,20 +170,14 @@ RSpec.describe Canonical::Sync::ClothingItems do
       let(:preserve_existing_records) { false }
 
       context 'when an ActiveRecord::RecordInvalid error is raised' do
-        let(:errored_model) do
-          instance_double Canonical::ClothingItem,
-                          errors:,
-                          class: class_double(Canonical::ClothingItem, i18n_scope: :activerecord)
-        end
+        let(:errored_model) { instance_double Canonical::ClothingItem, errors:, class: class_double(Canonical::ClothingItem, i18n_scope: :activerecord) }
 
         let(:errors) { double('errors', full_messages: ["Name can't be blank"]) }
 
         before do
           create(:enchantment)
 
-          allow_any_instance_of(Canonical::ClothingItem)
-            .to receive(:save!)
-                  .and_raise(ActiveRecord::RecordInvalid, errored_model)
+          allow_any_instance_of(Canonical::ClothingItem).to receive(:save!).and_raise(ActiveRecord::RecordInvalid, errored_model)
           allow(Rails.logger).to receive(:error)
         end
 
@@ -209,9 +185,7 @@ RSpec.describe Canonical::Sync::ClothingItems do
           expect { perform }
             .to raise_error(ActiveRecord::RecordInvalid)
 
-          expect(Rails.logger)
-            .to have_received(:error)
-                  .with("Error saving canonical clothing item \"0010DD3C\": Validation failed: Name can't be blank")
+          expect(Rails.logger).to have_received(:error).with("Error saving canonical clothing item \"0010DD3C\": Validation failed: Name can't be blank")
         end
       end
 
@@ -227,9 +201,7 @@ RSpec.describe Canonical::Sync::ClothingItems do
           expect { perform }
             .to raise_error(StandardError)
 
-          expect(Rails.logger)
-            .to have_received(:error)
-                  .with('Unexpected error StandardError saving canonical clothing item "0010DD3C": foobar')
+          expect(Rails.logger).to have_received(:error).with('Unexpected error StandardError saving canonical clothing item "0010DD3C": foobar')
         end
       end
 
@@ -245,9 +217,7 @@ RSpec.describe Canonical::Sync::ClothingItems do
           expect { perform }
             .to raise_error(StandardError)
 
-          expect(Rails.logger)
-            .to have_received(:error)
-                  .with('Unexpected error StandardError while syncing canonical clothing items: foobar')
+          expect(Rails.logger).to have_received(:error).with('Unexpected error StandardError while syncing canonical clothing items: foobar')
         end
       end
     end

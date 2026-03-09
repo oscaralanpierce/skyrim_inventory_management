@@ -7,26 +7,18 @@ RSpec.describe Canonical::Sync do
     context 'when the model is ":all"' do
       subject(:perform) { described_class.perform(:all, false) }
 
-      before do
-        described_class::SYNCERS.each_value do |syncer|
-          allow(syncer).to receive(:perform)
-        end
-      end
+      before { described_class::SYNCERS.each_value {|syncer| allow(syncer).to receive(:perform) } }
 
       it 'calls all the other syncers', :aggregate_failures do
         perform
-        described_class::SYNCERS.each_value do |syncer|
-          expect(syncer).to have_received(:perform).with(false)
-        end
+        described_class::SYNCERS.each_value {|syncer| expect(syncer).to have_received(:perform).with(false) }
       end
     end
 
     context 'when the model is ":alchemical_property"' do
       subject(:perform) { described_class.perform(:alchemical_property, false) }
 
-      before do
-        allow(Canonical::Sync::AlchemicalProperties).to receive(:perform)
-      end
+      before { allow(Canonical::Sync::AlchemicalProperties).to receive(:perform) }
 
       it 'calls #perform on the correct syncer' do
         perform
@@ -37,9 +29,7 @@ RSpec.describe Canonical::Sync do
     context 'when the model is ":enchantment"' do
       subject(:perform) { described_class.perform(:enchantment, true) }
 
-      before do
-        allow(Canonical::Sync::Enchantments).to receive(:perform)
-      end
+      before { allow(Canonical::Sync::Enchantments).to receive(:perform) }
 
       it 'calls #perform on the correct syncer' do
         perform
@@ -50,9 +40,7 @@ RSpec.describe Canonical::Sync do
     context 'when the model is ":spell"' do
       subject(:perform) { described_class.perform(:spell, false) }
 
-      before do
-        allow(Canonical::Sync::Spells).to receive(:perform)
-      end
+      before { allow(Canonical::Sync::Spells).to receive(:perform) }
 
       it 'calls #perform on the correct syncer' do
         perform
@@ -63,9 +51,7 @@ RSpec.describe Canonical::Sync do
     context 'when the model is ":property"' do
       subject(:perform) { described_class.perform(:property, false) }
 
-      before do
-        allow(Canonical::Sync::Properties).to receive(:perform)
-      end
+      before { allow(Canonical::Sync::Properties).to receive(:perform) }
 
       it 'calls #perform on the correct syncer' do
         perform
@@ -76,9 +62,7 @@ RSpec.describe Canonical::Sync do
     context 'when the model is ":jewelry"' do
       subject(:perform) { described_class.perform(:jewelry, true) }
 
-      before do
-        allow(Canonical::Sync::JewelryItems).to receive(:perform)
-      end
+      before { allow(Canonical::Sync::JewelryItems).to receive(:perform) }
 
       it 'calls #perform on the correct syncer' do
         perform
@@ -89,9 +73,7 @@ RSpec.describe Canonical::Sync do
     context 'when the model is ":clothing"' do
       subject(:perform) { described_class.perform(:clothing, false) }
 
-      before do
-        allow(Canonical::Sync::ClothingItems).to receive(:perform)
-      end
+      before { allow(Canonical::Sync::ClothingItems).to receive(:perform) }
 
       it 'calls #perform on the correct syncer' do
         perform
@@ -102,9 +84,7 @@ RSpec.describe Canonical::Sync do
     context 'when the model is ":armor"' do
       subject(:perform) { described_class.perform(:armor, true) }
 
-      before do
-        allow(Canonical::Sync::Armor).to receive(:perform)
-      end
+      before { allow(Canonical::Sync::Armor).to receive(:perform) }
 
       it 'calls #perform on the correct syncer' do
         perform
@@ -115,9 +95,7 @@ RSpec.describe Canonical::Sync do
     context 'when the model is ":ingredient"' do
       subject(:perform) { described_class.perform(:ingredient, true) }
 
-      before do
-        allow(Canonical::Sync::Ingredients).to receive(:perform)
-      end
+      before { allow(Canonical::Sync::Ingredients).to receive(:perform) }
 
       it 'calls #perform on the correct syncer' do
         perform
@@ -128,9 +106,7 @@ RSpec.describe Canonical::Sync do
     context 'when the model is ":weapon"' do
       subject(:perform) { described_class.perform(:weapon, true) }
 
-      before do
-        allow(Canonical::Sync::Weapons).to receive(:perform)
-      end
+      before { allow(Canonical::Sync::Weapons).to receive(:perform) }
 
       it 'calls #perform on the correct syncer' do
         perform
@@ -141,9 +117,7 @@ RSpec.describe Canonical::Sync do
     context 'when the model is ":power"' do
       subject(:perform) { described_class.perform(:power, true) }
 
-      before do
-        allow(Canonical::Sync::Powers).to receive(:perform)
-      end
+      before { allow(Canonical::Sync::Powers).to receive(:perform) }
 
       it 'calls #perform on the correct syncer' do
         perform
@@ -154,9 +128,7 @@ RSpec.describe Canonical::Sync do
     context 'when the model is ":staff"' do
       subject(:perform) { described_class.perform(:staff, true) }
 
-      before do
-        allow(Canonical::Sync::Staves).to receive(:perform)
-      end
+      before { allow(Canonical::Sync::Staves).to receive(:perform) }
 
       it 'calls #perform on the correct syncer' do
         perform
@@ -167,9 +139,7 @@ RSpec.describe Canonical::Sync do
     context 'when the model is ":book"' do
       subject(:perform) { described_class.perform(:book, false) }
 
-      before do
-        allow(Canonical::Sync::Books).to receive(:perform)
-      end
+      before { allow(Canonical::Sync::Books).to receive(:perform) }
 
       it 'calls #perform on the correct syncer' do
         perform
@@ -180,9 +150,7 @@ RSpec.describe Canonical::Sync do
     context 'when the model is ":misc_item"' do
       subject(:perform) { described_class.perform(:misc_item, true) }
 
-      before do
-        allow(Canonical::Sync::MiscItems).to receive(:perform)
-      end
+      before { allow(Canonical::Sync::MiscItems).to receive(:perform) }
 
       it 'calls #perform on the correct syncer' do
         perform
@@ -193,9 +161,7 @@ RSpec.describe Canonical::Sync do
     context 'when the model is ":potion"' do
       subject(:perform) { described_class.perform(:potion, true) }
 
-      before do
-        allow(Canonical::Sync::Potions).to receive(:perform)
-      end
+      before { allow(Canonical::Sync::Potions).to receive(:perform) }
 
       it 'calls #perform on the correct syncer' do
         perform
@@ -206,9 +172,7 @@ RSpec.describe Canonical::Sync do
     context 'when the item is ":crafting_material"' do
       subject(:perform) { described_class.perform(:crafting_material) }
 
-      before do
-        allow(Canonical::Sync::CraftingMaterials).to receive(:perform)
-      end
+      before { allow(Canonical::Sync::CraftingMaterials).to receive(:perform) }
 
       it 'calls ::perform on the correct syncer' do
         perform
@@ -219,9 +183,7 @@ RSpec.describe Canonical::Sync do
     context 'when the item is ":tempering_material"' do
       subject(:perform) { described_class.perform(:tempering_material) }
 
-      before do
-        allow(Canonical::Sync::TemperingMaterials).to receive(:perform)
-      end
+      before { allow(Canonical::Sync::TemperingMaterials).to receive(:perform) }
 
       it 'calls ::perform on the correct syncer' do
         perform

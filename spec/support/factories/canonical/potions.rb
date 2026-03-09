@@ -13,9 +13,7 @@ FactoryBot.define do
     collectible { true }
 
     trait :with_associations do
-      after(:create) do |potion|
-        create_list(:canonical_potions_alchemical_property, 2, potion:)
-      end
+      after(:create) {|potion| create_list(:canonical_potions_alchemical_property, 2, potion:) }
     end
   end
 end

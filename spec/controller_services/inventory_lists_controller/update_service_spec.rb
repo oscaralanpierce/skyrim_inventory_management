@@ -117,9 +117,7 @@ RSpec.describe InventoryListsController::UpdateService do
       let(:inventory_list) { create(:inventory_list, game:) }
       let(:params) { { title: 'New Title' } }
 
-      before do
-        allow_any_instance_of(InventoryList).to receive(:update).and_raise(StandardError, 'Something went horribly wrong')
-      end
+      before { allow_any_instance_of(InventoryList).to receive(:update).and_raise(StandardError, 'Something went horribly wrong') }
 
       it 'returns a Service::InternalServerErrorResult' do
         expect(perform).to be_a(Service::InternalServerErrorResult)

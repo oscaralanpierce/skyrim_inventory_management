@@ -21,9 +21,7 @@ RSpec.describe InventoryItemsController::DestroyService do
       context 'when there is no matching item on another list' do
         let!(:list_item) { create(:inventory_item, list: inventory_list) }
 
-        before do
-          aggregate_list.add_item_from_child_list(list_item)
-        end
+        before { aggregate_list.add_item_from_child_list(list_item) }
 
         it 'destroys the list item and aggregate list item' do
           expect { perform }
@@ -116,9 +114,7 @@ RSpec.describe InventoryItemsController::DestroyService do
     context 'when something unexpected goes wrong' do
       let!(:list_item) { create(:inventory_item, list: inventory_list) }
 
-      before do
-        allow_any_instance_of(InventoryList).to receive(:aggregate).and_raise(StandardError.new('Something went horribly wrong'))
-      end
+      before { allow_any_instance_of(InventoryList).to receive(:aggregate).and_raise(StandardError.new('Something went horribly wrong')) }
 
       it 'returns a Service::InternalServerErrorResult' do
         expect(perform).to be_a(Service::InternalServerErrorResult)

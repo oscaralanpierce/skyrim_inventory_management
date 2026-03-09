@@ -40,17 +40,7 @@ RSpec.describe ApplicationController::AuthorizationService do
     context 'when login is successful' do
       let(:status) { 200 }
       let(:success) { true }
-      let(:body) do
-        File.read(
-          Rails.root.join(
-            'spec',
-            'support',
-            'fixtures',
-            'auth',
-            'success.json',
-          ),
-        )
-      end
+      let(:body) { File.read(Rails.root.join('spec', 'support', 'fixtures', 'auth', 'success.json')) }
 
       context 'when a matching user exists' do
         let!(:user) { create(:authenticated_user) }
@@ -106,22 +96,10 @@ RSpec.describe ApplicationController::AuthorizationService do
       let(:status) { 200 }
       let(:success) { true }
 
-      before do
-        allow(Rails.logger).to receive(:error)
-      end
+      before { allow(Rails.logger).to receive(:error) }
 
       context 'when there is no "users" array in the returned value' do
-        let(:body) do
-          File.read(
-            Rails.root.join(
-              'spec',
-              'support',
-              'fixtures',
-              'auth',
-              'no_users_array.json',
-            ),
-          )
-        end
+        let(:body) { File.read(Rails.root.join('spec', 'support', 'fixtures', 'auth', 'no_users_array.json')) }
 
         it "doesn't create a user" do
           expect { perform }
@@ -143,24 +121,12 @@ RSpec.describe ApplicationController::AuthorizationService do
 
         it 'logs the error' do
           perform
-          expect(Rails.logger)
-            .to have_received(:error)
-                  .with('ApplicationController::AuthorizationService::AmbiguousUserError validating user access token: Token validation response did not include a user')
+          expect(Rails.logger).to have_received(:error).with('ApplicationController::AuthorizationService::AmbiguousUserError validating user access token: Token validation response did not include a user')
         end
       end
 
       context 'when there are no users in the returned array' do
-        let(:body) do
-          File.read(
-            Rails.root.join(
-              'spec',
-              'support',
-              'fixtures',
-              'auth',
-              'empty_users_array.json',
-            ),
-          )
-        end
+        let(:body) { File.read(Rails.root.join('spec', 'support', 'fixtures', 'auth', 'empty_users_array.json')) }
 
         it "doesn't create a user" do
           expect { perform }
@@ -182,24 +148,12 @@ RSpec.describe ApplicationController::AuthorizationService do
 
         it 'logs the error' do
           perform
-          expect(Rails.logger)
-            .to have_received(:error)
-                  .with('ApplicationController::AuthorizationService::AmbiguousUserError validating user access token: Token validation response did not include a user')
+          expect(Rails.logger).to have_received(:error).with('ApplicationController::AuthorizationService::AmbiguousUserError validating user access token: Token validation response did not include a user')
         end
       end
 
       context 'when the token response includes multiple users' do
-        let(:body) do
-          File.read(
-            Rails.root.join(
-              'spec',
-              'support',
-              'fixtures',
-              'auth',
-              'multiple_users.json',
-            ),
-          )
-        end
+        let(:body) { File.read(Rails.root.join('spec', 'support', 'fixtures', 'auth', 'multiple_users.json')) }
 
         it "doesn't create a user" do
           expect { perform }
@@ -221,9 +175,7 @@ RSpec.describe ApplicationController::AuthorizationService do
 
         it 'logs the error' do
           perform
-          expect(Rails.logger)
-            .to have_received(:error)
-                  .with('ApplicationController::AuthorizationService::AmbiguousUserError validating user access token: Token validation response included multiple users')
+          expect(Rails.logger).to have_received(:error).with('ApplicationController::AuthorizationService::AmbiguousUserError validating user access token: Token validation response included multiple users')
         end
       end
     end
@@ -234,11 +186,7 @@ RSpec.describe ApplicationController::AuthorizationService do
 
       # Note: We don't actually know what an unsuccessful response body would look like
       #       because we haven't received one yet during manual testing.
-      let(:body) do
-        {
-          error: 'Something went wrong',
-        }.to_json
-      end
+      let(:body) { { error: 'Something went wrong' }.to_json }
 
       before do
         allow(Rails.logger).to receive(:debug)
@@ -296,9 +244,7 @@ RSpec.describe ApplicationController::AuthorizationService do
 
       it 'logs the error' do
         perform
-        expect(Rails.logger)
-          .to have_received(:error)
-                .with('StandardError validating user access token: Something went wrong')
+        expect(Rails.logger).to have_received(:error).with('StandardError validating user access token: Something went wrong')
       end
     end
   end

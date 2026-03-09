@@ -1,19 +1,10 @@
 # frozen_string_literal: true
 
 class Book < InGameItem
-  belongs_to :canonical_book,
-             optional: true,
-             class_name: 'Canonical::Book',
-             inverse_of: :books
+  belongs_to :canonical_book, optional: true, class_name: 'Canonical::Book', inverse_of: :books
 
-  has_many :recipes_canonical_ingredients,
-           dependent: :destroy,
-           inverse_of: :recipe,
-           foreign_key: 'recipe_id'
-  has_many :canonical_ingredients,
-           through: :recipes_canonical_ingredients,
-           class_name: 'Canonical::Ingredient',
-           source: :ingredient
+  has_many :recipes_canonical_ingredients, dependent: :destroy, inverse_of: :recipe, foreign_key: 'recipe_id'
+  has_many :canonical_ingredients, through: :recipes_canonical_ingredients, class_name: 'Canonical::Ingredient', source: :ingredient
 
   validates :title, presence: true
 
@@ -29,15 +20,7 @@ class Book < InGameItem
 
     return canonicals if canonicals.none? || canonical_ingredients.none?
 
-    recipes_canonical_ingredients.each do |join_model|
-      canonicals = canonicals
-                     .joins(:recipes_canonical_ingredients)
-                     .where(
-                       recipes_canonical_ingredients: {
-                         ingredient_id: join_model.ingredient_id,
-                       },
-                     )
-    end
+    recipes_canonical_ingredients.each {|join_model| canonicals = canonicals.joins(:recipes_canonical_ingredients).where(recipes_canonical_ingredients: { ingredient_id: join_model.ingredient_id }) }
 
     Canonical::Book.where(id: canonicals.ids)
   end
@@ -94,10 +77,6 @@ class Book < InGameItem
   end
 
   def attributes_to_match
-    {
-      authors: authors.presence,
-      unit_weight:,
-      skill_name:,
-    }.compact
+    { authors: authors.presence, unit_weight:, skill_name: }.compact
   end
 end

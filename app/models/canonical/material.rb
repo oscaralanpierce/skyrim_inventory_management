@@ -10,11 +10,7 @@ module Canonical
 
     validate :validate_mutual_exclusivity
     validate :validate_uniqueness_in_proper_scope
-    validates :quantity,
-              numericality: {
-                only_integer: true,
-                greater_than: 0,
-              }
+    validates :quantity, numericality: { only_integer: true, greater_than: 0 }
 
     delegate :name, to: :source_material
 
@@ -29,10 +25,7 @@ module Canonical
     def validate_mutual_exclusivity
       return unless craftable.present? && temperable.present?
 
-      errors.add(
-        :base,
-        'must have either a craftable or a temperable association, not both',
-      )
+      errors.add(:base, 'must have either a craftable or a temperable association, not both')
     end
 
     def validate_uniqueness_in_proper_scope
@@ -50,21 +43,11 @@ module Canonical
     end
 
     def unique_craftable?
-      Canonical::Material.find_by(
-        source_material:,
-        source_material_type:,
-        craftable_id:,
-        craftable_type:,
-      ).nil?
+      Canonical::Material.find_by(source_material:, source_material_type:, craftable_id:, craftable_type:).nil?
     end
 
     def unique_temperable?
-      Canonical::Material.find_by(
-        source_material:,
-        source_material_type:,
-        temperable_id:,
-        temperable_type:,
-      ).nil?
+      Canonical::Material.find_by(source_material:, source_material_type:, temperable_id:, temperable_type:).nil?
     end
   end
 end

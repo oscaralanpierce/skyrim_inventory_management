@@ -84,9 +84,7 @@ RSpec.describe GamesController::UpdateService do
       let(:game) { create(:game, user:) }
       let(:params) { { description: 'New description' } }
 
-      before do
-        allow_any_instance_of(Game).to receive(:update).and_raise(StandardError, 'Something went horribly wrong')
-      end
+      before { allow_any_instance_of(Game).to receive(:update).and_raise(StandardError, 'Something went horribly wrong') }
 
       it 'returns a Service::InternalServerErrorResult' do
         expect(perform).to be_a(Service::InternalServerErrorResult)

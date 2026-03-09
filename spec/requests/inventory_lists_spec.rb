@@ -3,12 +3,7 @@
 require 'rails_helper'
 
 RSpec.describe 'InventoryLists', type: :request do
-  let(:headers) do
-    {
-      'Content-Type' => 'application/json',
-      'Authorization' => 'Bearer xxxxxxx',
-    }
-  end
+  let(:headers) { { 'Content-Type' => 'application/json', 'Authorization' => 'Bearer xxxxxxx' } }
 
   describe 'GET /games/:game_id/inventory_lists' do
     subject(:get_index) { get "/games/#{game.id}/inventory_lists", headers: }
@@ -16,9 +11,7 @@ RSpec.describe 'InventoryLists', type: :request do
     context 'when authenticated' do
       let!(:user) { create(:authenticated_user) }
 
-      before do
-        stub_successful_login
-      end
+      before { stub_successful_login }
 
       context 'when the game is not found' do
         let(:game) { double(id: 491_349_759) }
@@ -80,9 +73,7 @@ RSpec.describe 'InventoryLists', type: :request do
     context 'when unauthenticated' do
       let!(:game) { create(:game) }
 
-      before do
-        stub_unsuccessful_login
-      end
+      before { stub_unsuccessful_login }
 
       it 'returns status 401' do
         get_index
@@ -102,9 +93,7 @@ RSpec.describe 'InventoryLists', type: :request do
     context 'when authenticated' do
       let!(:user) { create(:authenticated_user) }
 
-      before do
-        stub_successful_login
-      end
+      before { stub_successful_login }
 
       context 'when all goes well' do
         let(:game) { create(:game, user:) }
@@ -236,9 +225,7 @@ RSpec.describe 'InventoryLists', type: :request do
     context 'when unauthenticated' do
       let!(:game) { create(:game) }
 
-      before do
-        stub_unsuccessful_login
-      end
+      before { stub_unsuccessful_login }
 
       it "doesn't create inventory lists" do
         expect { create_inventory_list }
@@ -263,9 +250,7 @@ RSpec.describe 'InventoryLists', type: :request do
     context 'when authenticated' do
       let!(:user) { create(:authenticated_user) }
 
-      before do
-        stub_successful_login
-      end
+      before { stub_successful_login }
 
       context 'when all goes well' do
         let!(:inventory_list) { create(:inventory_list, game:) }
@@ -394,9 +379,7 @@ RSpec.describe 'InventoryLists', type: :request do
         let!(:inventory_list) { create(:inventory_list, game:) }
         let(:game) { create(:game, user:) }
 
-        before do
-          allow_any_instance_of(User).to receive(:inventory_lists).and_raise(StandardError, 'Something went catastrophically wrong')
-        end
+        before { allow_any_instance_of(User).to receive(:inventory_lists).and_raise(StandardError, 'Something went catastrophically wrong') }
 
         it 'returns status 500' do
           update_inventory_list
@@ -414,9 +397,7 @@ RSpec.describe 'InventoryLists', type: :request do
       let!(:inventory_list) { create(:inventory_list) }
       let(:list_id) { inventory_list.id }
 
-      before do
-        stub_unsuccessful_login
-      end
+      before { stub_unsuccessful_login }
 
       it "doesn't update the inventory list" do
         expect { update_inventory_list }
@@ -441,9 +422,7 @@ RSpec.describe 'InventoryLists', type: :request do
     context 'when authenticated' do
       let!(:user) { create(:authenticated_user) }
 
-      before do
-        stub_successful_login
-      end
+      before { stub_successful_login }
 
       context 'when all goes well' do
         let!(:inventory_list) { create(:inventory_list, game:) }
@@ -572,9 +551,7 @@ RSpec.describe 'InventoryLists', type: :request do
         let!(:inventory_list) { create(:inventory_list, game:) }
         let(:game) { create(:game, user:) }
 
-        before do
-          allow_any_instance_of(User).to receive(:inventory_lists).and_raise(StandardError, 'Something went catastrophically wrong')
-        end
+        before { allow_any_instance_of(User).to receive(:inventory_lists).and_raise(StandardError, 'Something went catastrophically wrong') }
 
         it 'returns status 500' do
           update_inventory_list
@@ -592,9 +569,7 @@ RSpec.describe 'InventoryLists', type: :request do
       let!(:inventory_list) { create(:inventory_list) }
       let(:list_id) { inventory_list.id }
 
-      before do
-        stub_unsuccessful_login
-      end
+      before { stub_unsuccessful_login }
 
       it "doesn't update the inventory list" do
         expect { update_inventory_list }
@@ -620,9 +595,7 @@ RSpec.describe 'InventoryLists', type: :request do
       let!(:user) { create(:authenticated_user) }
       let(:game) { create(:game, user:) }
 
-      before do
-        stub_successful_login
-      end
+      before { stub_successful_login }
 
       context 'when the inventory list exists' do
         let!(:inventory_list) { create(:inventory_list, game:) }
@@ -645,9 +618,7 @@ RSpec.describe 'InventoryLists', type: :request do
         end
 
         context "when this is not the game's last regular inventory list" do
-          before do
-            create(:inventory_list, game:, aggregate_list: game.aggregate_inventory_list)
-          end
+          before { create(:inventory_list, game:, aggregate_list: game.aggregate_inventory_list) }
 
           it 'deletes the requested inventory list' do
             expect { delete_inventory_list }
@@ -722,9 +693,7 @@ RSpec.describe 'InventoryLists', type: :request do
     context 'when unauthenticated' do
       let!(:inventory_list) { create(:inventory_list) }
 
-      before do
-        stub_unsuccessful_login
-      end
+      before { stub_unsuccessful_login }
 
       it "doesn't destroy the inventory list" do
         expect { delete_inventory_list }

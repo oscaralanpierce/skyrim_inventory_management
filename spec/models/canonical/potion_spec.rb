@@ -158,13 +158,7 @@ RSpec.describe Canonical::Potion, type: :model do
       let(:alchemical_property) { create(:alchemical_property) }
 
       before do
-        potion
-          .canonical_potions_alchemical_properties
-          .create!(
-            alchemical_property:,
-            strength: 15,
-            duration: 30,
-          )
+        potion.canonical_potions_alchemical_properties.create!(alchemical_property:, strength: 15, duration: 30)
 
         potion.reload
       end

@@ -31,9 +31,7 @@ RSpec.describe Ingredient, type: :model do
     end
 
     context 'when there are multiple matching canonical ingredients' do
-      before do
-        create_list(:canonical_ingredient, 3, name: ingredient.name)
-      end
+      before { create_list(:canonical_ingredient, 3, name: ingredient.name) }
 
       it 'is valid' do
         expect(ingredient).to be_valid
@@ -41,9 +39,7 @@ RSpec.describe Ingredient, type: :model do
     end
 
     context 'when there is one matching canonical ingredient' do
-      before do
-        create(:canonical_ingredient, name: ingredient.name)
-      end
+      before { create(:canonical_ingredient, name: ingredient.name) }
 
       it 'is valid' do
         expect(ingredient).to be_valid
@@ -64,14 +60,7 @@ RSpec.describe Ingredient, type: :model do
       context 'when the canonical ingredient is not unique' do
         let(:canonical_ingredient) { create(:canonical_ingredient) }
 
-        before do
-          create_list(
-            :ingredient,
-            3,
-            canonical_ingredient:,
-            game:,
-          )
-        end
+        before { create_list(:ingredient, 3, canonical_ingredient:, game:) }
 
         it 'is valid' do
           expect(ingredient).to be_valid
@@ -79,14 +68,7 @@ RSpec.describe Ingredient, type: :model do
       end
 
       context 'when the canonical ingredient is unique' do
-        let(:canonical_ingredient) do
-          create(
-            :canonical_ingredient,
-            max_quantity: 1,
-            unique_item: true,
-            rare_item: true,
-          )
-        end
+        let(:canonical_ingredient) { create(:canonical_ingredient, max_quantity: 1, unique_item: true, rare_item: true) }
 
         context 'when the canonical ingredient has no other matches' do
           it 'is valid' do
@@ -95,9 +77,7 @@ RSpec.describe Ingredient, type: :model do
         end
 
         context 'when the canonical ingredient has another match for another game' do
-          before do
-            create(:ingredient, canonical_ingredient:)
-          end
+          before { create(:ingredient, canonical_ingredient:) }
 
           it 'is valid' do
             expect(ingredient).to be_valid
@@ -105,13 +85,7 @@ RSpec.describe Ingredient, type: :model do
         end
 
         context 'when the canonical ingredient has another match for the same game' do
-          before do
-            create(
-              :ingredient,
-              canonical_ingredient:,
-              game:,
-            )
-          end
+          before { create(:ingredient, canonical_ingredient:, game:) }
 
           it 'is invalid' do
             validate
@@ -159,9 +133,7 @@ RSpec.describe Ingredient, type: :model do
         let!(:matching_canonicals) { create_list(:canonical_ingredient, 2, name: 'Blue Mountain Flower', unit_weight: 0.1) }
         let(:ingredient) { create(:ingredient, name: 'Blue Mountain Flower', unit_weight: 0.1) }
 
-        before do
-          create(:canonical_ingredient, name: 'Blue Mountain Flower', unit_weight: 0.2)
-        end
+        before { create(:canonical_ingredient, name: 'Blue Mountain Flower', unit_weight: 0.2) }
 
         it 'returns all the matching canonical ingredients' do
           expect(ingredient.canonical_models).to eq matching_canonicals
@@ -171,35 +143,16 @@ RSpec.describe Ingredient, type: :model do
       # NB: No context is required for when no join model fully matches because
       #     join model validations will fail if they don't match.
       context 'when there are also alchemical properties involved' do
-        let!(:matching_canonicals) do
-          create_list(
-            :canonical_ingredient,
-            3,
-            :with_alchemical_properties,
-            name: 'Blue Mountain Flower',
-          )
-        end
+        let!(:matching_canonicals) { create_list(:canonical_ingredient, 3, :with_alchemical_properties, name: 'Blue Mountain Flower') }
 
         let(:ingredient) { create(:ingredient, name: 'Blue Mountain Flower') }
         let(:alchemical_property) { matching_canonicals.second.alchemical_properties.reload.second }
 
         context 'when multiple join models fully match' do
           before do
-            matching_canonicals
-              .last
-              .reload
-              .canonical_ingredients_alchemical_properties
-              .find_by(priority: alchemical_property.priority)
-              .update!(
-                alchemical_property:,
-              )
+            matching_canonicals.last.reload.canonical_ingredients_alchemical_properties.find_by(priority: alchemical_property.priority).update!(alchemical_property:)
 
-            create(
-              :ingredients_alchemical_property,
-              ingredient:,
-              alchemical_property:,
-              priority: alchemical_property.priority,
-            )
+            create(:ingredients_alchemical_property, ingredient:, alchemical_property:, priority: alchemical_property.priority)
 
             ingredient.reload
           end
@@ -211,21 +164,9 @@ RSpec.describe Ingredient, type: :model do
 
         context 'when one join model fully matches' do
           before do
-            matching_canonicals
-              .last
-              .reload
-              .canonical_ingredients_alchemical_properties
-              .find_by(priority: 4)
-              .update!(
-                alchemical_property:,
-              )
+            matching_canonicals.last.reload.canonical_ingredients_alchemical_properties.find_by(priority: 4).update!(alchemical_property:)
 
-            create(
-              :ingredients_alchemical_property,
-              ingredient:,
-              alchemical_property:,
-              priority: 4,
-            )
+            create(:ingredients_alchemical_property, ingredient:, alchemical_property:, priority: 4)
 
             ingredient.reload
           end
@@ -248,13 +189,7 @@ RSpec.describe Ingredient, type: :model do
     context 'when the canonical model changes' do
       let(:ingredient) { create(:ingredient_with_matching_canonical) }
 
-      let!(:new_canonical) do
-        create(
-          :canonical_ingredient,
-          name: 'Powdered Mammoth Tusk',
-          unit_weight: 0.1,
-        )
-      end
+      let!(:new_canonical) { create(:canonical_ingredient, name: 'Powdered Mammoth Tusk', unit_weight: 0.1) }
 
       it 'returns the canonical that matches' do
         ingredient.name = 'powdered mammoth tusk'
@@ -299,13 +234,7 @@ RSpec.describe Ingredient, type: :model do
       let(:ingredient) { create(:ingredient_with_matching_canonical) }
 
       context 'when the update changes the canonical match' do
-        let!(:new_canonical) do
-          create(
-            :canonical_ingredient,
-            name: 'Horseradish',
-            unit_weight: 0.2,
-          )
-        end
+        let!(:new_canonical) { create(:canonical_ingredient, name: 'Horseradish', unit_weight: 0.2) }
 
         it 'changes the canonical association' do
           ingredient.name = 'horseradish'
@@ -328,14 +257,7 @@ RSpec.describe Ingredient, type: :model do
       end
 
       context 'when the update results in an ambiguous match' do
-        before do
-          create_list(
-            :canonical_ingredient,
-            2,
-            name: 'Horseradish',
-            unit_weight: 0.2,
-          )
-        end
+        before { create_list(:canonical_ingredient, 2, name: 'Horseradish', unit_weight: 0.2) }
 
         it 'sets the canonical ingredient association to nil' do
           ingredient.name = 'horseradish'

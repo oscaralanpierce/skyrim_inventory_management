@@ -1,25 +1,13 @@
 # frozen_string_literal: true
 
 class Armor < EnchantableInGameItem
-  belongs_to :canonical_armor,
-             optional: true,
-             inverse_of: :armors,
-             class_name: 'Canonical::Armor'
+  belongs_to :canonical_armor, optional: true, inverse_of: :armors, class_name: 'Canonical::Armor'
 
   validates :name, presence: true
 
-  validates :weight,
-            inclusion: {
-              in: Canonical::Armor::ARMOR_WEIGHTS,
-              message: 'must be "light armor" or "heavy armor"',
-              allow_nil: true,
-            }
+  validates :weight, inclusion: { in: Canonical::Armor::ARMOR_WEIGHTS, message: 'must be "light armor" or "heavy armor"', allow_nil: true }
 
-  validates :unit_weight,
-            numericality: {
-              greater_than_or_equal_to: 0,
-              allow_nil: true,
-            }
+  validates :unit_weight, numericality: { greater_than_or_equal_to: 0, allow_nil: true }
 
   def canonical_model
     canonical_armor
@@ -79,9 +67,6 @@ class Armor < EnchantableInGameItem
   end
 
   def attributes_to_match
-    {
-      unit_weight:,
-      weight:,
-    }.compact
+    { unit_weight:, weight: }.compact
   end
 end

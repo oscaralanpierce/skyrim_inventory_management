@@ -5,48 +5,16 @@ module Canonical
     self.table_name = 'canonical_misc_items'
 
     include Canonical
-    VALID_ITEM_TYPES = [
-      'animal part',
-      'book',
-      'daedric artifact',
-      'dragon claw',
-      'Dwemer artifact',
-      'gemstone',
-      'key',
-      'larceny trophy',
-      'map',
-      'miscellaneous',
-      'paragon',
-      'pelt',
-    ].freeze
+    VALID_ITEM_TYPES = ['animal part', 'book', 'daedric artifact', 'dragon claw', 'Dwemer artifact', 'gemstone', 'key', 'larceny trophy', 'map', 'miscellaneous', 'paragon', 'pelt'].freeze
 
-    has_many :misc_items,
-             inverse_of: :canonical_misc_item,
-             dependent: :nullify,
-             foreign_key: 'canonical_misc_item_id',
-             class_name: '::MiscItem'
+    has_many :misc_items, inverse_of: :canonical_misc_item, dependent: :nullify, foreign_key: 'canonical_misc_item_id', class_name: '::MiscItem'
 
     validates :name, presence: true
-    validates :item_code,
-              presence: true,
-              uniqueness: { message: 'must be unique' }
-    validates :unit_weight,
-              presence: true,
-              numericality: { greater_than_or_equal_to: 0 }
+    validates :item_code, presence: true, uniqueness: { message: 'must be unique' }
+    validates :unit_weight, presence: true, numericality: { greater_than_or_equal_to: 0 }
     validates :item_types, presence: true
-    validates :add_on,
-              presence: true,
-              inclusion: {
-                in: SUPPORTED_ADD_ONS,
-                message: UNSUPPORTED_ADD_ON_MESSAGE,
-              }
-    validates :max_quantity,
-              numericality: {
-                greater_than_or_equal_to: 1,
-                only_integer: true,
-                message: 'must be an integer of at least 1',
-                allow_nil: true,
-              }
+    validates :add_on, presence: true, inclusion: { in: SUPPORTED_ADD_ONS, message: UNSUPPORTED_ADD_ON_MESSAGE }
+    validates :max_quantity, numericality: { greater_than_or_equal_to: 1, only_integer: true, message: 'must be an integer of at least 1', allow_nil: true }
 
     validate :validate_item_types
     validate :validate_boolean_values

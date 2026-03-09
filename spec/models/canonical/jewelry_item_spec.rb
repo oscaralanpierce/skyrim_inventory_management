@@ -219,9 +219,7 @@ RSpec.describe Canonical::JewelryItem, type: :model do
       let(:item) { create(:canonical_jewelry_item) }
       let(:enchantment) { create(:enchantment) }
 
-      before do
-        item.enchantables_enchantments.create!(enchantment:, strength: 17)
-      end
+      before { item.enchantables_enchantments.create!(enchantment:, strength: 17) }
 
       it 'gives the enchantment strength' do
         expect(item.enchantments.first.strength).to eq 17
@@ -232,24 +230,9 @@ RSpec.describe Canonical::JewelryItem, type: :model do
       subject(:crafting_materials) { item.crafting_materials }
 
       let(:item) { create(:canonical_jewelry_item) }
-      let(:canonical_materials) do
-        [
-          create(
-            :canonical_material,
-            craftable: item,
-            quantity: 2,
-          ),
-          create(
-            :canonical_material,
-            craftable: item,
-            quantity: 3,
-          ),
-        ]
-      end
+      let(:canonical_materials) { [create(:canonical_material, craftable: item, quantity: 2), create(:canonical_material, craftable: item, quantity: 3)] }
 
-      before do
-        item.reload
-      end
+      before { item.reload }
 
       it 'returns the canonical materials used to craft the item' do
         raw_materials = canonical_materials.map(&:source_material)

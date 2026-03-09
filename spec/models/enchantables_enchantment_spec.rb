@@ -11,13 +11,7 @@ RSpec.describe EnchantablesEnchantment, type: :model do
     describe 'enchantable item and enchantment' do
       let(:armor) { create(:canonical_armor) }
 
-      let(:model) do
-        build(
-          :enchantables_enchantment,
-          enchantable: armor,
-          enchantment:,
-        )
-      end
+      let(:model) { build(:enchantables_enchantment, enchantable: armor, enchantment:) }
 
       it 'must form a unique combination' do
         create(:enchantables_enchantment, :for_canonical_armor, enchantable: armor, enchantment:)
@@ -82,10 +76,7 @@ RSpec.describe EnchantablesEnchantment, type: :model do
   end
 
   describe 'polymorphic associations' do
-    subject(:enchantable_type) do
-      described_class
-        .new(enchantable: item, enchantment: create(:enchantment)).enchantable_type
-    end
+    subject(:enchantable_type) { described_class.new(enchantable: item, enchantment: create(:enchantment)).enchantable_type }
 
     context 'when the association is a canonical armor item' do
       let(:item) { create(:canonical_armor) }
@@ -122,9 +113,7 @@ RSpec.describe EnchantablesEnchantment, type: :model do
     context 'when the association is an armor item' do
       let(:item) { create(:armor) }
 
-      before do
-        create(:canonical_armor)
-      end
+      before { create(:canonical_armor) }
 
       it 'sets the enchantable type' do
         expect(enchantable_type).to eq 'Armor'
@@ -134,9 +123,7 @@ RSpec.describe EnchantablesEnchantment, type: :model do
     context 'when the association is a clothing item' do
       let(:item) { create(:clothing_item) }
 
-      before do
-        create(:canonical_clothing_item)
-      end
+      before { create(:canonical_clothing_item) }
 
       it 'sets the enchantable type' do
         expect(enchantable_type).to eq 'ClothingItem'
@@ -146,9 +133,7 @@ RSpec.describe EnchantablesEnchantment, type: :model do
     context 'when the association is a jewelry item' do
       let(:item) { create(:jewelry_item) }
 
-      before do
-        create(:canonical_jewelry_item)
-      end
+      before { create(:canonical_jewelry_item) }
 
       it 'sets the enchantable type' do
         expect(enchantable_type).to eq 'JewelryItem'
@@ -158,9 +143,7 @@ RSpec.describe EnchantablesEnchantment, type: :model do
     context 'when the association is a weapon' do
       let(:item) { create(:weapon) }
 
-      before do
-        create(:canonical_weapon)
-      end
+      before { create(:canonical_weapon) }
 
       it 'sets the enchantable type' do
         expect(enchantable_type).to eq 'Weapon'
@@ -171,17 +154,9 @@ RSpec.describe EnchantablesEnchantment, type: :model do
   describe '::added_automatically scope' do
     subject(:added_automatically) { described_class.added_automatically }
 
-    let!(:included_models) do
-      [
-        create(:enchantables_enchantment, :for_armor, added_automatically: true),
-        create(:enchantables_enchantment, :for_weapon, added_automatically: true),
-        create(:enchantables_enchantment, :for_canonical_clothing),
-      ]
-    end
+    let!(:included_models) { [create(:enchantables_enchantment, :for_armor, added_automatically: true), create(:enchantables_enchantment, :for_weapon, added_automatically: true), create(:enchantables_enchantment, :for_canonical_clothing)] }
 
-    before do
-      create(:enchantables_enchantment, :for_armor, added_automatically: false)
-    end
+    before { create(:enchantables_enchantment, :for_armor, added_automatically: false) }
 
     it 'includes all models with #added_automatically set to true' do
       expect(added_automatically).to contain_exactly(*included_models)
@@ -191,12 +166,7 @@ RSpec.describe EnchantablesEnchantment, type: :model do
   describe '::added_manually scope' do
     subject(:added_manually) { described_class.added_manually }
 
-    let!(:included_models) do
-      [
-        create(:enchantables_enchantment, :for_armor, added_automatically: false),
-        create(:enchantables_enchantment, :for_weapon, added_automatically: false),
-      ]
-    end
+    let!(:included_models) { [create(:enchantables_enchantment, :for_armor, added_automatically: false), create(:enchantables_enchantment, :for_weapon, added_automatically: false)] }
 
     before do
       create(:enchantables_enchantment, :for_armor, added_automatically: true)
@@ -229,11 +199,7 @@ RSpec.describe EnchantablesEnchantment, type: :model do
         before do
           canonical = create(:canonical_armor)
 
-          create(
-            :enchantables_enchantment,
-            enchantable: canonical,
-            enchantment:,
-          )
+          create(:enchantables_enchantment, enchantable: canonical, enchantment:)
         end
 
         it "doesn't add errors" do
@@ -244,18 +210,9 @@ RSpec.describe EnchantablesEnchantment, type: :model do
 
       context 'when there is no canonical model that matches' do
         before do
-          canonicals = create_list(
-            :canonical_armor,
-            2,
-            enchantable: false,
-          )
+          canonicals = create_list(:canonical_armor, 2, enchantable: false)
 
-          create(
-            :enchantables_enchantment,
-            enchantable: canonicals.first,
-            enchantment:,
-            strength: 2,
-          )
+          create(:enchantables_enchantment, enchantable: canonicals.first, enchantment:, strength: 2)
         end
 
         it 'adds errors' do
@@ -271,9 +228,7 @@ RSpec.describe EnchantablesEnchantment, type: :model do
 
     let(:model) { build(:enchantables_enchantment, enchantable:, enchantment:) }
 
-    before do
-      allow(enchantable).to receive(:save!)
-    end
+    before { allow(enchantable).to receive(:save!) }
 
     context 'when the enchantable association is a canonical model' do
       let(:enchantable) { create(:canonical_jewelry_item) }

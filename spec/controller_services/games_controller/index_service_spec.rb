@@ -39,9 +39,7 @@ RSpec.describe GamesController::IndexService do
     context 'when something unexpected goes wrong' do
       let(:user) { create(:user_with_games) }
 
-      before do
-        allow_any_instance_of(User).to receive(:games).and_raise(StandardError, 'Something went horribly wrong')
-      end
+      before { allow_any_instance_of(User).to receive(:games).and_raise(StandardError, 'Something went horribly wrong') }
 
       it 'returns a Service::InternalServerErrorResult' do
         expect(perform).to be_a(Service::InternalServerErrorResult)

@@ -9,9 +9,7 @@ RSpec.describe Canonical::Sync::JewelryItems do
   let(:json_path) { Rails.root.join('spec', 'support', 'fixtures', 'canonical', 'sync', 'jewelry_items.json') }
   let!(:json_data) { File.read(json_path) }
 
-  before do
-    allow(File).to receive(:read).and_return(json_data)
-  end
+  before { allow(File).to receive(:read).and_return(json_data) }
 
   describe '::perform' do
     subject(:perform) { described_class.perform(preserve_existing_records) }
@@ -22,9 +20,7 @@ RSpec.describe Canonical::Sync::JewelryItems do
       context 'when there are no existing jewelry items in the database' do
         let(:syncer) { described_class.new(preserve_existing_records) }
 
-        before do
-          create(:enchantment, name: 'Fortify Health')
-        end
+        before { create(:enchantment, name: 'Fortify Health') }
 
         it 'instantiates itseslf' do
           allow(described_class).to receive(:new).and_return(syncer)
@@ -51,9 +47,7 @@ RSpec.describe Canonical::Sync::JewelryItems do
         let!(:item_not_in_json) { create(:canonical_jewelry_item, item_code: '12345678') }
         let(:syncer) { described_class.new(preserve_existing_records) }
 
-        before do
-          create(:enchantment, name: 'Fortify Health')
-        end
+        before { create(:enchantment, name: 'Fortify Health') }
 
         it 'instantiates itself' do
           allow(described_class).to receive(:new).and_return(syncer)
@@ -85,17 +79,13 @@ RSpec.describe Canonical::Sync::JewelryItems do
       end
 
       context 'when there are no enchantments in the database' do
-        before do
-          allow(Rails.logger).to receive(:error)
-        end
+        before { allow(Rails.logger).to receive(:error) }
 
         it "logs an error and doesn't create models", :aggregate_failures do
           expect { perform }
             .to raise_error(Canonical::Sync::PrerequisiteNotMetError)
 
-          expect(Rails.logger)
-            .to have_received(:error)
-                  .with('Prerequisite(s) not met: sync Enchantment before canonical jewelry items')
+          expect(Rails.logger).to have_received(:error).with('Prerequisite(s) not met: sync Enchantment before canonical jewelry items')
           expect(Canonical::JewelryItem.count).to eq 0
         end
       end
@@ -113,9 +103,7 @@ RSpec.describe Canonical::Sync::JewelryItems do
           expect { perform }
             .to raise_error ActiveRecord::RecordInvalid
 
-          expect(Rails.logger)
-            .to have_received(:error)
-                  .with('Validation error saving associations for canonical jewelry item "00094E3E": Validation failed: Enchantment must exist')
+          expect(Rails.logger).to have_received(:error).with('Validation error saving associations for canonical jewelry item "00094E3E": Validation failed: Enchantment must exist')
         end
       end
     end
@@ -126,9 +114,7 @@ RSpec.describe Canonical::Sync::JewelryItems do
       let!(:item_in_json) { create(:canonical_jewelry_item, item_code: '00094E3E', jewelry_type: 'circlet') }
       let!(:item_not_in_json) { create(:canonical_jewelry_item, item_code: '12345678') }
 
-      before do
-        create(:enchantment, name: 'Fortify Health')
-      end
+      before { create(:enchantment, name: 'Fortify Health') }
 
       it 'instantiates itself' do
         allow(described_class).to receive(:new).and_return(syncer)
@@ -158,20 +144,14 @@ RSpec.describe Canonical::Sync::JewelryItems do
       let(:preserve_existing_records) { false }
 
       context 'when an ActiveRecord::RecordInvalid error is raised' do
-        let(:errored_model) do
-          instance_double Canonical::JewelryItem,
-                          errors:,
-                          class: class_double(Canonical::JewelryItem, i18n_scope: :activerecord)
-        end
+        let(:errored_model) { instance_double Canonical::JewelryItem, errors:, class: class_double(Canonical::JewelryItem, i18n_scope: :activerecord) }
 
         let(:errors) { double('errors', full_messages: ["Name can't be blank"]) }
 
         before do
           create(:enchantment)
 
-          allow_any_instance_of(Canonical::JewelryItem)
-            .to receive(:save!)
-                  .and_raise(ActiveRecord::RecordInvalid, errored_model)
+          allow_any_instance_of(Canonical::JewelryItem).to receive(:save!).and_raise(ActiveRecord::RecordInvalid, errored_model)
           allow(Rails.logger).to receive(:error)
         end
 
@@ -179,9 +159,7 @@ RSpec.describe Canonical::Sync::JewelryItems do
           expect { perform }
             .to raise_error(ActiveRecord::RecordInvalid)
 
-          expect(Rails.logger)
-            .to have_received(:error)
-                  .with("Error saving canonical jewelry item \"00094E3E\": Validation failed: Name can't be blank")
+          expect(Rails.logger).to have_received(:error).with("Error saving canonical jewelry item \"00094E3E\": Validation failed: Name can't be blank")
         end
       end
 
@@ -197,9 +175,7 @@ RSpec.describe Canonical::Sync::JewelryItems do
           expect { perform }
             .to raise_error(StandardError)
 
-          expect(Rails.logger)
-            .to have_received(:error)
-                  .with('Unexpected error StandardError saving canonical jewelry item "00094E3E": foobar')
+          expect(Rails.logger).to have_received(:error).with('Unexpected error StandardError saving canonical jewelry item "00094E3E": foobar')
         end
       end
 
@@ -215,9 +191,7 @@ RSpec.describe Canonical::Sync::JewelryItems do
           expect { perform }
             .to raise_error(StandardError)
 
-          expect(Rails.logger)
-            .to have_received(:error)
-                  .with('Unexpected error StandardError while syncing canonical jewelry items: foobar')
+          expect(Rails.logger).to have_received(:error).with('Unexpected error StandardError while syncing canonical jewelry items: foobar')
         end
       end
     end

@@ -1,15 +1,10 @@
 # frozen_string_literal: true
 
 class Ingredient < InGameItem
-  belongs_to :canonical_ingredient,
-             class_name: 'Canonical::Ingredient',
-             optional: true,
-             inverse_of: :ingredients
+  belongs_to :canonical_ingredient, class_name: 'Canonical::Ingredient', optional: true, inverse_of: :ingredients
 
   has_many :ingredients_alchemical_properties, dependent: :destroy, inverse_of: :ingredient
-  has_many :alchemical_properties,
-           -> { select 'alchemical_properties.*, ingredients_alchemical_properties.priority' },
-           through: :ingredients_alchemical_properties
+  has_many :alchemical_properties, -> { select 'alchemical_properties.*, ingredients_alchemical_properties.priority' }, through: :ingredients_alchemical_properties
 
   validates :name, presence: true
 
@@ -28,13 +23,7 @@ class Ingredient < InGameItem
 
     return canonicals if canonicals.none? || alchemical_properties.none?
 
-    ingredients_alchemical_properties.each do |join_model|
-      canonicals = canonicals.joins(:canonical_ingredients_alchemical_properties).where(
-        'canonical_ingredients_alchemical_properties.alchemical_property_id = :property_id AND canonical_ingredients_alchemical_properties.priority = :priority',
-        property_id: join_model.alchemical_property_id,
-        priority: join_model.priority,
-      )
-    end
+    ingredients_alchemical_properties.each {|join_model| canonicals = canonicals.joins(:canonical_ingredients_alchemical_properties).where('canonical_ingredients_alchemical_properties.alchemical_property_id = :property_id AND canonical_ingredients_alchemical_properties.priority = :priority', property_id: join_model.alchemical_property_id, priority: join_model.priority) }
 
     Canonical::Ingredient.where(id: canonicals.ids)
   end

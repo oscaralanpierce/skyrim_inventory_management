@@ -10,15 +10,11 @@ FactoryBot.define do
     end
 
     trait :with_enchanted_canonical do
-      association :canonical_jewelry_item,
-                  factory: %i[canonical_jewelry_item with_enchantments],
-                  strategy: :create
+      association :canonical_jewelry_item, factory: %i[canonical_jewelry_item with_enchantments], strategy: :create
     end
 
     trait :with_enchantments do
-      after(:create) do |item|
-        create_list(:enchantables_enchantment, 2, enchantable: item)
-      end
+      after(:create) {|item| create_list(:enchantables_enchantment, 2, enchantable: item) }
     end
   end
 end

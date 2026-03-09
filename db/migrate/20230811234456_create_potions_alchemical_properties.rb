@@ -8,9 +8,7 @@ class CreatePotionsAlchemicalProperties < ActiveRecord::Migration[7.0]
       t.integer :strength
       t.integer :duration
 
-      t.index %i[potion_id alchemical_property_id],
-              unique: true,
-              name: 'index_potions_alc_properties_on_potion_id_alc_property_id'
+      t.index %i[potion_id alchemical_property_id], unique: true, name: 'index_potions_alc_properties_on_potion_id_alc_property_id'
 
       t.timestamps
     end

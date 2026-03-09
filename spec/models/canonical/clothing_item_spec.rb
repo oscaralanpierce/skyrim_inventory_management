@@ -9,17 +9,7 @@ RSpec.describe Canonical::ClothingItem, type: :model do
     let(:model) { build(:canonical_clothing_item) }
 
     it 'is valid with valid attributes' do
-      model = described_class.new(
-        name: 'Clothes',
-        item_code: 'foo',
-        unit_weight: 1,
-        body_slot: 'body',
-        add_on: 'base',
-        collectible: true,
-        purchasable: true,
-        unique_item: false,
-        rare_item: false,
-      )
+      model = described_class.new(name: 'Clothes', item_code: 'foo', unit_weight: 1, body_slot: 'body', add_on: 'base', collectible: true, purchasable: true, unique_item: false, rare_item: false)
 
       expect(model).to be_valid
     end
@@ -219,9 +209,7 @@ RSpec.describe Canonical::ClothingItem, type: :model do
       let(:item) { create(:canonical_clothing_item) }
       let(:enchantment) { create(:enchantment) }
 
-      before do
-        item.enchantables_enchantments.create!(enchantment:, strength: 14)
-      end
+      before { item.enchantables_enchantments.create!(enchantment:, strength: 14) }
 
       it 'gives the enchantment strength' do
         expect(item.enchantments.first.strength).to eq 14

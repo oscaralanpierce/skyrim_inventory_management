@@ -50,12 +50,7 @@ RSpec.describe Canonical::Property, type: :model do
       end
 
       it 'must have a unique city (if not null)' do
-        described_class.create!(
-          name: 'Proudspire Manor',
-          hold: 'Haafingar',
-          city: 'Solitude',
-          add_on: 'base',
-        )
+        described_class.create!(name: 'Proudspire Manor', hold: 'Haafingar', city: 'Solitude', add_on: 'base')
 
         property.city = 'Solitude'
         validate
@@ -83,9 +78,7 @@ RSpec.describe Canonical::Property, type: :model do
 
       names_and_holds = described_class::VALID_NAMES.zip(Skyrim::HOLDS)
 
-      names_and_holds.each do |pair|
-        described_class.find_or_create_by!(name: pair[0], hold: pair[1], add_on: 'base')
-      end
+      names_and_holds.each {|pair| described_class.find_or_create_by!(name: pair[0], hold: pair[1], add_on: 'base') }
     end
 
     it 'adds a validation error to the base' do

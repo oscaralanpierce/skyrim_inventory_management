@@ -37,14 +37,7 @@ RSpec.describe MiscItem, type: :model do
       context 'when the canonical misc item is not unique' do
         let(:canonical_misc_item) { create(:canonical_misc_item) }
 
-        before do
-          create_list(
-            :misc_item,
-            3,
-            canonical_misc_item:,
-            game:,
-          )
-        end
+        before { create_list(:misc_item, 3, canonical_misc_item:, game:) }
 
         it 'is valid' do
           expect(item).to be_valid
@@ -52,14 +45,7 @@ RSpec.describe MiscItem, type: :model do
       end
 
       context 'when the canonical misc item is unique' do
-        let(:canonical_misc_item) do
-          create(
-            :canonical_misc_item,
-            max_quantity: 1,
-            unique_item: true,
-            rare_item: true,
-          )
-        end
+        let(:canonical_misc_item) { create(:canonical_misc_item, max_quantity: 1, unique_item: true, rare_item: true) }
 
         context 'when the canonical has no other matches' do
           it 'is valid' do
@@ -68,9 +54,7 @@ RSpec.describe MiscItem, type: :model do
         end
 
         context 'when the canonical has another match for a different game' do
-          before do
-            create(:misc_item, canonical_misc_item:)
-          end
+          before { create(:misc_item, canonical_misc_item:) }
 
           it 'is valid' do
             expect(item).to be_valid
@@ -78,9 +62,7 @@ RSpec.describe MiscItem, type: :model do
         end
 
         context 'when the canonical has another match for the same game' do
-          before do
-            create(:misc_item, canonical_misc_item:, game:)
-          end
+          before { create(:misc_item, canonical_misc_item:, game:) }
 
           it 'is invalid' do
             validate
@@ -102,13 +84,7 @@ RSpec.describe MiscItem, type: :model do
       context 'when there are multiple matching canonical misc items' do
         let(:item) { build(:misc_item) }
 
-        before do
-          create_list(
-            :canonical_misc_item,
-            2,
-            name: item.name,
-          )
-        end
+        before { create_list(:canonical_misc_item, 2, name: item.name) }
 
         it 'is valid' do
           expect(item).to be_valid
@@ -153,13 +129,7 @@ RSpec.describe MiscItem, type: :model do
       let(:item) { create(:misc_item, name: 'Wedding Ring') }
 
       context 'when only the name has to match' do
-        let!(:matching_canonicals) do
-          create_list(
-            :canonical_misc_item,
-            3,
-            name: 'wedding ring',
-          )
-        end
+        let!(:matching_canonicals) { create_list(:canonical_misc_item, 3, name: 'wedding ring') }
 
         it 'matches case-insensitively' do
           expect(canonical_models).to contain_exactly(*matching_canonicals)
@@ -167,20 +137,11 @@ RSpec.describe MiscItem, type: :model do
       end
 
       context 'when both name and unit weight have to match' do
-        let!(:matching_canonicals) do
-          create_list(
-            :canonical_misc_item,
-            2,
-            name: "Wylandria's Soul Gem",
-            unit_weight: 0,
-          )
-        end
+        let!(:matching_canonicals) { create_list(:canonical_misc_item, 2, name: "Wylandria's Soul Gem", unit_weight: 0) }
 
         let(:item) { build(:misc_item, name: "Wylandria's Soul Gem", unit_weight: 0) }
 
-        before do
-          create(:canonical_misc_item, name: "Wylandria's Soul Gem", unit_weight: 1.0)
-        end
+        before { create(:canonical_misc_item, name: "Wylandria's Soul Gem", unit_weight: 1.0) }
 
         it 'returns the matching models' do
           expect(canonical_models).to contain_exactly(*matching_canonicals)
@@ -200,13 +161,7 @@ RSpec.describe MiscItem, type: :model do
     context 'when the canonical model changes' do
       let(:item) { create(:misc_item, :with_matching_canonical) }
 
-      let!(:new_canonical) do
-        create(
-          :canonical_misc_item,
-          name: 'Jeweled Flagon',
-          unit_weight: 0,
-        )
-      end
+      let!(:new_canonical) { create(:canonical_misc_item, name: 'Jeweled Flagon', unit_weight: 0) }
 
       it 'returns the canonical that matches' do
         item.name = 'jeweled flagon'
@@ -221,13 +176,7 @@ RSpec.describe MiscItem, type: :model do
     subject(:validate) { item.validate }
 
     context 'when there is a single matching canonical model' do
-      let!(:matching_canonical) do
-        create(
-          :canonical_misc_item,
-          name: "Wylandria's Soul Gem",
-          unit_weight: 0,
-        )
-      end
+      let!(:matching_canonical) { create(:canonical_misc_item, name: "Wylandria's Soul Gem", unit_weight: 0) }
 
       let(:item) { build(:misc_item, name: "wylandria's soul gem") }
 
@@ -244,12 +193,7 @@ RSpec.describe MiscItem, type: :model do
     end
 
     context 'when there are multiple matching canonical models' do
-      let!(:matching_canonicals) do
-        [
-          create(:canonical_misc_item, name: "Wylandria's Soul Gem", unit_weight: 0),
-          create(:canonical_misc_item, name: "Wylandria's Soul Gem", unit_weight: 1),
-        ]
-      end
+      let!(:matching_canonicals) { [create(:canonical_misc_item, name: "Wylandria's Soul Gem", unit_weight: 0), create(:canonical_misc_item, name: "Wylandria's Soul Gem", unit_weight: 1)] }
 
       let(:item) { create(:misc_item, name: "Wylandria's Soul Gem") }
 
@@ -263,13 +207,7 @@ RSpec.describe MiscItem, type: :model do
       let(:item) { create(:misc_item, :with_matching_canonical) }
 
       context 'when the update results in a new canonical match' do
-        let!(:new_canonical) do
-          create(
-            :canonical_misc_item,
-            name: 'Pill Bottle',
-            unit_weight: 0.3,
-          )
-        end
+        let!(:new_canonical) { create(:canonical_misc_item, name: 'Pill Bottle', unit_weight: 0.3) }
 
         it 'associates the new canonical model' do
           item.name = 'pill bottle'
@@ -292,14 +230,7 @@ RSpec.describe MiscItem, type: :model do
       end
 
       context 'when the update results in an ambiguous match' do
-        before do
-          create_list(
-            :canonical_misc_item,
-            2,
-            name: 'Pill Bottle',
-            unit_weight: 0.3,
-          )
-        end
+        before { create_list(:canonical_misc_item, 2, name: 'Pill Bottle', unit_weight: 0.3) }
 
         it 'sets the canonical misc item to nil' do
           item.name = 'pill bottle'

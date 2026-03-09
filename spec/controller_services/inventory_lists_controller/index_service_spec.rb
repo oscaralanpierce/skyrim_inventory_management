@@ -63,9 +63,7 @@ RSpec.describe InventoryListsController::IndexService do
     context 'when something unexpected goes wrong' do
       let(:game) { create(:game, user:) }
 
-      before do
-        allow(user.games).to receive(:find).and_raise(StandardError.new('Something went horribly wrong'))
-      end
+      before { allow(user.games).to receive(:find).and_raise(StandardError.new('Something went horribly wrong')) }
 
       it 'returns a Service::InternalServerErrorResult' do
         expect(perform).to be_a(Service::InternalServerErrorResult)

@@ -12,16 +12,12 @@ RSpec.describe Canonical::Sync::Ingredients do
   let(:alchemical_property_names) do
     # There are a shitload of these (16) so better to just take the names from
     # the JSON instead of listing them all out.
-    names = JSON
-              .parse(json_data, symbolize_names: true)
-              .map {|data| data[:alchemical_properties].pluck(:name) }
+    names = JSON.parse(json_data, symbolize_names: true).map {|data| data[:alchemical_properties].pluck(:name) }
 
     names.flatten!.uniq!
   end
 
-  before do
-    allow(File).to receive(:read).and_return(json_data)
-  end
+  before { allow(File).to receive(:read).and_return(json_data) }
 
   describe '::perform' do
     subject(:perform) { described_class.perform(preserve_existing_records) }
@@ -32,9 +28,7 @@ RSpec.describe Canonical::Sync::Ingredients do
       context 'when there are no existing canonical ingredients in the database' do
         let(:syncer) { described_class.new(preserve_existing_records) }
 
-        before do
-          alchemical_property_names.each {|name| create(:alchemical_property, name:) }
-        end
+        before { alchemical_property_names.each {|name| create(:alchemical_property, name:) } }
 
         it 'instantiates itseslf' do
           allow(described_class).to receive(:new).and_return(syncer)
@@ -61,9 +55,7 @@ RSpec.describe Canonical::Sync::Ingredients do
         let!(:item_not_in_json) { create(:canonical_ingredient, item_code: '12345678') }
         let(:syncer) { described_class.new(preserve_existing_records) }
 
-        before do
-          alchemical_property_names.each {|name| create(:alchemical_property, name:) }
-        end
+        before { alchemical_property_names.each {|name| create(:alchemical_property, name:) } }
 
         it 'instantiates itself' do
           allow(described_class).to receive(:new).and_return(syncer)
@@ -89,10 +81,7 @@ RSpec.describe Canonical::Sync::Ingredients do
         end
 
         it "removes alchemical properties that don't exist in the JSON data" do
-          item_in_json.canonical_ingredients_alchemical_properties.create!(
-            alchemical_property: create(:alchemical_property, name: 'Fortify Awesomeness'),
-            priority: 1,
-          )
+          item_in_json.canonical_ingredients_alchemical_properties.create!(alchemical_property: create(:alchemical_property, name: 'Fortify Awesomeness'), priority: 1)
 
           perform
           expect(item_in_json.alchemical_properties.find_by(name: 'Fortify Awesomeness')).to be_nil
@@ -100,23 +89,18 @@ RSpec.describe Canonical::Sync::Ingredients do
 
         it 'adds alchemical properties' do
           perform
-          expect(item_in_json.alchemical_properties.pluck(:name))
-            .to contain_exactly('Weakness to Frost', 'Fortify Sneak', 'Weakness to Poison', 'Fortify Restoration')
+          expect(item_in_json.alchemical_properties.pluck(:name)).to contain_exactly('Weakness to Frost', 'Fortify Sneak', 'Weakness to Poison', 'Fortify Restoration')
         end
       end
 
       context 'when there are no alchemical properties in the database' do
-        before do
-          allow(Rails.logger).to receive(:error)
-        end
+        before { allow(Rails.logger).to receive(:error) }
 
         it "logs an error and doesn't create models", :aggregate_failures do
           expect { perform }
             .to raise_error(Canonical::Sync::PrerequisiteNotMetError)
 
-          expect(Rails.logger)
-            .to have_received(:error)
-                  .with('Prerequisite(s) not met: sync AlchemicalProperty before canonical ingredients')
+          expect(Rails.logger).to have_received(:error).with('Prerequisite(s) not met: sync AlchemicalProperty before canonical ingredients')
 
           expect(Canonical::Ingredient.count).to eq 0
         end
@@ -134,9 +118,7 @@ RSpec.describe Canonical::Sync::Ingredients do
           expect { perform }
             .to raise_error ActiveRecord::RecordInvalid
 
-          expect(Rails.logger)
-            .to have_received(:error)
-                  .with('Validation error saving associations for canonical ingredient "00106E1B": Validation failed: Alchemical property must exist')
+          expect(Rails.logger).to have_received(:error).with('Validation error saving associations for canonical ingredient "00106E1B": Validation failed: Alchemical property must exist')
         end
       end
     end
@@ -150,12 +132,7 @@ RSpec.describe Canonical::Sync::Ingredients do
       before do
         alchemical_property_names.each {|name| create(:alchemical_property, name:) }
 
-        create(
-          :canonical_ingredients_alchemical_property,
-          ingredient: item_in_json,
-          alchemical_property: create(:alchemical_property, name: 'Fortify Awesomeness'),
-          priority: 1,
-        )
+        create(:canonical_ingredients_alchemical_property, ingredient: item_in_json, alchemical_property: create(:alchemical_property, name: 'Fortify Awesomeness'), priority: 1)
 
         allow(Rails.logger).to receive(:warn)
       end
@@ -191,9 +168,7 @@ RSpec.describe Canonical::Sync::Ingredients do
       it 'logs a warning' do
         perform
 
-        expect(Rails.logger)
-          .to have_received(:warn)
-                .with('preserve_existing_records mode does not preserve associations for canonical ingredients')
+        expect(Rails.logger).to have_received(:warn).with('preserve_existing_records mode does not preserve associations for canonical ingredients')
       end
     end
 
@@ -201,20 +176,14 @@ RSpec.describe Canonical::Sync::Ingredients do
       let(:preserve_existing_records) { false }
 
       context 'when an ActiveRecord::RecordInvalid error is raised' do
-        let(:errored_model) do
-          instance_double Canonical::Ingredient,
-                          errors:,
-                          class: class_double(Canonical::Ingredient, i18n_scope: :activerecord)
-        end
+        let(:errored_model) { instance_double Canonical::Ingredient, errors:, class: class_double(Canonical::Ingredient, i18n_scope: :activerecord) }
 
         let(:errors) { double('errors', full_messages: ["Name can't be blank"]) }
 
         before do
           create(:alchemical_property)
 
-          allow_any_instance_of(Canonical::Ingredient)
-            .to receive(:save!)
-                  .and_raise(ActiveRecord::RecordInvalid, errored_model)
+          allow_any_instance_of(Canonical::Ingredient).to receive(:save!).and_raise(ActiveRecord::RecordInvalid, errored_model)
           allow(Rails.logger).to receive(:error)
         end
 
@@ -222,9 +191,7 @@ RSpec.describe Canonical::Sync::Ingredients do
           expect { perform }
             .to raise_error(ActiveRecord::RecordInvalid)
 
-          expect(Rails.logger)
-            .to have_received(:error)
-                  .with("Error saving canonical ingredient \"00106E1B\": Validation failed: Name can't be blank")
+          expect(Rails.logger).to have_received(:error).with("Error saving canonical ingredient \"00106E1B\": Validation failed: Name can't be blank")
         end
       end
 
@@ -240,9 +207,7 @@ RSpec.describe Canonical::Sync::Ingredients do
           expect { perform }
             .to raise_error(StandardError)
 
-          expect(Rails.logger)
-            .to have_received(:error)
-                  .with('Unexpected error StandardError saving canonical ingredient "00106E1B": foobar')
+          expect(Rails.logger).to have_received(:error).with('Unexpected error StandardError saving canonical ingredient "00106E1B": foobar')
         end
       end
 
@@ -258,9 +223,7 @@ RSpec.describe Canonical::Sync::Ingredients do
           expect { perform }
             .to raise_error(StandardError)
 
-          expect(Rails.logger)
-            .to have_received(:error)
-                  .with('Unexpected error StandardError while syncing canonical ingredients: foobar')
+          expect(Rails.logger).to have_received(:error).with('Unexpected error StandardError while syncing canonical ingredients: foobar')
         end
       end
     end

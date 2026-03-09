@@ -49,12 +49,7 @@ module Listable
       new_attrs[:notes] = [existing_item&.notes, new_attrs[:notes]].compact.join(' -- ').presence
 
       if new_attrs[:unit_weight].nil? && !list.aggregate_list?
-        aggregate_item = list
-                           .aggregate_list
-                           .list_items.find_by(
-                             'description ILIKE ?',
-                             new_attrs[:description],
-                           )
+        aggregate_item = list.aggregate_list.list_items.find_by('description ILIKE ?', new_attrs[:description])
 
         new_attrs[:unit_weight] = aggregate_item&.unit_weight
       end

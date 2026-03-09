@@ -13,9 +13,7 @@ RSpec.describe WishList, type: :model do
       let!(:wish_list2) { create(:wish_list, game:) }
       let!(:wish_list3) { create(:wish_list, game:) }
 
-      before do
-        wish_list2.update!(title: 'Windstad Manor')
-      end
+      before { wish_list2.update!(title: 'Windstad Manor') }
 
       it 'is in reverse chronological order by updated_at with aggregate before anything' do
         expect(index_order).to eq([aggregate_list, wish_list2, wish_list3, wish_list1])
@@ -54,9 +52,7 @@ RSpec.describe WishList, type: :model do
       let!(:game2) { create(:game_with_wish_lists, user:) }
       let!(:game3) { create(:game_with_wish_lists, user:) }
 
-      before do
-        create(:game_with_wish_lists)
-      end
+      before { create(:game_with_wish_lists) }
 
       it "returns all the wish lists from all the user's games" do
         # These are going to be rearranged in the output since game.wish_lists
@@ -67,17 +63,7 @@ RSpec.describe WishList, type: :model do
         agg_list2, game2_list1, game2_list2 = game2.wish_lists.to_a
         agg_list3, game3_list1, game3_list2 = game3.wish_lists.to_a
 
-        expect(described_class.belonging_to_user(user).to_a).to eq([
-          game3_list1,
-          game3_list2,
-          agg_list3,
-          game2_list1,
-          game2_list2,
-          agg_list2,
-          game1_list1,
-          game1_list2,
-          agg_list1,
-        ])
+        expect(described_class.belonging_to_user(user).to_a).to eq([game3_list1, game3_list2, agg_list3, game2_list1, game2_list2, agg_list2, game1_list1, game1_list2, agg_list1])
       end
     end
   end
@@ -112,9 +98,7 @@ RSpec.describe WishList, type: :model do
         let(:game) { create(:game) }
         let(:aggregate_list) { build(:aggregate_wish_list, game:) }
 
-        before do
-          create(:aggregate_wish_list, game:)
-        end
+        before { create(:aggregate_wish_list, game:) }
 
         it 'is invalid', :aggregate_failures do
           expect(aggregate_list).not_to be_valid
@@ -257,9 +241,7 @@ RSpec.describe WishList, type: :model do
           end
 
           context 'when there is a wish list called "My List <negative integer>"' do
-            before do
-              create(:wish_list, game:, title: 'My List -4')
-            end
+            before { create(:wish_list, game:, title: 'My List -4') }
 
             it 'ignores the list title with the negative integer' do
               expect(title).to eq 'My List 1'
@@ -310,9 +292,7 @@ RSpec.describe WishList, type: :model do
     let!(:item2) { create(:wish_list_item, list: wish_list) }
     let!(:item3) { create(:wish_list_item, list: wish_list) }
 
-    before do
-      item2.update!(quantity: 2)
-    end
+    before { item2.update!(quantity: 2) }
 
     it 'keeps child models in descending order of updated_at' do
       expect(wish_list.list_items.to_a).to eq([item2, item3, item1])
@@ -327,9 +307,7 @@ RSpec.describe WishList, type: :model do
       let(:wish_list) { create(:aggregate_wish_list) }
 
       context 'when the game has regular lists' do
-        before do
-          create(:wish_list, game: wish_list.game, aggregate_list: wish_list)
-        end
+        before { create(:wish_list, game: wish_list.game, aggregate_list: wish_list) }
 
         it 'raises an error and does not destroy the list' do
           expect { destroy_list }
@@ -355,9 +333,7 @@ RSpec.describe WishList, type: :model do
     let(:game) { create(:game) }
 
     context 'when the user has additional regular lists' do
-      before do
-        create(:wish_list, game:)
-      end
+      before { create(:wish_list, game:) }
 
       it "doesn't destroy the aggregate list" do
         expect { destroy_list }
@@ -380,14 +356,7 @@ RSpec.describe WishList, type: :model do
       let(:aggregate_list) { create(:aggregate_wish_list) }
 
       context 'when there is no matching item on the aggregate list' do
-        let(:list_item) do
-          create(
-            :wish_list_item,
-            quantity: 3,
-            unit_weight: 4,
-            notes: "shouldn't be on aggregate list",
-          )
-        end
+        let(:list_item) { create(:wish_list_item, quantity: 3, unit_weight: 4, notes: "shouldn't be on aggregate list") }
 
         it 'creates a corresponding item on the aggregate list' do
           expect { add_item }
@@ -396,38 +365,19 @@ RSpec.describe WishList, type: :model do
 
         it 'sets the correct attributes' do
           add_item
-          expect(aggregate_list.list_items.last.attributes).to include(
-            'description' => list_item.description,
-            'quantity' => list_item.quantity,
-            'notes' => nil,
-            'unit_weight' => list_item.unit_weight,
-          )
+          expect(aggregate_list.list_items.last.attributes).to include('description' => list_item.description, 'quantity' => list_item.quantity, 'notes' => nil, 'unit_weight' => list_item.unit_weight)
         end
       end
 
       context 'when there is a matching item on the aggregate list' do
         let(:other_list) { create(:wish_list, game: aggregate_list.game, aggregate_list:) }
 
-        let!(:item_on_other_list) do
-          create(
-            :wish_list_item,
-            description: 'Dwarven metal ingot',
-            list: other_list,
-            unit_weight: 0.3,
-          )
-        end
+        let!(:item_on_other_list) { create(:wish_list_item, description: 'Dwarven metal ingot', list: other_list, unit_weight: 0.3) }
 
         context 'when the new item has notes' do
           let!(:existing_list_item) { create(:wish_list_item, list: aggregate_list, quantity: 3) }
 
-          let(:list_item) do
-            create(
-              :wish_list_item,
-              description: existing_list_item.description,
-              quantity: 2,
-              notes: 'foobar',
-            )
-          end
+          let(:list_item) { create(:wish_list_item, description: existing_list_item.description, quantity: 2, notes: 'foobar') }
 
           it 'combines the quantities but not the notes values', :aggregate_failures do
             add_item
@@ -437,23 +387,9 @@ RSpec.describe WishList, type: :model do
         end
 
         context "when the new item doesn't have a unit weight" do
-          let!(:existing_list_item) do
-            create(
-              :wish_list_item,
-              description: 'Dwarven metal ingot',
-              list: aggregate_list,
-              unit_weight: 0.3,
-            )
-          end
+          let!(:existing_list_item) { create(:wish_list_item, description: 'Dwarven metal ingot', list: aggregate_list, unit_weight: 0.3) }
 
-          let(:list_item) do
-            create(
-              :wish_list_item,
-              description: existing_list_item.description,
-              quantity: 2,
-              unit_weight: nil,
-            )
-          end
+          let(:list_item) { create(:wish_list_item, description: existing_list_item.description, quantity: 2, unit_weight: nil) }
 
           it 'leaves the unit weight as-is on the existing item' do
             add_item
@@ -467,23 +403,9 @@ RSpec.describe WishList, type: :model do
         end
 
         context 'when the new item has a unit weight' do
-          let!(:existing_list_item) do
-            create(
-              :wish_list_item,
-              description: 'Dwarven metal ingot',
-              unit_weight: 0.3,
-              list: aggregate_list,
-            )
-          end
+          let!(:existing_list_item) { create(:wish_list_item, description: 'Dwarven metal ingot', unit_weight: 0.3, list: aggregate_list) }
 
-          let(:list_item) do
-            create(
-              :wish_list_item,
-              description: 'Dwarven metal ingot',
-              quantity: 2,
-              unit_weight: 0.2,
-            )
-          end
+          let(:list_item) { create(:wish_list_item, description: 'Dwarven metal ingot', quantity: 2, unit_weight: 0.2) }
 
           it 'updates the unit weight of the existing item' do
             add_item
@@ -525,9 +447,7 @@ RSpec.describe WishList, type: :model do
         let(:aggregate_list) { create(:aggregate_wish_list) }
         let(:item_attrs) { { 'description' => 'Necklace', 'quantity' => 3, 'notes' => 'some notes' } }
 
-        before do
-          aggregate_list.list_items.create(description: 'Necklace', quantity: 2)
-        end
+        before { aggregate_list.list_items.create(description: 'Necklace', quantity: 2) }
 
         it 'raises an error' do
           expect { remove_item }
@@ -539,9 +459,7 @@ RSpec.describe WishList, type: :model do
         let(:aggregate_list) { create(:aggregate_wish_list) }
         let(:item_attrs) { { 'description' => 'Necklace', 'quantity' => 3, 'notes' => 'some notes' } }
 
-        before do
-          aggregate_list.list_items.create(description: 'Necklace', quantity: 3)
-        end
+        before { aggregate_list.list_items.create(description: 'Necklace', quantity: 3) }
 
         it 'removes the item from the aggregate list' do
           expect { remove_item }
@@ -553,9 +471,7 @@ RSpec.describe WishList, type: :model do
         let(:aggregate_list) { create(:aggregate_wish_list) }
         let(:item_attrs) { { 'description' => 'Necklace', 'quantity' => 3, 'notes' => 'notes 2' } }
 
-        before do
-          aggregate_list.list_items.create!(description: 'Necklace', quantity: 4)
-        end
+        before { aggregate_list.list_items.create!(description: 'Necklace', quantity: 4) }
 
         it 'adjusts the quantity on the aggregate list item' do
           remove_item
@@ -579,15 +495,7 @@ RSpec.describe WishList, type: :model do
       let(:description) { 'Corundum ingot' }
 
       context 'when adjusting quantity up' do
-        subject(:update_item) do
-          aggregate_list.update_item_from_child_list(
-            description,
-            quantity: {
-              from: 1,
-              to: 3,
-            },
-          )
-        end
+        subject(:update_item) { aggregate_list.update_item_from_child_list(description, quantity: { from: 1, to: 3 }) }
 
         before do
           # upcase the description to test that the comparison is case insensitive
@@ -601,19 +509,9 @@ RSpec.describe WishList, type: :model do
       end
 
       context 'when adjusting quantity down' do
-        subject(:update_item) do
-          aggregate_list.update_item_from_child_list(
-            description,
-            quantity: {
-              from: 3,
-              to: 1,
-            },
-          )
-        end
+        subject(:update_item) { aggregate_list.update_item_from_child_list(description, quantity: { from: 3, to: 1 }) }
 
-        before do
-          aggregate_list.list_items.create!(description:, quantity: 5)
-        end
+        before { aggregate_list.list_items.create!(description:, quantity: 5) }
 
         it 'decreases the quantity by the delta' do
           update_item
@@ -622,14 +520,7 @@ RSpec.describe WishList, type: :model do
       end
 
       context 'when unsetting unit weight' do
-        subject(:update_item) do
-          aggregate_list.update_item_from_child_list(
-            description,
-            unit_weight: {
-              to: nil,
-            },
-          )
-        end
+        subject(:update_item) { aggregate_list.update_item_from_child_list(description, unit_weight: { to: nil }) }
 
         let!(:item_on_other_list) { create(:wish_list_item, list: other_list, description:, unit_weight: 1) }
         let!(:aggregate_list_item) { create(:wish_list_item, list: aggregate_list, description:, quantity: 3, unit_weight: 1) }
@@ -647,14 +538,7 @@ RSpec.describe WishList, type: :model do
       end
 
       context 'when updating unit weight' do
-        subject(:update_item) do
-          aggregate_list.update_item_from_child_list(
-            description,
-            unit_weight: {
-              to: 2,
-            },
-          )
-        end
+        subject(:update_item) { aggregate_list.update_item_from_child_list(description, unit_weight: { to: 2 }) }
 
         let!(:item_on_other_list) { create(:wish_list_item, list: other_list, description:, unit_weight: 1) }
         let!(:aggregate_list_item) { create(:wish_list_item, list: aggregate_list, description:, quantity: 3, unit_weight: 1) }
@@ -672,19 +556,9 @@ RSpec.describe WishList, type: :model do
       end
 
       context 'when updating notes' do
-        subject(:update_item) do
-          aggregate_list.update_item_from_child_list(
-            description,
-            notes: {
-              from: 'foo',
-              to: 'bar',
-            },
-          )
-        end
+        subject(:update_item) { aggregate_list.update_item_from_child_list(description, notes: { from: 'foo', to: 'bar' }) }
 
-        before do
-          aggregate_list.list_items.create!(description:, quantity: 2, unit_weight: 1)
-        end
+        before { aggregate_list.list_items.create!(description:, quantity: 2, unit_weight: 1) }
 
         it 'keeps the notes value at nil on the aggregate list' do
           update_item
@@ -693,15 +567,7 @@ RSpec.describe WishList, type: :model do
       end
 
       context 'when the new quantity is less than 1' do
-        subject(:update_item) do
-          aggregate_list.update_item_from_child_list(
-            description,
-            quantity: {
-              from: 2,
-              to: 0,
-            },
-          )
-        end
+        subject(:update_item) { aggregate_list.update_item_from_child_list(description, quantity: { from: 2, to: 0 }) }
 
         it 'raises an error' do
           expect { update_item }
@@ -710,19 +576,9 @@ RSpec.describe WishList, type: :model do
       end
 
       context 'when the new unit_weight is not a number' do
-        subject(:update_item) do
-          aggregate_list.update_item_from_child_list(
-            description,
-            unit_weight: {
-              from: 1,
-              to: 'carrot',
-            },
-          )
-        end
+        subject(:update_item) { aggregate_list.update_item_from_child_list(description, unit_weight: { from: 1, to: 'carrot' }) }
 
-        before do
-          aggregate_list.list_items.create!(description:, unit_weight: 1)
-        end
+        before { aggregate_list.list_items.create!(description:, unit_weight: 1) }
 
         it 'raises an error' do
           expect { update_item }
@@ -731,19 +587,9 @@ RSpec.describe WishList, type: :model do
       end
 
       context 'when the unit_weight value is invalid' do
-        subject(:update_item) do
-          aggregate_list.update_item_from_child_list(
-            description,
-            unit_weight: {
-              from: 1,
-              to: -1,
-            },
-          )
-        end
+        subject(:update_item) { aggregate_list.update_item_from_child_list(description, unit_weight: { from: 1, to: -1 }) }
 
-        before do
-          aggregate_list.list_items.create!(description:, unit_weight: 1)
-        end
+        before { aggregate_list.list_items.create!(description:, unit_weight: 1) }
 
         it 'raises an error' do
           expect { update_item }
@@ -752,15 +598,7 @@ RSpec.describe WishList, type: :model do
       end
 
       context 'when there is no matching item on the aggregate list' do
-        subject(:update_item) do
-          aggregate_list.update_item_from_child_list(
-            description,
-            quantity: {
-              from: 1,
-              to: 3,
-            },
-          )
-        end
+        subject(:update_item) { aggregate_list.update_item_from_child_list(description, quantity: { from: 1, to: 3 }) }
 
         it 'raises an error' do
           expect { update_item }
@@ -769,15 +607,7 @@ RSpec.describe WishList, type: :model do
       end
 
       context 'when called on a regular list' do
-        subject(:update_item) do
-          list.update_item_from_child_list(
-            description,
-            notes: {
-              from: nil,
-              to: 'something else',
-            },
-          )
-        end
+        subject(:update_item) { list.update_item_from_child_list(description, notes: { from: nil, to: 'something else' }) }
 
         let(:list) { create(:wish_list) }
 

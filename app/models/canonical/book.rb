@@ -6,92 +6,26 @@ module Canonical
   class Book < ApplicationRecord
     self.table_name = 'canonical_books'
 
-    BOOK_TYPES = [
-      'Black Book',
-      'document',
-      'Elder Scroll',
-      'journal',
-      'letter',
-      'lore book',
-      'quest book',
-      'recipe',
-      'skill book',
-      'treasure map',
-    ].freeze
+    BOOK_TYPES = ['Black Book', 'document', 'Elder Scroll', 'journal', 'letter', 'lore book', 'quest book', 'recipe', 'skill book', 'treasure map'].freeze
 
-    has_many :recipes_canonical_ingredients,
-             dependent: :destroy,
-             inverse_of: :recipe,
-             foreign_key: 'recipe_id'
+    has_many :recipes_canonical_ingredients, dependent: :destroy, inverse_of: :recipe, foreign_key: 'recipe_id'
     has_many :canonical_ingredients, through: :recipes_canonical_ingredients, class_name: 'Canonical::Ingredient', source: :ingredient
 
-    has_many :books,
-             dependent: :nullify,
-             class_name: '::Book',
-             inverse_of: :canonical_book,
-             foreign_key: 'canonical_book_id'
+    has_many :books, dependent: :nullify, class_name: '::Book', inverse_of: :canonical_book, foreign_key: 'canonical_book_id'
 
     validates :title, presence: true
-    validates :item_code,
-              presence: true,
-              uniqueness: { message: 'must be unique' }
-    validates :unit_weight,
-              presence: true,
-              numericality: { greater_than_or_equal_to: 0 }
-    validates :book_type,
-              inclusion: {
-                in: BOOK_TYPES,
-                message: 'must be a book type that exists in Skyrim',
-              }
-    validates :skill_name,
-              inclusion: {
-                in: Skyrim::SKILLS,
-                message: 'must be a skill that exists in Skyrim',
-                allow_blank: true,
-              }
-    validates :add_on,
-              presence: true,
-              inclusion: {
-                in: SUPPORTED_ADD_ONS,
-                message: UNSUPPORTED_ADD_ON_MESSAGE,
-              }
-    validates :max_quantity,
-              numericality: {
-                only_integer: true,
-                greater_than_or_equal_to: 1,
-                allow_nil: true,
-                message: 'must be an integer of at least 1',
-              }
-    validates :purchasable,
-              inclusion: {
-                in: BOOLEAN_VALUES,
-                message: BOOLEAN_VALIDATION_MESSAGE,
-              }
-    validates :collectible,
-              inclusion: {
-                in: BOOLEAN_VALUES,
-                message: BOOLEAN_VALIDATION_MESSAGE,
-              }
-    validates :unique_item,
-              inclusion: {
-                in: BOOLEAN_VALUES,
-                message: BOOLEAN_VALIDATION_MESSAGE,
-              }
-    validates :rare_item,
-              inclusion: {
-                in: BOOLEAN_VALUES,
-                message: BOOLEAN_VALIDATION_MESSAGE,
-              }
-    validates :solstheim_only,
-              inclusion: {
-                in: BOOLEAN_VALUES,
-                message: BOOLEAN_VALIDATION_MESSAGE,
-              }
-    validates :quest_item,
-              inclusion: {
-                in: BOOLEAN_VALUES,
-                message: BOOLEAN_VALIDATION_MESSAGE,
-              }
+    validates :item_code, presence: true, uniqueness: { message: 'must be unique' }
+    validates :unit_weight, presence: true, numericality: { greater_than_or_equal_to: 0 }
+    validates :book_type, inclusion: { in: BOOK_TYPES, message: 'must be a book type that exists in Skyrim' }
+    validates :skill_name, inclusion: { in: Skyrim::SKILLS, message: 'must be a skill that exists in Skyrim', allow_blank: true }
+    validates :add_on, presence: true, inclusion: { in: SUPPORTED_ADD_ONS, message: UNSUPPORTED_ADD_ON_MESSAGE }
+    validates :max_quantity, numericality: { only_integer: true, greater_than_or_equal_to: 1, allow_nil: true, message: 'must be an integer of at least 1' }
+    validates :purchasable, inclusion: { in: BOOLEAN_VALUES, message: BOOLEAN_VALIDATION_MESSAGE }
+    validates :collectible, inclusion: { in: BOOLEAN_VALUES, message: BOOLEAN_VALIDATION_MESSAGE }
+    validates :unique_item, inclusion: { in: BOOLEAN_VALUES, message: BOOLEAN_VALIDATION_MESSAGE }
+    validates :rare_item, inclusion: { in: BOOLEAN_VALUES, message: BOOLEAN_VALIDATION_MESSAGE }
+    validates :solstheim_only, inclusion: { in: BOOLEAN_VALUES, message: BOOLEAN_VALIDATION_MESSAGE }
+    validates :quest_item, inclusion: { in: BOOLEAN_VALUES, message: BOOLEAN_VALIDATION_MESSAGE }
 
     validate :validate_skill_name_presence
     validate :validate_uniqueness, if: -> { unique_item == true || max_quantity == 1 }

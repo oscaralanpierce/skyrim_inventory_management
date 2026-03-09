@@ -13,14 +13,8 @@ class MakeRecipesCanonicalIngredientsPolymorphic < ActiveRecord::Migration[7.1]
     # Remove the unique composite index on recipe_id and ingredient_id, since the
     # index will now have to incorporate recipe_type in order to correctly establish
     # a unique relationship between ingredient and recipe.
-    remove_index :recipes_canonical_ingredients,
-                 columns: %i[recipe_id ingredient_id],
-                 unique: true,
-                 name: 'index_can_books_ingredients_on_recipe_and_ingredient'
-    add_index :recipes_canonical_ingredients,
-              %i[recipe_id recipe_type ingredient_id],
-              unique: true,
-              name: 'index_recipes_can_ingredients_on_recipe_and_ingredient'
+    remove_index :recipes_canonical_ingredients, columns: %i[recipe_id ingredient_id], unique: true, name: 'index_can_books_ingredients_on_recipe_and_ingredient'
+    add_index :recipes_canonical_ingredients, %i[recipe_id recipe_type ingredient_id], unique: true, name: 'index_recipes_can_ingredients_on_recipe_and_ingredient'
 
     # Populate the recipe_type column on all existing models - since the recipe_id
     # previously only referred to the canonical_books table, this value can be
@@ -36,20 +30,12 @@ class MakeRecipesCanonicalIngredientsPolymorphic < ActiveRecord::Migration[7.1]
   end
 
   def down
-    add_foreign_key :recipes_canonical_ingredients,
-                    :canonical_books,
-                    column: :recipe_id
+    add_foreign_key :recipes_canonical_ingredients, :canonical_books, column: :recipe_id
 
-    remove_index :recipes_canonical_ingredients,
-                 columns: %i[recipe_id recipe_type ingredient_id],
-                 unique: true,
-                 name: 'index_recipes_can_ingredients_on_recipe_and_ingredient'
+    remove_index :recipes_canonical_ingredients, columns: %i[recipe_id recipe_type ingredient_id], unique: true, name: 'index_recipes_can_ingredients_on_recipe_and_ingredient'
 
     remove_column :recipes_canonical_ingredients, :recipe_type
 
-    add_index :recipes_canonical_ingredients,
-              %i[recipe_id ingredient_id],
-              unique: true,
-              name: 'index_can_books_ingredients_on_recipe_and_ingredient'
+    add_index :recipes_canonical_ingredients, %i[recipe_id ingredient_id], unique: true, name: 'index_can_books_ingredients_on_recipe_and_ingredient'
   end
 end

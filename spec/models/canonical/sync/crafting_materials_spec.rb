@@ -7,20 +7,9 @@ RSpec.describe Canonical::Sync::CraftingMaterials do
   # examples, the stub in the before block will prevent `File.read` from
   # running.
   let!(:json_data) { File.read(json_path) }
-  let!(:json_path) do
-    Rails.root.join(
-      'spec',
-      'support',
-      'fixtures',
-      'canonical',
-      'sync',
-      'crafting_materials.json',
-    )
-  end
+  let!(:json_path) { Rails.root.join('spec', 'support', 'fixtures', 'canonical', 'sync', 'crafting_materials.json') }
 
-  before do
-    allow(File).to receive(:read).and_return(json_data)
-  end
+  before { allow(File).to receive(:read).and_return(json_data) }
 
   describe '::perform' do
     subject(:perform) { described_class.perform(preserve_existing_records) }
@@ -53,9 +42,7 @@ RSpec.describe Canonical::Sync::CraftingMaterials do
         let(:preserve_existing_records) { false }
         let(:syncer) { described_class.new(preserve_existing_records) }
 
-        before do
-          allow(described_class).to receive(:new).and_return(syncer)
-        end
+        before { allow(described_class).to receive(:new).and_return(syncer) }
 
         it 'instantiates itself' do
           perform
@@ -83,12 +70,7 @@ RSpec.describe Canonical::Sync::CraftingMaterials do
         context 'when there are existing crafting material records in the database' do
           let(:craftable) { Canonical::Armor.find_by(item_code: 'XX012E8A') }
 
-          before do
-            create(
-              :canonical_material,
-              craftable:,
-            )
-          end
+          before { create(:canonical_material, craftable:) }
 
           it 'removes existing records', :aggregate_failures do
             perform
@@ -102,12 +84,7 @@ RSpec.describe Canonical::Sync::CraftingMaterials do
         let(:preserve_existing_records) { true }
         let(:craftable) { Canonical::Weapon.find_by(item_code: 'XX00F19E') }
 
-        before do
-          create(
-            :canonical_material,
-            craftable:,
-          )
-        end
+        before { create(:canonical_material, craftable:) }
 
         it 'keeps the existing records' do
           perform
@@ -119,17 +96,13 @@ RSpec.describe Canonical::Sync::CraftingMaterials do
     context 'when one or more prerequisite models has not been synced' do
       let(:preserve_existing_records) { false }
 
-      before do
-        allow(Rails.logger).to receive(:error)
-      end
+      before { allow(Rails.logger).to receive(:error) }
 
       it 'raises an error', :aggregate_failures do
         expect { perform }
           .to raise_error(Canonical::Sync::PrerequisiteNotMetError)
 
-        expect(Rails.logger)
-          .to have_received(:error)
-                .with('Prerequisite(s) not met: sync Canonical::Weapon, Canonical::Armor, Canonical::JewelryItem, Canonical::Ingredient, Canonical::RawMaterial before crafting materials')
+        expect(Rails.logger).to have_received(:error).with('Prerequisite(s) not met: sync Canonical::Weapon, Canonical::Armor, Canonical::JewelryItem, Canonical::Ingredient, Canonical::RawMaterial before crafting materials')
       end
     end
   end

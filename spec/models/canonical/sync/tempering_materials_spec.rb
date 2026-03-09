@@ -7,20 +7,9 @@ RSpec.describe Canonical::Sync::TemperingMaterials do
   # examples, the stub in the before block will prevent `File.read` from
   # running.
   let!(:json_data) { File.read(json_path) }
-  let!(:json_path) do
-    Rails.root.join(
-      'spec',
-      'support',
-      'fixtures',
-      'canonical',
-      'sync',
-      'tempering_materials.json',
-    )
-  end
+  let!(:json_path) { Rails.root.join('spec', 'support', 'fixtures', 'canonical', 'sync', 'tempering_materials.json') }
 
-  before do
-    allow(File).to receive(:read).and_return(json_data)
-  end
+  before { allow(File).to receive(:read).and_return(json_data) }
 
   describe '::perform' do
     subject(:perform) { described_class.perform(preserve_existing_records) }
@@ -41,16 +30,14 @@ RSpec.describe Canonical::Sync::TemperingMaterials do
         create(:canonical_raw_material, name: 'Ebony Ingot', item_code: '0005AD9D')
         create(:canonical_raw_material, name: 'Leather', item_code: '000DB5D2')
         create(:canonical_raw_material, name: 'Leather Strips', item_code: '000800E4')
-        create(:canonical_ingredient, name: 'Daedra Heart', item_code: '0003AD5B')\
+        create(:canonical_ingredient, name: 'Daedra Heart', item_code: '0003AD5B') \
       end
 
       context 'when preserve_existing_records is false' do
         let(:preserve_existing_records) { false }
         let(:syncer) { described_class.new(preserve_existing_records) }
 
-        before do
-          allow(described_class).to receive(:new).and_return(syncer)
-        end
+        before { allow(described_class).to receive(:new).and_return(syncer) }
 
         it 'instantiates itself' do
           perform
@@ -77,12 +64,7 @@ RSpec.describe Canonical::Sync::TemperingMaterials do
         context 'when there are existing tempering material records in the database' do
           let(:temperable) { Canonical::Armor.find_by(item_code: '000B509C') }
 
-          before do
-            create(
-              :canonical_material,
-              temperable:,
-            )
-          end
+          before { create(:canonical_material, temperable:) }
 
           it 'removes existing records', :aggregate_failures do
             perform
@@ -96,12 +78,7 @@ RSpec.describe Canonical::Sync::TemperingMaterials do
         let(:preserve_existing_records) { true }
         let(:temperable) { Canonical::Weapon.find_by(item_code: '000BEEEE') }
 
-        before do
-          create(
-            :canonical_material,
-            temperable:,
-          )
-        end
+        before { create(:canonical_material, temperable:) }
 
         it 'keeps the existing records' do
           perform
@@ -113,17 +90,13 @@ RSpec.describe Canonical::Sync::TemperingMaterials do
     context 'when prerequisite models do not exist' do
       let(:preserve_existing_records) { false }
 
-      before do
-        allow(Rails.logger).to receive(:error)
-      end
+      before { allow(Rails.logger).to receive(:error) }
 
       it 'raises an error', :aggregate_failures do
         expect { perform }
           .to raise_error(Canonical::Sync::PrerequisiteNotMetError)
 
-        expect(Rails.logger)
-          .to have_received(:error)
-                .with('Prerequisite(s) not met: sync Canonical::Armor, Canonical::Weapon, Canonical::RawMaterial, Canonical::Ingredient before tempering materials')
+        expect(Rails.logger).to have_received(:error).with('Prerequisite(s) not met: sync Canonical::Armor, Canonical::Weapon, Canonical::RawMaterial, Canonical::Ingredient before tempering materials')
       end
     end
   end

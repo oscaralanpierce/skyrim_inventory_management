@@ -19,29 +19,15 @@ FactoryBot.define do
     enchantable { true }
 
     trait :with_enchantments do
-      after(:create) do |item|
-        create_list(:enchantables_enchantment, 2, :with_strength, enchantable: item)
-      end
+      after(:create) {|item| create_list(:enchantables_enchantment, 2, :with_strength, enchantable: item) }
     end
 
     trait :with_tempering_materials do
-      after(:create) do |item|
-        create_list(
-          :canonical_material,
-          2,
-          temperable: item,
-        )
-      end
+      after(:create) {|item| create_list(:canonical_material, 2, temperable: item) }
     end
 
     trait :with_crafting_materials do
-      after(:create) do |item|
-        create_list(
-          :canonical_material,
-          2,
-          craftable: item,
-        )
-      end
+      after(:create) {|item| create_list(:canonical_material, 2, craftable: item) }
     end
   end
 end

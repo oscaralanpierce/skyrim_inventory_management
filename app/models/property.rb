@@ -9,45 +9,13 @@ class Property < ApplicationRecord
   has_many :wish_lists, dependent: nil
   has_many :inventory_lists, dependent: nil
 
-  validates :canonical_property,
-            uniqueness: {
-              scope: :game_id,
-              message: 'must be unique per game',
-            }
+  validates :canonical_property, uniqueness: { scope: :game_id, message: 'must be unique per game' }
 
-  validates :name,
-            presence: true,
-            inclusion: {
-              in: Canonical::Property::VALID_NAMES,
-              message: "must be an ownable property in Skyrim, or the Arch-Mage's Quarters",
-            },
-            uniqueness: {
-              scope: :game_id,
-              message: 'must be unique per game',
-            }
+  validates :name, presence: true, inclusion: { in: Canonical::Property::VALID_NAMES, message: "must be an ownable property in Skyrim, or the Arch-Mage's Quarters" }, uniqueness: { scope: :game_id, message: 'must be unique per game' }
 
-  validates :hold,
-            presence: true,
-            inclusion: {
-              in: Skyrim::HOLDS,
-              message: 'must be one of the nine Skyrim holds, or Solstheim',
-            },
-            uniqueness: {
-              scope: :game_id,
-              message: 'must be unique per game',
-            }
+  validates :hold, presence: true, inclusion: { in: Skyrim::HOLDS, message: 'must be one of the nine Skyrim holds, or Solstheim' }, uniqueness: { scope: :game_id, message: 'must be unique per game' }
 
-  validates :city,
-            inclusion: {
-              in: Canonical::Property::VALID_CITIES,
-              message: 'must be a Skyrim city in which an ownable property is located',
-              allow_blank: true,
-            },
-            uniqueness: {
-              scope: :game_id,
-              message: 'must be unique per game if present',
-              allow_nil: true,
-            }
+  validates :city, inclusion: { in: Canonical::Property::VALID_CITIES, message: 'must be a Skyrim city in which an ownable property is located', allow_blank: true }, uniqueness: { scope: :game_id, message: 'must be unique per game if present', allow_nil: true }
 
   validate :ensure_max, on: :create, if: :count_is_max
   validate :ensure_alchemy_lab_available
@@ -65,11 +33,7 @@ class Property < ApplicationRecord
   before_validation :set_values_from_canonical
 
   DOES_NOT_MATCH = "doesn't match any ownable property that exists in Skyrim"
-  HOMESTEADS = [
-    'lakeview manor',
-    'heljarchen hall',
-    'windstad manor',
-  ].freeze
+  HOMESTEADS = ['lakeview manor', 'heljarchen hall', 'windstad manor'].freeze
 
   def canonical_model
     canonical_property

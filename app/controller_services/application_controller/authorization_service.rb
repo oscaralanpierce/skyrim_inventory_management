@@ -41,11 +41,7 @@ class ApplicationController < ActionController::API
     attr_reader :controller, :access_token
 
     def connection
-      @connection ||= Faraday.new(
-        url: FIREBASE_VERIFICATION_URI,
-        params: { key: Rails.application.credentials[:google][:firebase_web_api_key] },
-        headers: { 'Content-Type' => 'application/json' },
-      )
+      @connection ||= Faraday.new(url: FIREBASE_VERIFICATION_URI, params: { key: Rails.application.credentials[:google][:firebase_web_api_key] }, headers: { 'Content-Type' => 'application/json' })
     end
   end
 end
