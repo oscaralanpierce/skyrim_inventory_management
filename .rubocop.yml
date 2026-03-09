@@ -58,19 +58,25 @@ Bundler/DuplicatedGem:
   Enabled: true
   Include:
     - '**/Gemfile'
+Bundler/DuplicatedGroup:
+  Enabled: true
+  Include:
+    - '**/Gemfile'
 Bundler/GemComment:
   Enabled: true
 Bundler/GemFilename:
   Enabled: true
   EnforcedStyle: Gemfile
-Bundler/OrderedGems:
-  Enabled: true
-  TreatCommentsAsGroupSeparators: false
 Bundler/GemVersion:
   Enabled: true
   EnforcedStyle: 'required'
   Include:
     - '**/Gemfile'
+Bundler/InsecureProtocolSource:
+  Enabled: true
+Bundler/OrderedGems:
+  Enabled: true
+  TreatCommentsAsGroupSeparators: false
 
 ###########################
 ### Layout Requirements ###
