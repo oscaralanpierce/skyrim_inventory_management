@@ -636,6 +636,9 @@ Naming/AsciiIdentifiers:
   Enabled: true
 Naming/BinaryOperatorParameterName:
   Enabled: true
+Naming/BlockForwarding:
+  Enabled: true
+  EnforcedStyle: explicit
 Naming/BlockParameterName:
   Enabled: true
   MinNameLength: 1
@@ -681,7 +684,7 @@ Naming/InclusiveLanguage:
         - main
 Naming/MemoizedInstanceVariableName:
   Enabled: true
-  EnforcedStyleForLeadingUnderscores: disallowed
+  EnforcedStyleForLeadingUnderscores: disallowed # default
 Naming/MethodName:
   Enabled: true
   EnforcedStyle: snake_case
