@@ -48,7 +48,7 @@ namespace :csv do
 
           item[:attributes][:smithing_perks] = item[:attributes][:smithing_perks].join(',')
 
-          csv << item[:attributes].values + [enchantment_names, enchantment_strengths, tempering_material_codes, tempering_material_quantities, crafting_material_codes, crafting_material_quantities]
+          csv << (item[:attributes].values + [enchantment_names, enchantment_strengths, tempering_material_codes, tempering_material_quantities, crafting_material_codes, crafting_material_quantities])
         end
       end
 
@@ -99,7 +99,7 @@ namespace :csv do
 
       csv_data = CSV.generate(headers) do |csv|
         json_data.each do |item|
-          csv << item[:attributes].values + concatenate_values(item[:enchantments], :name, :strength)
+          csv << (item[:attributes].values + concatenate_values(item[:enchantments], :name, :strength))
         end
       end
 
@@ -117,7 +117,7 @@ namespace :csv do
 
       csv_data = CSV.generate(headers) do |csv|
         json_data.each do |item|
-          csv << item[:attributes].values + concatenate_values(item[:alchemical_properties], :name, :priority)
+          csv << (item[:attributes].values + concatenate_values(item[:alchemical_properties], :name, :priority))
         end
       end
 
@@ -135,7 +135,7 @@ namespace :csv do
 
       csv_data = CSV.generate(headers) do |csv|
         json_data.each do |item|
-          csv << item[:attributes].values + concatenate_values(item[:enchantments], :name, :strength) + concatenate_values(item[:crafting_materials], :item_code, :quantity)
+          csv << (item[:attributes].values + concatenate_values(item[:enchantments], :name, :strength) + concatenate_values(item[:crafting_materials], :item_code, :quantity))
         end
       end
 
@@ -186,7 +186,7 @@ namespace :csv do
           power_names = item[:powers].pluck(:name)
                           .join(',')
 
-          csv << item[:attributes].values + concatenate_values(item[:spells], :name, :strength) + [power_names.empty? ? nil : power_names]
+          csv << (item[:attributes].values + concatenate_values(item[:spells], :name, :strength) + [power_names.empty? ? nil : power_names])
         end
       end
 
@@ -210,7 +210,7 @@ namespace :csv do
           crafting_material_codes, crafting_material_quantities = concatenate_values(item[:crafting_materials], :item_code, :quantity)
           tempering_material_codes, tempering_material_quantities = concatenate_values(item[:tempering_materials], :item_code, :quantity)
 
-          csv << item[:attributes].values + [enchantment_names, enchantment_strengths, tempering_material_codes, tempering_material_quantities, crafting_material_codes, crafting_material_quantities]
+          csv << (item[:attributes].values + [enchantment_names, enchantment_strengths, tempering_material_codes, tempering_material_quantities, crafting_material_codes, crafting_material_quantities])
         end
       end
 
@@ -296,7 +296,7 @@ namespace :csv do
 
       csv_data = CSV.generate(headers) do |csv|
         json_data.each do |item|
-          csv << item[:attributes].values + concatenate_values(item[:alchemical_properties], :name, :strength, :duration)
+          csv << (item[:attributes].values + concatenate_values(item[:alchemical_properties], :name, :strength, :duration))
         end
       end
 

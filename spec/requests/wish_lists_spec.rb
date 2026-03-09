@@ -860,8 +860,8 @@ RSpec.describe 'WishLists', type: :request do
         context "when this is not the game's last regular wish list" do
           let(:expected_response_body) do
             {
-              'deleted': [wish_list_id],
-              'aggregate': game.aggregate_wish_list,
+              deleted: [wish_list_id],
+              aggregate: game.aggregate_wish_list,
             }.to_json
           end
 

@@ -377,7 +377,14 @@ Lint/AmbiguousBlockAssociation:
   Enabled: true
 Lint/AmbiguousOperator:
   Enabled: true
+Lint/AmbiguousOperatorPrecedence:
+  Enabled: true
+Lint/AmbiguousRange:
+  Enabled: true
+  RequireParenthesesForMethodChains: true
 Lint/AmbiguousRegexpLiteral:
+  Enabled: true
+Lint/ArrayLiteralInRegexp:
   Enabled: true
 Lint/AssignmentInCondition:
   Enabled: true
@@ -386,6 +393,10 @@ Lint/BigDecimalNew:
 Lint/CircularArgumentReference:
   Enabled: true
 Lint/ConstantDefinitionInBlock:
+  Enabled: true
+Lint/ConstantOverwrittenInRescue:
+  Enabled: true
+Lint/CopDirectiveSyntax:
   Enabled: true
 Lint/Debugger:
   Enabled: true
@@ -405,6 +416,10 @@ Lint/DuplicateElsifCondition:
   Enabled: true
 Lint/DuplicateHashKey:
   Enabled: true
+Lint/DuplicateMagicComment:
+  Enabled: true
+Lint/DuplicateMatchPattern:
+  Enabled: true
 Lint/DuplicateMethods:
   Enabled: true
 Lint/DuplicateRegexpCharacterClassElement:
@@ -412,6 +427,8 @@ Lint/DuplicateRegexpCharacterClassElement:
 Lint/DuplicateRequire:
   Enabled: true
 Lint/DuplicateRescueException:
+  Enabled: true
+Lint/DuplicateSetElement:
   Enabled: true
 Lint/EachWithObjectArgument:
   Enabled: true
@@ -446,7 +463,11 @@ Lint/FloatOutOfRange:
   Enabled: true
 Lint/FormatParameterMismatch:
   Enabled: true
+Lint/HashNewWithKeywordArgumentsAsDefault:
+  Enabled: true
 Lint/HeredocMethodCallPosition:
+  Enabled: true
+Lint/IdentityComparison:
   Enabled: true
 Lint/ImplicitStringConcatenation:
   Enabled: true
@@ -456,6 +477,8 @@ Lint/InheritException:
   Enabled: true
   EnforcedStyle: standard_error
 Lint/InterpolationCheck:
+  Enabled: true
+Lint/LambdaWithoutLiteralBlock:
   Enabled: true
 Lint/LiteralAsCondition:
   Enabled: true
@@ -479,7 +502,7 @@ Lint/NextWithoutAccumulator:
   Enabled: true
 Lint/NoReturnInBeginEndBlocks:
   Enabled: true
-Lint/NonDeterministicRequireOrder:
+Lint/NumericOperationWithConstantResult:
   Enabled: true
 Lint/OrAssignmentToConstant:
   Enabled: true
@@ -501,6 +524,8 @@ Lint/RedundantCopEnableDirective:
   Enabled: true
 Lint/RedundantDirGlobSort:
   Enabled: true
+Lint/RedundantRegexpQuantifiers:
+  Enabled: true
 Lint/RedundantRequireStatement:
   Enabled: true
 Lint/RedundantSafeNavigation:
@@ -510,13 +535,19 @@ Lint/RedundantSplatExpansion:
   AllowPercentLiteralArrayArgument: true
 Lint/RedundantStringCoercion:
   Enabled: true
+Lint/RedundantTypeConversion:
+  Enabled: true
 Lint/RedundantWithIndex:
   Enabled: true
 Lint/RedundantWithObject:
   Enabled: true
+Lint/RefinementImportMethods:
+  Enabled: true
 Lint/RegexpAsCondition:
   Enabled: true
 Lint/RequireParentheses:
+  Enabled: true
+Lint/RequireRelativeSelfPath:
   Enabled: true
 Lint/RescueException:
   Enabled: true
@@ -546,6 +577,9 @@ Lint/StructNewOverride:
   Enabled: true
 Lint/SuppressedException:
   Enabled: true
+Lint/SymbolConversion:
+  Enabled: true
+  EnforcedStyle: strict # default
 Lint/Syntax:
   Enabled: true
 Lint/ToEnumArguments:
@@ -559,6 +593,8 @@ Lint/TrailingCommaInAttributeDeclaration:
 Lint/TripleQuotes:
   Enabled: true
 Lint/UnderscorePrefixedVariableName:
+  Enabled: true
+Lint/UnescapedBracketInRegexp:
   Enabled: true
 Lint/UnifiedInteger:
   Enabled: true
@@ -584,6 +620,10 @@ Lint/UselessAccessModifier:
 Lint/UselessAssignment:
   Enabled: true
 Lint/UselessMethodDefinition:
+  Enabled: true
+Lint/UselessNumericOperation:
+  Enabled: true
+Lint/UselessOr:
   Enabled: true
 
 ###########################
