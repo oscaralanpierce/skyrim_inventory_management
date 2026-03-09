@@ -24,6 +24,11 @@ class InventoryItemsController < ApplicationController
   private
 
   def list_item_params
-    params.require(:inventory_item).permit(:description, :quantity, :notes, :unit_weight)
+    params.require(:inventory_item).permit(
+      :description,
+      :quantity,
+      :notes,
+      :unit_weight,
+    )
   end
 end

@@ -34,7 +34,9 @@ module Canonical
               end
 
               object[association].each do |assn|
-                join_model = model.send(association_name).find_or_initialize_by(associated_model => associated_model_class.find_by(associated_model_identifier => assn.delete(associated_model_identifier)))
+                join_model = model
+                               .send(association_name)
+                               .find_or_initialize_by(associated_model => associated_model_class.find_by(associated_model_identifier => assn.delete(associated_model_identifier)))
                 join_model.assign_attributes(assn)
                 join_model.save!
               rescue ActiveRecord::RecordInvalid => e

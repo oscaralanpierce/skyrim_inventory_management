@@ -72,7 +72,10 @@ class WishListItemsController < ApplicationController
     end
 
     def all_matching_list_items
-      @all_matching_list_items ||= game.wish_list_items.where('description ILIKE ?', params[:description])
+      @all_matching_list_items ||= game.wish_list_items.where(
+        'description ILIKE ?',
+        params[:description],
+      )
     end
 
     def lists_to_be_changed

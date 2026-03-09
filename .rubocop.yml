@@ -275,9 +275,11 @@ Layout/MultilineOperationIndentation:
 Layout/ParameterAlignment:
   Enabled: true
   EnforcedStyle: with_first_parameter
-Layout/RedundantLineBreak:
-  Enabled: true
-  InspectBlocks: true
+# Note: Without the LineLength cop, this removes line breaks
+#       from *everything*
+# Layout/RedundantLineBreak:
+#   Enabled: true
+#   InspectBlocks: true
 Layout/RescueEnsureAlignment:
   Enabled: true
 Layout/SingleLineBlockChain:

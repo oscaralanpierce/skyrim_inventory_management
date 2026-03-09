@@ -22,13 +22,21 @@ module Canonical
           json_data.each do |object|
             craftable = self.class.const_get(object[:craftable][:type]).find_by(item_code: object[:craftable][:item_code])
 
-            raise DataIntegrityError.new("Expected craftable item name to be #{object[:metadata][:name]} but was #{craftable.name}") if craftable.name != object[:metadata][:name]
+            if craftable.name != object[:metadata][:name]
+              raise DataIntegrityError.new(
+                "Expected craftable item name to be #{object[:metadata][:name]} but was #{craftable.name}",
+              )
+            end
 
             object[:materials].each do |material|
               source_material_class = self.class.const_get(material[:metadata][:source_material_type])
               source_material = source_material_class.find_by(item_code: material[:metadata][:item_code])
 
-              raise DataIntegrityError.new("Expected material name to be #{material[:metadata][:name]} but was #{source_material.name}") if source_material.name != material[:metadata][:name]
+              if source_material.name != material[:metadata][:name]
+                raise DataIntegrityError.new(
+                  "Expected material name to be #{material[:metadata][:name]} but was #{source_material.name}",
+                )
+              end
 
               attributes = material[:attributes].merge(craftable:, source_material:)
 
@@ -68,7 +76,12 @@ module Canonical
       end
 
       def json_file_path
-        Rails.root.join('lib', 'tasks', 'canonical_models', 'canonical_crafting_materials.json')
+        Rails.root.join(
+          'lib',
+          'tasks',
+          'canonical_models',
+          'canonical_crafting_materials.json',
+        )
       end
 
       def json_data
