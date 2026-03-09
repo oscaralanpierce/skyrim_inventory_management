@@ -203,6 +203,12 @@ Layout/FirstHashElementIndentation:
   EnforcedStyle: consistent
 Layout/FirstHashElementLineBreak:
   Enabled: true
+Layout/FirstMethodArgumentLineBreak:
+  Enabled: true
+  AllowMultilineFinalElement: true
+Layout/FirstMethodParameterLineBreak:
+  Enabled: true
+  AllowMultilineFinalElement: true
 Layout/FirstParameterIndentation:
   Enabled: true
   EnforcedStyle: consistent
@@ -231,6 +237,12 @@ Layout/LeadingCommentSpace:
   Enabled: true
 Layout/LeadingEmptyLines:
   Enabled: true
+Layout/LineContinuationLeadingSpace:
+  Enabled: true
+  EnforcedStyle: trailing # default
+Layout/LineContinuationSpacing:
+  Enabled: true
+  EnforcedStyle: space # default
 Layout/LineEndStringConcatenationIndentation:
   Enabled: true
   EnforcedStyle: aligned
@@ -260,12 +272,20 @@ Layout/MultilineMethodCallIndentation:
 Layout/MultilineMethodDefinitionBraceLayout:
   Enabled: true
   EnforcedStyle: symmetrical
+Layout/MultilineMethodParameterLineBreaks:
+  Enabled: true
+  AllowMultilineFinalElement: true
 Layout/MultilineOperationIndentation:
   Enabled: true
   EnforcedStyle: indented
 Layout/ParameterAlignment:
   Enabled: true
   EnforcedStyle: with_first_parameter
+# Note: Without the LineLength cop, this removes line breaks
+#       from *everything*
+# Layout/RedundantLineBreak:
+#   Enabled: true
+#   InspectBlocks: true
 Layout/RescueEnsureAlignment:
   Enabled: true
 Layout/SingleLineBlockChain:
@@ -337,6 +357,9 @@ Layout/SpaceInsideReferenceBrackets:
   Enabled: true
   EnforcedStyle: no_space
   EnforcedStyleForEmptyBrackets: no_space
+Layout/SpaceInsideStringInterpolation:
+  Enabled: true
+  EnforcedStyle: no_space # default
 Layout/TrailingEmptyLines:
   Enabled: true
   EnforcedStyle: final_newline

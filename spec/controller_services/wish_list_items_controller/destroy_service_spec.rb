@@ -59,11 +59,13 @@ RSpec.describe WishListItemsController::DestroyService do
         let(:user) { game.user }
         let(:second_list) { create(:wish_list, game:, aggregate_list:) }
         let(:second_list_item) do
-          create(:wish_list_item,
-                 list: second_list,
-                 description: list_item.description.upcase, # make sure comparison is case insensitive
-                 quantity: 2,
-                 notes: 'some other notes',)
+          create(
+            :wish_list_item,
+            list: second_list,
+            description: list_item.description.upcase, # make sure comparison is case insensitive
+            quantity: 2,
+            notes: 'some other notes',
+          )
         end
 
         before do
