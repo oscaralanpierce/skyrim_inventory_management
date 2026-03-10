@@ -13,7 +13,7 @@ RSpec.describe Service::OkResult do
 
   describe '#status' do
     it 'is :ok' do
-      expect(result.status).to eq :ok
+      expect(result.status).to eq(:ok)
     end
   end
 end

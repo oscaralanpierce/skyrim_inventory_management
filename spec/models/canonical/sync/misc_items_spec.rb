@@ -14,11 +14,11 @@ RSpec.describe Canonical::Sync::MiscItems do
   end
 
   describe '::perform' do
-    subject(:perform) { described_class.perform(preserve_existing_records) }
+    subject(:perform) { described_class.perform(preserve_existing_records:) }
 
     context 'when preserve_existing_records is false' do
       let(:preserve_existing_records) { false }
-      let(:syncer) { described_class.new(preserve_existing_records) }
+      let(:syncer) { described_class.new(preserve_existing_records:) }
 
       before do
         allow(described_class).to receive(:new).and_return(syncer)
@@ -26,7 +26,7 @@ RSpec.describe Canonical::Sync::MiscItems do
 
       it 'instantiates itself' do
         perform
-        expect(described_class).to have_received(:new).with(preserve_existing_records)
+        expect(described_class).to have_received(:new).with(preserve_existing_records:)
       end
 
       context 'when there are no existing records in the database' do
@@ -39,17 +39,17 @@ RSpec.describe Canonical::Sync::MiscItems do
       context 'when there are existing records in the database' do
         let!(:item_in_json) { create(:canonical_misc_item, item_code: 'XX012F97', name: 'Quartz Paragon') }
         let!(:item_not_in_json) { create(:canonical_misc_item, item_code: '12345678') }
-        let(:syncer) { described_class.new(preserve_existing_records) }
+        let(:syncer) { described_class.new(preserve_existing_records:) }
 
         it 'instantiates itself' do
           allow(described_class).to receive(:new).and_return(syncer)
           perform
-          expect(described_class).to have_received(:new).with(preserve_existing_records)
+          expect(described_class).to have_received(:new).with(preserve_existing_records:)
         end
 
         it 'updates models that were already in the database' do
           perform
-          expect(item_in_json.reload.name).to eq 'Amethyst Paragon'
+          expect(item_in_json.reload.name).to eq('Amethyst Paragon')
         end
 
         it "removes models in the database that aren't in the JSON data" do
@@ -68,19 +68,19 @@ RSpec.describe Canonical::Sync::MiscItems do
 
     context 'when preserve_existing_records is true' do
       let(:preserve_existing_records) { true }
-      let(:syncer) { described_class.new(preserve_existing_records) }
+      let(:syncer) { described_class.new(preserve_existing_records:) }
       let!(:item_in_json) { create(:canonical_misc_item, item_code: 'XX012F97', name: 'Quartz Paragon') }
       let!(:item_not_in_json) { create(:canonical_misc_item, item_code: '12345678') }
 
       it 'instantiates itself' do
         allow(described_class).to receive(:new).and_return(syncer)
         perform
-        expect(described_class).to have_received(:new).with(preserve_existing_records)
+        expect(described_class).to have_received(:new).with(preserve_existing_records:)
       end
 
       it 'updates models found in the JSON data' do
         perform
-        expect(item_in_json.reload.name).to eq 'Amethyst Paragon'
+        expect(item_in_json.reload.name).to eq('Amethyst Paragon')
       end
 
       it 'adds models not already in the database', :aggregate_failures do

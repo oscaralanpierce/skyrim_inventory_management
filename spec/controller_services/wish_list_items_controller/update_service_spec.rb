@@ -1,11 +1,11 @@
 # frozen_string_literal: true
 
 require 'rails_helper'
-require 'service/ok_result'
-require 'service/not_found_result'
-require 'service/unprocessable_entity_result'
-require 'service/method_not_allowed_result'
 require 'service/internal_server_error_result'
+require 'service/method_not_allowed_result'
+require 'service/not_found_result'
+require 'service/ok_result'
+require 'service/unprocessable_entity_result'
 
 RSpec.describe WishListItemsController::UpdateService do
   describe '#perform' do
@@ -28,13 +28,13 @@ RSpec.describe WishListItemsController::UpdateService do
 
         it 'updates the list item', :aggregate_failures do
           perform
-          expect(list_item.reload.quantity).to eq 9
-          expect(list_item.notes).to eq 'To make bolts with'
+          expect(list_item.reload.quantity).to eq(9)
+          expect(list_item.notes).to eq('To make bolts with')
         end
 
         it 'updates the aggregate list item' do
           perform
-          expect(aggregate_list_item.quantity).to eq 9
+          expect(aggregate_list_item.quantity).to eq(9)
           expect(aggregate_list_item.notes).to be_nil
         end
 
@@ -43,7 +43,7 @@ RSpec.describe WishListItemsController::UpdateService do
         end
 
         it 'returns the modified wish list items as the resource' do
-          expect(perform.resource).to eq [aggregate_list_item, list_item.reload]
+          expect(perform.resource).to eq([aggregate_list_item, list_item.reload])
         end
       end
 
@@ -63,12 +63,12 @@ RSpec.describe WishListItemsController::UpdateService do
 
           it 'updates the list item' do
             perform
-            expect(list_item.reload.quantity).to eq 12
+            expect(list_item.reload.quantity).to eq(12)
           end
 
           it 'updates the aggregate list item' do
             perform
-            expect(aggregate_list.reload.list_items.first.quantity).to eq 15
+            expect(aggregate_list.reload.list_items.first.quantity).to eq(15)
           end
 
           it 'returns a Service::OkResult' do
@@ -85,20 +85,20 @@ RSpec.describe WishListItemsController::UpdateService do
 
           it 'updates the list item', :aggregate_failures do
             perform
-            expect(list_item.reload.quantity).to eq 10
-            expect(list_item.unit_weight).to eq 2
+            expect(list_item.reload.quantity).to eq(10)
+            expect(list_item.unit_weight).to eq(2)
           end
 
           it 'updates the aggregate list item', :aggregate_failures do
             perform
-            expect(aggregate_list_item.quantity).to eq 13
-            expect(aggregate_list_item.unit_weight).to eq 2
+            expect(aggregate_list_item.quantity).to eq(13)
+            expect(aggregate_list_item.unit_weight).to eq(2)
           end
 
           it 'updates only the unit weight of the other list item', :aggregate_failures do
             perform
-            expect(other_item.reload.quantity).to eq 3
-            expect(other_item.unit_weight).to eq 2
+            expect(other_item.reload.quantity).to eq(3)
+            expect(other_item.unit_weight).to eq(2)
           end
 
           it 'returns a Service::OkResult' do
@@ -115,19 +115,19 @@ RSpec.describe WishListItemsController::UpdateService do
 
           it 'updates the list item', :aggregate_failures do
             perform
-            expect(list_item.reload.quantity).to eq 10
+            expect(list_item.reload.quantity).to eq(10)
             expect(list_item.unit_weight).to be_nil
           end
 
           it 'updates the aggregate list item', :aggregate_failures do
             perform
-            expect(aggregate_list_item.quantity).to eq 13
+            expect(aggregate_list_item.quantity).to eq(13)
             expect(aggregate_list_item.unit_weight).to be_nil
           end
 
           it 'updates only the unit weight of the other list item', :aggregate_failures do
             perform
-            expect(other_item.reload.quantity).to eq 3
+            expect(other_item.reload.quantity).to eq(3)
             expect(other_item.unit_weight).to be_nil
           end
 
@@ -184,7 +184,7 @@ RSpec.describe WishListItemsController::UpdateService do
       end
 
       it 'sets the errors' do
-        expect(perform.errors).to eq ['Cannot manually update list items on an aggregate wish list']
+        expect(perform.errors).to eq(['Cannot manually update list items on an aggregate wish list'])
       end
     end
 
@@ -202,13 +202,13 @@ RSpec.describe WishListItemsController::UpdateService do
 
       it "doesn't update the aggregate list item", :aggregate_failures do
         perform
-        expect(aggregate_list_item.quantity).to eq 3
-        expect(aggregate_list_item.unit_weight).to be nil
+        expect(aggregate_list_item.quantity).to eq(3)
+        expect(aggregate_list_item.unit_weight).to be_nil
       end
 
       it "doesn't update the other item's unit_weight" do
         perform
-        expect(other_item.reload.unit_weight).to be nil
+        expect(other_item.reload.unit_weight).to be_nil
       end
 
       it 'returns a Service::UnprocessableEntityResult' do
@@ -216,7 +216,7 @@ RSpec.describe WishListItemsController::UpdateService do
       end
 
       it 'includes the validation errors' do
-        expect(perform.errors).to eq ['Quantity must be greater than 0']
+        expect(perform.errors).to eq(['Quantity must be greater than 0'])
       end
     end
 
@@ -236,7 +236,7 @@ RSpec.describe WishListItemsController::UpdateService do
       end
 
       it 'sets the errors' do
-        expect(perform.errors).to eq ['Something went horribly wrong']
+        expect(perform.errors).to eq(['Something went horribly wrong'])
       end
     end
   end

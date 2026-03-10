@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 require 'rails_helper'
-require 'service/ok_result'
 require 'service/internal_server_error_result'
+require 'service/ok_result'
 
 RSpec.describe GamesController::IndexService do
   describe '#perform' do

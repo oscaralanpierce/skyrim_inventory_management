@@ -18,7 +18,7 @@ RSpec.describe Canonical::IngredientsAlchemicalProperty, type: :model do
           new_association = build(:canonical_ingredients_alchemical_property, ingredient:)
 
           new_association.validate
-          expect(new_association.errors[:ingredient]).to include 'already has 4 alchemical properties'
+          expect(new_association.errors[:ingredient]).to include('already has 4 alchemical properties')
         end
       end
 
@@ -67,7 +67,7 @@ RSpec.describe Canonical::IngredientsAlchemicalProperty, type: :model do
               model.ingredient = new_ingredient
               model.validate
 
-              expect(model.errors[:ingredient]).to include 'already has 4 alchemical properties'
+              expect(model.errors[:ingredient]).to include('already has 4 alchemical properties')
             end
           end
         end
@@ -94,7 +94,7 @@ RSpec.describe Canonical::IngredientsAlchemicalProperty, type: :model do
           )
 
           model.validate
-          expect(model.errors[:priority]).to include 'must be unique per ingredient'
+          expect(model.errors[:priority]).to include('must be unique per ingredient')
         end
 
         it "isn't required to be globally unique" do
@@ -108,21 +108,21 @@ RSpec.describe Canonical::IngredientsAlchemicalProperty, type: :model do
         model = build(:canonical_ingredients_alchemical_property, priority: 0)
 
         model.validate
-        expect(model.errors[:priority]).to include 'must be greater than or equal to 1'
+        expect(model.errors[:priority]).to include('must be greater than or equal to 1')
       end
 
       it "can't be more than 4" do
         model = build(:canonical_ingredients_alchemical_property, priority: 5)
 
         model.validate
-        expect(model.errors[:priority]).to include 'must be less than or equal to 4'
+        expect(model.errors[:priority]).to include('must be less than or equal to 4')
       end
 
       it 'must be an integer' do
         model = build(:canonical_ingredients_alchemical_property, priority: 1.5)
 
         model.validate
-        expect(model.errors[:priority]).to include 'must be an integer'
+        expect(model.errors[:priority]).to include('must be an integer')
       end
     end
 
@@ -131,7 +131,7 @@ RSpec.describe Canonical::IngredientsAlchemicalProperty, type: :model do
         model = build(:canonical_ingredients_alchemical_property, strength_modifier: 0)
 
         model.validate
-        expect(model.errors[:strength_modifier]).to include 'must be greater than 0'
+        expect(model.errors[:strength_modifier]).to include('must be greater than 0')
       end
     end
 
@@ -140,7 +140,7 @@ RSpec.describe Canonical::IngredientsAlchemicalProperty, type: :model do
         model = build(:canonical_ingredients_alchemical_property, duration_modifier: 0)
 
         model.validate
-        expect(model.errors[:duration_modifier]).to include 'must be greater than 0'
+        expect(model.errors[:duration_modifier]).to include('must be greater than 0')
       end
     end
 
@@ -155,7 +155,7 @@ RSpec.describe Canonical::IngredientsAlchemicalProperty, type: :model do
         )
 
         model.validate
-        expect(model.errors[:alchemical_property_id]).to include 'must form a unique combination with canonical ingredient'
+        expect(model.errors[:alchemical_property_id]).to include('must form a unique combination with canonical ingredient')
       end
     end
   end

@@ -8,12 +8,12 @@ RSpec.describe 'Utilities', type: :request do
 
     it 'returns status 200' do
       privacy
-      expect(response.status).to eq 200
+      expect(response.status).to eq(200)
     end
 
     it 'renders the privacy policy in plain text' do
       privacy
-      expect(response.headers['Content-Type']).to eq 'text/plain; charset=utf-8'
+      expect(response.headers['Content-Type']).to eq('text/plain; charset=utf-8')
     end
   end
 
@@ -22,12 +22,12 @@ RSpec.describe 'Utilities', type: :request do
 
     it 'returns status 200' do
       tos
-      expect(response.status).to eq 200
+      expect(response.status).to eq(200)
     end
 
     it 'renders the terms of service in plain text' do
       tos
-      expect(response.headers['Content-Type']).to eq 'text/plain; charset=utf-8'
+      expect(response.headers['Content-Type']).to eq('text/plain; charset=utf-8')
     end
   end
 end

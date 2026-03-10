@@ -36,7 +36,7 @@ RSpec.describe 'WishLists', type: :request do
 
           it 'returns status 201' do
             create_wish_list
-            expect(response.status).to eq 201
+            expect(response.status).to eq(201)
           end
         end
 
@@ -57,7 +57,7 @@ RSpec.describe 'WishLists', type: :request do
 
           it 'returns status 201' do
             create_wish_list
-            expect(response.status).to eq 201
+            expect(response.status).to eq(201)
           end
         end
 
@@ -71,12 +71,12 @@ RSpec.describe 'WishLists', type: :request do
 
           it 'returns status 201' do
             create_wish_list
-            expect(response.status).to eq 201
+            expect(response.status).to eq(201)
           end
 
           it 'creates the wish list with a default title' do
             create_wish_list
-            expect(game.wish_lists.last.title).to eq 'My List 1'
+            expect(game.wish_lists.last.title).to eq('My List 1')
           end
         end
       end
@@ -86,7 +86,7 @@ RSpec.describe 'WishLists', type: :request do
 
         it 'returns status 404' do
           create_wish_list
-          expect(response.status).to eq 404
+          expect(response.status).to eq(404)
         end
 
         it "doesn't return any data" do
@@ -105,7 +105,7 @@ RSpec.describe 'WishLists', type: :request do
 
         it 'returns status 404' do
           create_wish_list
-          expect(response.status).to eq 404
+          expect(response.status).to eq(404)
         end
 
         it "doesn't return any data" do
@@ -128,7 +128,7 @@ RSpec.describe 'WishLists', type: :request do
 
         it 'returns status 422' do
           create_wish_list
-          expect(response.status).to eq 422
+          expect(response.status).to eq(422)
         end
 
         it 'returns the errors' do
@@ -155,7 +155,7 @@ RSpec.describe 'WishLists', type: :request do
 
         it 'returns an error' do
           create_wish_list
-          expect(response.status).to eq 422
+          expect(response.status).to eq(422)
         end
 
         it 'returns a helpful error body' do
@@ -179,7 +179,7 @@ RSpec.describe 'WishLists', type: :request do
 
       it 'returns status 401' do
         create_wish_list
-        expect(response.status).to eq 401
+        expect(response.status).to eq(401)
       end
 
       it "doesn't return any data" do
@@ -209,7 +209,7 @@ RSpec.describe 'WishLists', type: :request do
         context 'when the request body sets a valid title' do
           it 'updates the title' do
             update_wish_list
-            expect(wish_list.reload.title).to eq 'Severin Manor'
+            expect(wish_list.reload.title).to eq('Severin Manor')
           end
 
           it 'returns the updated list' do
@@ -222,7 +222,7 @@ RSpec.describe 'WishLists', type: :request do
 
           it 'returns status 200' do
             update_wish_list
-            expect(response.status).to eq 200
+            expect(response.status).to eq(200)
           end
         end
 
@@ -231,7 +231,7 @@ RSpec.describe 'WishLists', type: :request do
 
           it 'sets a default title' do
             update_wish_list
-            expect(wish_list.reload.title).to eq 'My List 1'
+            expect(wish_list.reload.title).to eq('My List 1')
           end
 
           it 'returns the updated list' do
@@ -244,7 +244,7 @@ RSpec.describe 'WishLists', type: :request do
 
           it 'returns status 200' do
             update_wish_list
-            expect(response.status).to eq 200
+            expect(response.status).to eq(200)
           end
         end
 
@@ -266,7 +266,7 @@ RSpec.describe 'WishLists', type: :request do
 
           it 'returns status 200' do
             update_wish_list
-            expect(response.status).to eq 200
+            expect(response.status).to eq(200)
           end
         end
 
@@ -288,7 +288,7 @@ RSpec.describe 'WishLists', type: :request do
 
           it 'returns status 200' do
             update_wish_list
-            expect(response.status).to eq 200
+            expect(response.status).to eq(200)
           end
         end
       end
@@ -309,7 +309,7 @@ RSpec.describe 'WishLists', type: :request do
 
         it 'returns status 422' do
           update_wish_list
-          expect(response.status).to eq 422
+          expect(response.status).to eq(422)
         end
 
         it 'returns the errors' do
@@ -323,7 +323,7 @@ RSpec.describe 'WishLists', type: :request do
 
         it 'returns status 404' do
           update_wish_list
-          expect(response.status).to eq 404
+          expect(response.status).to eq(404)
         end
 
         it "doesn't return data" do
@@ -343,7 +343,7 @@ RSpec.describe 'WishLists', type: :request do
 
         it 'returns status 404' do
           update_wish_list
-          expect(response.status).to eq 404
+          expect(response.status).to eq(404)
         end
 
         it "doesn't return data" do
@@ -366,12 +366,12 @@ RSpec.describe 'WishLists', type: :request do
 
         it "doesn't update the list" do
           update_wish_list
-          expect(wish_list.reload.title).to eq 'All Items'
+          expect(wish_list.reload.title).to eq('All Items')
         end
 
         it 'returns status 405 (method not allowed)' do
           update_wish_list
-          expect(response.status).to eq 405
+          expect(response.status).to eq(405)
         end
 
         it 'returns a helpful error body' do
@@ -394,12 +394,12 @@ RSpec.describe 'WishLists', type: :request do
 
         it "doesn't update the list" do
           update_wish_list
-          expect(wish_list.reload.aggregate).to eq false
+          expect(wish_list.reload.aggregate).to eq(false)
         end
 
         it 'returns status 422' do
           update_wish_list
-          expect(response.status).to eq 422
+          expect(response.status).to eq(422)
         end
 
         it 'returns a helpful error body' do
@@ -428,7 +428,7 @@ RSpec.describe 'WishLists', type: :request do
 
         it 'returns status 500' do
           update_wish_list
-          expect(response.status).to eq 500
+          expect(response.status).to eq(500)
         end
 
         it 'returns the error in the body' do
@@ -453,7 +453,7 @@ RSpec.describe 'WishLists', type: :request do
 
       it 'returns status 401' do
         update_wish_list
-        expect(response.status).to eq 401
+        expect(response.status).to eq(401)
       end
 
       it "doesn't return any data" do
@@ -483,7 +483,7 @@ RSpec.describe 'WishLists', type: :request do
         context 'when the request body sets a valid title' do
           it 'updates the title' do
             update_wish_list
-            expect(wish_list.reload.title).to eq 'Severin Manor'
+            expect(wish_list.reload.title).to eq('Severin Manor')
           end
 
           it 'returns the updated list' do
@@ -496,7 +496,7 @@ RSpec.describe 'WishLists', type: :request do
 
           it 'returns status 200' do
             update_wish_list
-            expect(response.status).to eq 200
+            expect(response.status).to eq(200)
           end
         end
 
@@ -505,7 +505,7 @@ RSpec.describe 'WishLists', type: :request do
 
           it 'sets a default title' do
             update_wish_list
-            expect(wish_list.reload.title).to eq 'My List 1'
+            expect(wish_list.reload.title).to eq('My List 1')
           end
 
           it 'returns the updated list' do
@@ -518,7 +518,7 @@ RSpec.describe 'WishLists', type: :request do
 
           it 'returns status 200' do
             update_wish_list
-            expect(response.status).to eq 200
+            expect(response.status).to eq(200)
           end
         end
 
@@ -540,7 +540,7 @@ RSpec.describe 'WishLists', type: :request do
 
           it 'returns status 200' do
             update_wish_list
-            expect(response.status).to eq 200
+            expect(response.status).to eq(200)
           end
         end
 
@@ -562,7 +562,7 @@ RSpec.describe 'WishLists', type: :request do
 
           it 'returns status 200' do
             update_wish_list
-            expect(response.status).to eq 200
+            expect(response.status).to eq(200)
           end
         end
       end
@@ -583,7 +583,7 @@ RSpec.describe 'WishLists', type: :request do
 
         it 'returns status 422' do
           update_wish_list
-          expect(response.status).to eq 422
+          expect(response.status).to eq(422)
         end
 
         it 'returns the errors' do
@@ -597,7 +597,7 @@ RSpec.describe 'WishLists', type: :request do
 
         it 'returns status 404' do
           update_wish_list
-          expect(response.status).to eq 404
+          expect(response.status).to eq(404)
         end
 
         it "doesn't return data" do
@@ -617,7 +617,7 @@ RSpec.describe 'WishLists', type: :request do
 
         it 'returns status 404' do
           update_wish_list
-          expect(response.status).to eq 404
+          expect(response.status).to eq(404)
         end
 
         it "doesn't return data" do
@@ -638,12 +638,12 @@ RSpec.describe 'WishLists', type: :request do
 
         it "doesn't update the list" do
           update_wish_list
-          expect(wish_list.reload.title).to eq 'All Items'
+          expect(wish_list.reload.title).to eq('All Items')
         end
 
         it 'returns status 405 (method not allowed)' do
           update_wish_list
-          expect(response.status).to eq 405
+          expect(response.status).to eq(405)
         end
 
         it 'returns a helpful error body' do
@@ -664,12 +664,12 @@ RSpec.describe 'WishLists', type: :request do
 
         it "doesn't update the list" do
           update_wish_list
-          expect(wish_list.reload.aggregate).to eq false
+          expect(wish_list.reload.aggregate).to eq(false)
         end
 
         it 'returns status 422' do
           update_wish_list
-          expect(response.status).to eq 422
+          expect(response.status).to eq(422)
         end
 
         it 'returns a helpful error body' do
@@ -696,7 +696,7 @@ RSpec.describe 'WishLists', type: :request do
 
         it 'returns status 500' do
           update_wish_list
-          expect(response.status).to eq 500
+          expect(response.status).to eq(500)
         end
 
         it 'returns the error in the body' do
@@ -721,7 +721,7 @@ RSpec.describe 'WishLists', type: :request do
 
       it 'returns status 401' do
         update_wish_list
-        expect(response.status).to eq 401
+        expect(response.status).to eq(401)
       end
 
       it "doesn't return any data" do
@@ -746,7 +746,7 @@ RSpec.describe 'WishLists', type: :request do
 
         it 'returns status 404' do
           get_index
-          expect(response.status).to eq 404
+          expect(response.status).to eq(404)
         end
 
         it 'returns no data' do
@@ -760,7 +760,7 @@ RSpec.describe 'WishLists', type: :request do
 
         it 'returns status 404' do
           get_index
-          expect(response.status).to eq 404
+          expect(response.status).to eq(404)
         end
 
         it 'returns no data' do
@@ -774,12 +774,12 @@ RSpec.describe 'WishLists', type: :request do
 
         it 'returns status 200' do
           get_index
-          expect(response.status).to eq 200
+          expect(response.status).to eq(200)
         end
 
         it 'returns an empty array' do
           get_index
-          expect(JSON.parse(response.body)).to eq []
+          expect(JSON.parse(response.body)).to eq([])
         end
       end
 
@@ -788,12 +788,12 @@ RSpec.describe 'WishLists', type: :request do
 
         it 'returns status 200' do
           get_index
-          expect(response.status).to eq 200
+          expect(response.status).to eq(200)
         end
 
         it 'returns the wish lists in index order' do
           get_index
-          expect(response.body).to eq game.wish_lists.index_order.to_json
+          expect(response.body).to eq(game.wish_lists.index_order.to_json)
         end
       end
     end
@@ -807,7 +807,7 @@ RSpec.describe 'WishLists', type: :request do
 
       it 'returns status 401' do
         get_index
-        expect(response.status).to eq 401
+        expect(response.status).to eq(401)
       end
 
       it "doesn't return any data" do
@@ -848,12 +848,12 @@ RSpec.describe 'WishLists', type: :request do
 
           it 'returns status 200' do
             delete_wish_list
-            expect(response.status).to eq 200
+            expect(response.status).to eq(200)
           end
 
           it 'returns the IDs of the deleted lists' do
             delete_wish_list
-            expect(response.body).to eq expected_response_body
+            expect(response.body).to eq(expected_response_body)
           end
         end
 
@@ -876,7 +876,7 @@ RSpec.describe 'WishLists', type: :request do
 
           it 'returns status 200' do
             delete_wish_list
-            expect(response.status).to eq 200
+            expect(response.status).to eq(200)
           end
 
           it 'returns the deleted list ID and the aggregate list' do
@@ -891,7 +891,7 @@ RSpec.describe 'WishLists', type: :request do
 
         it 'returns 404' do
           delete_wish_list
-          expect(response.status).to eq 404
+          expect(response.status).to eq(404)
         end
 
         it "doesn't return any data" do
@@ -910,7 +910,7 @@ RSpec.describe 'WishLists', type: :request do
 
         it 'returns 404' do
           delete_wish_list
-          expect(response.status).to eq 404
+          expect(response.status).to eq(404)
         end
 
         it "doesn't return any data" do
@@ -929,7 +929,7 @@ RSpec.describe 'WishLists', type: :request do
 
         it 'returns status 405' do
           delete_wish_list
-          expect(response.status).to eq 405
+          expect(response.status).to eq(405)
         end
 
         it 'returns an "errors" array' do
@@ -953,7 +953,7 @@ RSpec.describe 'WishLists', type: :request do
 
       it 'returns status 401' do
         delete_wish_list
-        expect(response.status).to eq 401
+        expect(response.status).to eq(401)
       end
 
       it "doesn't return any data" do

@@ -7,7 +7,7 @@ RSpec.describe Service::InternalServerErrorResult do
 
   describe '#status' do
     it 'is :internal_server_error' do
-      expect(result.status).to eq :internal_server_error
+      expect(result.status).to eq(:internal_server_error)
     end
   end
 end

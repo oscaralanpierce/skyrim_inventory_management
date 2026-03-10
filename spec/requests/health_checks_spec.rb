@@ -8,7 +8,7 @@ RSpec.describe 'HealthChecks', type: :request do
 
     it 'returns status 200' do
       index
-      expect(response.status).to eq 200
+      expect(response.status).to eq(200)
     end
 
     it 'returns an empty object' do

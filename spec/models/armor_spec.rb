@@ -11,19 +11,19 @@ RSpec.describe Armor, type: :model do
     it 'is invalid without a name' do
       armor.name = nil
       validate
-      expect(armor.errors[:name]).to include "can't be blank"
+      expect(armor.errors[:name]).to include("can't be blank")
     end
 
     it 'is invalid with an invalid weight value' do
       armor.weight = 'medium armor'
       validate
-      expect(armor.errors[:weight]).to include 'must be "light armor" or "heavy armor"'
+      expect(armor.errors[:weight]).to include('must be "light armor" or "heavy armor"')
     end
 
     it 'is invalid with a negative unit weight' do
       armor.unit_weight = -2.5
       validate
-      expect(armor.errors[:unit_weight]).to include 'must be greater than or equal to 0'
+      expect(armor.errors[:unit_weight]).to include('must be greater than or equal to 0')
     end
 
     describe '#canonical_armor' do
@@ -62,7 +62,7 @@ RSpec.describe Armor, type: :model do
             armor.canonical_armor = canonical_armor
             armor.game = game
             validate
-            expect(armor.errors[:base]).to include 'is a duplicate of a unique in-game item'
+            expect(armor.errors[:base]).to include('is a duplicate of a unique in-game item')
           end
         end
 
@@ -105,13 +105,13 @@ RSpec.describe Armor, type: :model do
 
     describe '#crafting_materials' do
       it 'uses the values from the canonical model' do
-        expect(armor.crafting_materials).to eq canonical_armor.crafting_materials
+        expect(armor.crafting_materials).to eq(canonical_armor.crafting_materials)
       end
     end
 
     describe '#tempering_materials' do
       it 'uses the values from the canonical model' do
-        expect(armor.tempering_materials).to eq canonical_armor.tempering_materials
+        expect(armor.tempering_materials).to eq(canonical_armor.tempering_materials)
       end
     end
 
@@ -169,10 +169,10 @@ RSpec.describe Armor, type: :model do
 
       it 'sets the attributes', :aggregate_failures do
         validate
-        expect(armor.name).to eq 'Steel Plate Armor'
-        expect(armor.magical_effects).to eq 'Something'
-        expect(armor.unit_weight).to eq 20
-        expect(armor.weight).to eq 'heavy armor'
+        expect(armor.name).to eq('Steel Plate Armor')
+        expect(armor.magical_effects).to eq('Something')
+        expect(armor.unit_weight).to eq(20)
+        expect(armor.weight).to eq('heavy armor')
       end
     end
 
@@ -196,7 +196,7 @@ RSpec.describe Armor, type: :model do
 
       it "doesn't set other attributes", :aggregate_failures do
         validate
-        expect(armor.name).to eq 'Steel plate armor'
+        expect(armor.name).to eq('Steel plate armor')
         expect(armor.weight).to be_nil
         expect(armor.unit_weight).to be_nil
       end
@@ -207,7 +207,7 @@ RSpec.describe Armor, type: :model do
 
       it 'is invalid' do
         validate
-        expect(armor.errors[:base]).to include "doesn't match any item that exists in Skyrim"
+        expect(armor.errors[:base]).to include("doesn't match any item that exists in Skyrim")
       end
     end
 
@@ -266,10 +266,10 @@ RSpec.describe Armor, type: :model do
 
           validate
 
-          expect(armor.name).to eq 'Imperial Boots of Resist Frost'
-          expect(armor.magical_effects).to eq 'This Will Be Case Insensitive'
-          expect(armor.weight).to eq 'light armor'
-          expect(armor.unit_weight).to eq 2
+          expect(armor.name).to eq('Imperial Boots of Resist Frost')
+          expect(armor.magical_effects).to eq('This Will Be Case Insensitive')
+          expect(armor.weight).to eq('light armor')
+          expect(armor.unit_weight).to eq(2)
         end
 
         it 'removes automatically added enchantments', :aggregate_failures do
@@ -281,7 +281,7 @@ RSpec.describe Armor, type: :model do
           validate
           armor.enchantables_enchantments.reload
 
-          expect(armor.enchantables_enchantments.count).to eq 1
+          expect(armor.enchantables_enchantments.count).to eq(1)
           expect(armor.enchantables_enchantments.pluck(:added_automatically)).to be_all(false)
         end
       end
@@ -318,8 +318,8 @@ RSpec.describe Armor, type: :model do
 
           validate
 
-          expect(armor.name).to eq 'imperial boots of resist frost'
-          expect(armor.magical_effects).to eq 'this will be case insensitive'
+          expect(armor.name).to eq('imperial boots of resist frost')
+          expect(armor.magical_effects).to eq('this will be case insensitive')
           expect(armor.weight).to be_nil
           expect(armor.unit_weight).to be_nil
         end
@@ -333,7 +333,7 @@ RSpec.describe Armor, type: :model do
           validate
           armor.enchantables_enchantments.reload
 
-          expect(armor.enchantables_enchantments.count).to eq 1
+          expect(armor.enchantables_enchantments.count).to eq(1)
           expect(armor.enchantables_enchantments.pluck(:added_automatically)).to be_all(false)
         end
       end
@@ -353,7 +353,7 @@ RSpec.describe Armor, type: :model do
           validate
           armor.enchantables_enchantments.reload
 
-          expect(armor.enchantables_enchantments.count).to eq 1
+          expect(armor.enchantables_enchantments.count).to eq(1)
           expect(armor.enchantables_enchantments.pluck(:added_automatically)).to be_all(false)
         end
       end
@@ -384,7 +384,7 @@ RSpec.describe Armor, type: :model do
 
         it 'adds enchantments from the canonical armor' do
           armor.save!
-          expect(armor.enchantments.length).to eq 2
+          expect(armor.enchantments.length).to eq(2)
         end
 
         it 'sets "added_automatically" to true on new associations' do
@@ -401,7 +401,7 @@ RSpec.describe Armor, type: :model do
               model.enchantment == join_model.enchantment && model.strength == join_model.strength
             end
 
-            expect(has_matching).to be true
+            expect(has_matching).to be(true)
           end
         end
       end
@@ -417,12 +417,12 @@ RSpec.describe Armor, type: :model do
         end
 
         it "doesn't remove the existing enchantments" do
-          expect(armor.enchantments.reload.length).to eq 4
+          expect(armor.enchantments.reload.length).to eq(4)
         end
 
         it 'sets "added_automatically" only on the new associations' do
           expect(armor.enchantables_enchantments.pluck(:added_automatically))
-            .to eq [true, true, false, false]
+            .to eq([true, true, false, false])
         end
       end
     end
@@ -455,7 +455,7 @@ RSpec.describe Armor, type: :model do
       let(:armor) { create(:armor, :with_matching_canonical) }
 
       it 'returns the canonical armor' do
-        expect(canonical_model).to eq armor.canonical_armor
+        expect(canonical_model).to eq(armor.canonical_armor)
       end
     end
 
@@ -606,7 +606,7 @@ RSpec.describe Armor, type: :model do
         expect { add_enchantment }
           .to raise_error(ActiveRecord::RecordInvalid)
 
-        expect(armor.enchantments.reload.length).to eq 0
+        expect(armor.enchantments.reload.length).to eq(0)
       end
     end
 
@@ -631,7 +631,7 @@ RSpec.describe Armor, type: :model do
 
       it 'adds missing enchantments' do
         add_enchantment
-        expect(armor.enchantments.reload.length).to eq 2
+        expect(armor.enchantments.reload.length).to eq(2)
       end
     end
 
@@ -647,7 +647,7 @@ RSpec.describe Armor, type: :model do
 
       it "doesn't add additional enchantments" do
         add_enchantment
-        expect(armor.enchantments.reload.length).to eq 1
+        expect(armor.enchantments.reload.length).to eq(1)
       end
     end
   end

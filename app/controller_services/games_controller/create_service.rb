@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 require 'service/created_result'
-require 'service/unprocessable_entity_result'
 require 'service/internal_server_error_result'
+require 'service/unprocessable_entity_result'
 
 class GamesController < ApplicationController
   class CreateService

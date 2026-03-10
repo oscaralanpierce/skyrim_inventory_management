@@ -2,8 +2,8 @@
 
 require 'rails_helper'
 require 'service/created_result'
-require 'service/unprocessable_entity_result'
 require 'service/internal_server_error_result'
+require 'service/unprocessable_entity_result'
 
 RSpec.describe GamesController::CreateService do
   subject(:perform) { described_class.new(user, params).perform }
@@ -23,7 +23,7 @@ RSpec.describe GamesController::CreateService do
     end
 
     it 'sets the game as the resource' do
-      expect(perform.resource).to eq user.games.last
+      expect(perform.resource).to eq(user.games.last)
     end
   end
 

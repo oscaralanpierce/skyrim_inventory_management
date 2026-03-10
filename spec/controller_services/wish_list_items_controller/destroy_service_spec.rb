@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
 require 'rails_helper'
-require 'service/ok_result'
-require 'service/not_found_result'
-require 'service/method_not_allowed_result'
 require 'service/internal_server_error_result'
+require 'service/method_not_allowed_result'
+require 'service/not_found_result'
+require 'service/ok_result'
 
 RSpec.describe WishListItemsController::DestroyService do
   describe '#perform' do
@@ -26,7 +26,7 @@ RSpec.describe WishListItemsController::DestroyService do
         it 'destroys the list item' do
           perform
           expect { WishListItem.find(list_item.id) }
-            .to raise_error ActiveRecord::RecordNotFound
+            .to raise_error(ActiveRecord::RecordNotFound)
         end
 
         it 'destroys the item on the aggregate list' do
@@ -35,7 +35,7 @@ RSpec.describe WishListItemsController::DestroyService do
         end
 
         it 'returns a Service::OkResult' do
-          expect(perform).to be_a Service::OkResult
+          expect(perform).to be_a(Service::OkResult)
         end
 
         it 'sets the aggregate list and the regular list as the resource' do
@@ -75,12 +75,12 @@ RSpec.describe WishListItemsController::DestroyService do
         it 'destroys the list item' do
           perform
           expect { WishListItem.find(list_item.id) }
-            .to raise_error ActiveRecord::RecordNotFound
+            .to raise_error(ActiveRecord::RecordNotFound)
         end
 
         it 'changes the quantity of the aggregate list item' do
           perform
-          expect(aggregate_list.list_items.first.quantity).to eq 2
+          expect(aggregate_list.list_items.first.quantity).to eq(2)
         end
 
         it 'sets the updated_at timestamp on the wish list' do
@@ -96,7 +96,7 @@ RSpec.describe WishListItemsController::DestroyService do
         end
 
         it 'returns a Service::OkResult' do
-          expect(perform).to be_a Service::OkResult
+          expect(perform).to be_a(Service::OkResult)
         end
 
         it 'sets the aggregate list and the regular list as the resource' do
@@ -144,15 +144,15 @@ RSpec.describe WishListItemsController::DestroyService do
 
       it "doesn't destroy the list item" do
         perform
-        expect(WishListItem.find(list_item.id)).to be_a WishListItem
+        expect(WishListItem.find(list_item.id)).to be_a(WishListItem)
       end
 
       it 'returns a Service::MethodNotAllowedResult' do
-        expect(perform).to be_a Service::MethodNotAllowedResult
+        expect(perform).to be_a(Service::MethodNotAllowedResult)
       end
 
       it 'includes a helpful error message' do
-        expect(perform.errors).to eq ['Cannot manually delete list item from aggregate wish list']
+        expect(perform.errors).to eq(['Cannot manually delete list item from aggregate wish list'])
       end
     end
 

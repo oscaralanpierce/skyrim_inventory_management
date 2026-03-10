@@ -67,10 +67,10 @@ RSpec.describe Canonical::Sync::TemperingMaterials do
 
           it 'creates the correct associations', :aggregate_failures do
             perform
-            expect(Canonical::Armor.find_by(item_code: '000B509C').tempering_materials.count).to eq 1
-            expect(Canonical::Weapon.find_by(item_code: '000BEEEE').tempering_materials.count).to eq 1
-            expect(Canonical::Armor.find_by(item_code: '0010A06A').tempering_materials.count).to eq 2
-            expect(Canonical::Weapon.find_by(item_code: 'XX039FB1').tempering_materials.count).to eq 2
+            expect(Canonical::Armor.find_by(item_code: '000B509C').tempering_materials.count).to eq(1)
+            expect(Canonical::Weapon.find_by(item_code: '000BEEEE').tempering_materials.count).to eq(1)
+            expect(Canonical::Armor.find_by(item_code: '0010A06A').tempering_materials.count).to eq(2)
+            expect(Canonical::Weapon.find_by(item_code: 'XX039FB1').tempering_materials.count).to eq(2)
           end
         end
 
@@ -86,8 +86,8 @@ RSpec.describe Canonical::Sync::TemperingMaterials do
 
           it 'removes existing records', :aggregate_failures do
             perform
-            expect(temperable.reload.tempering_materials.count).to eq 1
-            expect(temperable.tempering_materials.map(&:name)).to eq ['Steel Ingot']
+            expect(temperable.reload.tempering_materials.count).to eq(1)
+            expect(temperable.tempering_materials.map(&:name)).to eq(['Steel Ingot'])
           end
         end
       end
@@ -105,7 +105,7 @@ RSpec.describe Canonical::Sync::TemperingMaterials do
 
         it 'keeps the existing records' do
           perform
-          expect(temperable.reload.tempering_materials.count).to eq 2
+          expect(temperable.reload.tempering_materials.count).to eq(2)
         end
       end
     end

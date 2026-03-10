@@ -13,7 +13,7 @@ RSpec.describe Canonical::PowerablesPower, type: :model do
         model = build(:canonical_powerables_power, :for_staff, powerable: staff, power:)
 
         model.validate
-        expect(model.errors[:power_id]).to include 'must form a unique combination with powerable item'
+        expect(model.errors[:power_id]).to include('must form a unique combination with powerable item')
       end
     end
 
@@ -24,7 +24,7 @@ RSpec.describe Canonical::PowerablesPower, type: :model do
         let(:item) { create(:canonical_staff) }
 
         it 'sets the powerable type' do
-          expect(powerable_type).to eq 'Canonical::Staff'
+          expect(powerable_type).to eq('Canonical::Staff')
         end
       end
 
@@ -32,7 +32,7 @@ RSpec.describe Canonical::PowerablesPower, type: :model do
         let(:item) { create(:canonical_weapon) }
 
         it 'sets the powerable type' do
-          expect(powerable_type).to eq 'Canonical::Weapon'
+          expect(powerable_type).to eq('Canonical::Weapon')
         end
       end
     end

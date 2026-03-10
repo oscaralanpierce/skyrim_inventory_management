@@ -120,7 +120,7 @@ module Aggregatable
 
     return if quantity.blank?
 
-    raise AggregateListError.new('Invalid data to update aggregate list item') unless quantity[:from].is_a?(Integer) && quantity[:to].is_a?(Integer) && quantity[:to] > 0
+    raise AggregateListError.new('Invalid data to update aggregate list item') unless quantity[:from].is_a?(Integer) && quantity[:to].is_a?(Integer) && quantity[:to].positive?
 
     delta = quantity[:to] - quantity[:from]
     item.quantity += delta
@@ -131,7 +131,7 @@ module Aggregatable
 
     return if unit_weight.blank?
 
-    raise AggregateListError.new('Invalid data to update aggregate list item') if unit_weight[:to].present? && (!unit_weight[:to].is_a?(Numeric) || unit_weight[:to] < 0)
+    raise AggregateListError.new('Invalid data to update aggregate list item') if unit_weight[:to].present? && (!unit_weight[:to].is_a?(Numeric) || unit_weight[:to].negative?)
 
     other_items = child_lists.all.map(&:list_items)
     other_items.flatten!
@@ -186,7 +186,7 @@ module Aggregatable
   def one_aggregate_list_per_game
     scope = self.class.where(game:, aggregate: true)
 
-    errors.add(:aggregate, 'can only be one list per game') if scope.count > 1 || (scope.count > 0 && scope.exclude?(self))
+    errors.add(:aggregate, 'can only be one list per game') if scope.count > 1 || (scope.count.positive? && scope.exclude?(self))
   end
 
   def remove_aggregate_list_id

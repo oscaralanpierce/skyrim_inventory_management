@@ -24,13 +24,13 @@ RSpec.describe Canonical::Sync::Ingredients do
   end
 
   describe '::perform' do
-    subject(:perform) { described_class.perform(preserve_existing_records) }
+    subject(:perform) { described_class.perform(preserve_existing_records:) }
 
     context 'when preserve_existing_records is false' do
       let(:preserve_existing_records) { false }
 
       context 'when there are no existing canonical ingredients in the database' do
-        let(:syncer) { described_class.new(preserve_existing_records) }
+        let(:syncer) { described_class.new(preserve_existing_records:) }
 
         before do
           alchemical_property_names.each {|name| create(:alchemical_property, name:) }
@@ -39,7 +39,7 @@ RSpec.describe Canonical::Sync::Ingredients do
         it 'instantiates itseslf' do
           allow(described_class).to receive(:new).and_return(syncer)
           perform
-          expect(described_class).to have_received(:new).with(preserve_existing_records)
+          expect(described_class).to have_received(:new).with(preserve_existing_records:)
         end
 
         it 'populates the models from the JSON file' do
@@ -49,17 +49,17 @@ RSpec.describe Canonical::Sync::Ingredients do
 
         it 'creates the associations to alchemical properties', :aggregate_failures do
           perform
-          expect(Canonical::Ingredient.find_by(item_code: '00106E1B').alchemical_properties.length).to eq 4
-          expect(Canonical::Ingredient.find_by(item_code: 'XX01CD71').alchemical_properties.length).to eq 4
-          expect(Canonical::Ingredient.find_by(item_code: '00034D31').alchemical_properties.length).to eq 4
-          expect(Canonical::Ingredient.find_by(item_code: '0003AD5E').alchemical_properties.length).to eq 4
+          expect(Canonical::Ingredient.find_by(item_code: '00106E1B').alchemical_properties.length).to eq(4)
+          expect(Canonical::Ingredient.find_by(item_code: 'XX01CD71').alchemical_properties.length).to eq(4)
+          expect(Canonical::Ingredient.find_by(item_code: '00034D31').alchemical_properties.length).to eq(4)
+          expect(Canonical::Ingredient.find_by(item_code: '0003AD5E').alchemical_properties.length).to eq(4)
         end
       end
 
       context 'when there are existing canonical ingredient records in the database' do
         let!(:item_in_json) { create(:canonical_ingredient, item_code: '00106E1B', unit_weight: 1.2) }
         let!(:item_not_in_json) { create(:canonical_ingredient, item_code: '12345678') }
-        let(:syncer) { described_class.new(preserve_existing_records) }
+        let(:syncer) { described_class.new(preserve_existing_records:) }
 
         before do
           alchemical_property_names.each {|name| create(:alchemical_property, name:) }
@@ -68,12 +68,12 @@ RSpec.describe Canonical::Sync::Ingredients do
         it 'instantiates itself' do
           allow(described_class).to receive(:new).and_return(syncer)
           perform
-          expect(described_class).to have_received(:new).with(preserve_existing_records)
+          expect(described_class).to have_received(:new).with(preserve_existing_records:)
         end
 
         it 'updates models that were already in the database' do
           perform
-          expect(item_in_json.reload.unit_weight).to eq 0.5
+          expect(item_in_json.reload.unit_weight).to eq(0.5)
         end
 
         it "removes models in the database that aren't in the JSON data" do
@@ -118,7 +118,7 @@ RSpec.describe Canonical::Sync::Ingredients do
             .to have_received(:error)
                   .with('Prerequisite(s) not met: sync AlchemicalProperty before canonical ingredients')
 
-          expect(Canonical::Ingredient.count).to eq 0
+          expect(Canonical::Ingredient.count).to eq(0)
         end
       end
 
@@ -132,7 +132,7 @@ RSpec.describe Canonical::Sync::Ingredients do
 
         it 'logs a validation error', :aggregate_failures do
           expect { perform }
-            .to raise_error ActiveRecord::RecordInvalid
+            .to raise_error(ActiveRecord::RecordInvalid)
 
           expect(Rails.logger)
             .to have_received(:error)
@@ -143,7 +143,7 @@ RSpec.describe Canonical::Sync::Ingredients do
 
     context 'when preserve_existing_records is true' do
       let(:preserve_existing_records) { true }
-      let(:syncer) { described_class.new(preserve_existing_records) }
+      let(:syncer) { described_class.new(preserve_existing_records:) }
       let!(:item_in_json) { create(:canonical_ingredient, item_code: '00106E1B', unit_weight: 1.2) }
       let!(:item_not_in_json) { create(:canonical_ingredient, item_code: '12345678') }
 
@@ -163,12 +163,12 @@ RSpec.describe Canonical::Sync::Ingredients do
       it 'instantiates itself' do
         allow(described_class).to receive(:new).and_return(syncer)
         perform
-        expect(described_class).to have_received(:new).with(preserve_existing_records)
+        expect(described_class).to have_received(:new).with(preserve_existing_records:)
       end
 
       it 'updates models found in the JSON data' do
         perform
-        expect(item_in_json.reload.unit_weight).to eq 0.5
+        expect(item_in_json.reload.unit_weight).to eq(0.5)
       end
 
       it 'adds models not already in the database', :aggregate_failures do

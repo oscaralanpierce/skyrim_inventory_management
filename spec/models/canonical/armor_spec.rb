@@ -12,7 +12,7 @@ RSpec.describe Canonical::Armor, type: :model do
       it "can't be blank" do
         armor.name = nil
         validate
-        expect(armor.errors[:name]).to include "can't be blank"
+        expect(armor.errors[:name]).to include("can't be blank")
       end
     end
 
@@ -20,13 +20,13 @@ RSpec.describe Canonical::Armor, type: :model do
       it "can't be blank" do
         armor.item_code = nil
         validate
-        expect(armor.errors[:item_code]).to include "can't be blank"
+        expect(armor.errors[:item_code]).to include("can't be blank")
       end
 
       it 'must be unique' do
         create(:canonical_armor, item_code: armor.item_code)
         validate
-        expect(armor.errors[:item_code]).to include 'must be unique'
+        expect(armor.errors[:item_code]).to include('must be unique')
       end
     end
 
@@ -34,13 +34,13 @@ RSpec.describe Canonical::Armor, type: :model do
       it "can't be blank" do
         armor.weight = nil
         validate
-        expect(armor.errors[:weight]).to include "can't be blank"
+        expect(armor.errors[:weight]).to include("can't be blank")
       end
 
       it 'is invalid with an invalid weight value' do
         armor.weight = 'medium armor'
         validate
-        expect(armor.errors[:weight]).to include 'must be "light armor" or "heavy armor"'
+        expect(armor.errors[:weight]).to include('must be "light armor" or "heavy armor"')
       end
     end
 
@@ -48,13 +48,13 @@ RSpec.describe Canonical::Armor, type: :model do
       it 'is invalid without a body slot' do
         armor.body_slot = nil
         validate
-        expect(armor.errors[:body_slot]).to include "can't be blank"
+        expect(armor.errors[:body_slot]).to include("can't be blank")
       end
 
       it 'is invalid without a valid body slot value' do
         armor.body_slot = 'foo'
         validate
-        expect(armor.errors[:body_slot]).to include 'must be "head", "body", "hands", "feet", "hair", or "shield"'
+        expect(armor.errors[:body_slot]).to include('must be "head", "body", "hands", "feet", "hair", or "shield"')
       end
     end
 
@@ -62,19 +62,19 @@ RSpec.describe Canonical::Armor, type: :model do
       it 'is invalid without a unit weight' do
         armor.unit_weight = nil
         validate
-        expect(armor.errors[:unit_weight]).to include "can't be blank"
+        expect(armor.errors[:unit_weight]).to include("can't be blank")
       end
 
       it 'is invalid with a non-numeric unit weight' do
         armor.unit_weight = 'foo'
         validate
-        expect(armor.errors[:unit_weight]).to include 'is not a number'
+        expect(armor.errors[:unit_weight]).to include('is not a number')
       end
 
       it 'is invalid with a negative unit weight' do
         armor.unit_weight = -2.4
         validate
-        expect(armor.errors[:unit_weight]).to include 'must be greater than or equal to 0'
+        expect(armor.errors[:unit_weight]).to include('must be greater than or equal to 0')
       end
     end
 
@@ -82,7 +82,7 @@ RSpec.describe Canonical::Armor, type: :model do
       it 'must include only valid smithing perks' do
         armor.smithing_perks = ['Titanium Smithing']
         validate
-        expect(armor.errors[:smithing_perks]).to include '"Titanium Smithing" is not a valid smithing perk'
+        expect(armor.errors[:smithing_perks]).to include('"Titanium Smithing" is not a valid smithing perk')
       end
     end
 
@@ -90,13 +90,13 @@ RSpec.describe Canonical::Armor, type: :model do
       it 'must be a supported add-on' do
         armor.add_on = 'fishing'
         validate
-        expect(armor.errors[:add_on]).to include 'must be a SIM-supported add-on or DLC'
+        expect(armor.errors[:add_on]).to include('must be a SIM-supported add-on or DLC')
       end
 
       it 'must be present' do
         armor.add_on = nil
         validate
-        expect(armor.errors[:add_on]).to include "can't be blank"
+        expect(armor.errors[:add_on]).to include("can't be blank")
       end
     end
 
@@ -109,13 +109,13 @@ RSpec.describe Canonical::Armor, type: :model do
       it 'must be at least 1' do
         armor.max_quantity = 0
         validate
-        expect(armor.errors[:max_quantity]).to include 'must be an integer of at least 1'
+        expect(armor.errors[:max_quantity]).to include('must be an integer of at least 1')
       end
 
       it 'must be an integer' do
         armor.max_quantity = 1.27
         validate
-        expect(armor.errors[:max_quantity]).to include 'must be an integer of at least 1'
+        expect(armor.errors[:max_quantity]).to include('must be an integer of at least 1')
       end
     end
 
@@ -123,7 +123,7 @@ RSpec.describe Canonical::Armor, type: :model do
       it 'must be true or false' do
         armor.collectible = nil
         validate
-        expect(armor.errors[:collectible]).to include 'must be true or false'
+        expect(armor.errors[:collectible]).to include('must be true or false')
       end
     end
 
@@ -131,7 +131,7 @@ RSpec.describe Canonical::Armor, type: :model do
       it 'must be true or false' do
         armor.leveled = nil
         validate
-        expect(armor.errors[:leveled]).to include 'must be true or false'
+        expect(armor.errors[:leveled]).to include('must be true or false')
       end
     end
 
@@ -139,7 +139,7 @@ RSpec.describe Canonical::Armor, type: :model do
       it 'must be true or false' do
         armor.purchasable = nil
         validate
-        expect(armor.errors[:purchasable]).to include 'must be true or false'
+        expect(armor.errors[:purchasable]).to include('must be true or false')
       end
     end
 
@@ -147,7 +147,7 @@ RSpec.describe Canonical::Armor, type: :model do
       it 'must be true or false' do
         armor.unique_item = nil
         validate
-        expect(armor.errors[:unique_item]).to include 'must be true or false'
+        expect(armor.errors[:unique_item]).to include('must be true or false')
       end
 
       it 'must be true if max quantity is 1' do
@@ -156,7 +156,7 @@ RSpec.describe Canonical::Armor, type: :model do
 
         validate
 
-        expect(armor.errors[:unique_item]).to include 'must be true if max quantity is 1'
+        expect(armor.errors[:unique_item]).to include('must be true if max quantity is 1')
       end
 
       it 'must be false if max quantity is not 1' do
@@ -165,7 +165,7 @@ RSpec.describe Canonical::Armor, type: :model do
 
         validate
 
-        expect(armor.errors[:unique_item]).to include 'must correspond to a max quantity of 1'
+        expect(armor.errors[:unique_item]).to include('must correspond to a max quantity of 1')
       end
     end
 
@@ -173,14 +173,14 @@ RSpec.describe Canonical::Armor, type: :model do
       it 'must be true or false' do
         armor.rare_item = nil
         validate
-        expect(armor.errors[:rare_item]).to include 'must be true or false'
+        expect(armor.errors[:rare_item]).to include('must be true or false')
       end
 
       it 'must be true if the item is unique' do
         armor.unique_item = true
         armor.rare_item = false
         validate
-        expect(armor.errors[:rare_item]).to include 'must be true if item is unique'
+        expect(armor.errors[:rare_item]).to include('must be true if item is unique')
       end
     end
 
@@ -188,7 +188,7 @@ RSpec.describe Canonical::Armor, type: :model do
       it 'must be true or false' do
         armor.quest_item = nil
         validate
-        expect(armor.errors[:quest_item]).to include 'must be true or false'
+        expect(armor.errors[:quest_item]).to include('must be true or false')
       end
     end
 
@@ -196,7 +196,7 @@ RSpec.describe Canonical::Armor, type: :model do
       it 'must be true or false' do
         armor.quest_reward = nil
         validate
-        expect(armor.errors[:quest_reward]).to include 'must be true or false'
+        expect(armor.errors[:quest_reward]).to include('must be true or false')
       end
     end
 
@@ -204,7 +204,7 @@ RSpec.describe Canonical::Armor, type: :model do
       it 'must be true or false' do
         armor.enchantable = nil
         validate
-        expect(armor.errors[:enchantable]).to include 'must be true or false'
+        expect(armor.errors[:enchantable]).to include('must be true or false')
       end
     end
   end
@@ -212,7 +212,7 @@ RSpec.describe Canonical::Armor, type: :model do
   describe 'default behavior' do
     it 'upcases item codes' do
       armor = create(:canonical_armor, item_code: 'abc123')
-      expect(armor.reload.item_code).to eq 'ABC123'
+      expect(armor.reload.item_code).to eq('ABC123')
     end
   end
 
@@ -226,7 +226,7 @@ RSpec.describe Canonical::Armor, type: :model do
       end
 
       it 'gives the enchantment strength' do
-        expect(armor.enchantments.first.strength).to eq 40
+        expect(armor.enchantments.first.strength).to eq(40)
       end
     end
 
@@ -286,7 +286,7 @@ RSpec.describe Canonical::Armor, type: :model do
   describe 'class methods' do
     describe 'unique_identifier' do
       it 'returns :item_code' do
-        expect(described_class.unique_identifier).to eq :item_code
+        expect(described_class.unique_identifier).to eq(:item_code)
       end
     end
   end

@@ -12,7 +12,7 @@ RSpec.describe Ingredient, type: :model do
       it "can't be blank" do
         ingredient.name = nil
         validate
-        expect(ingredient.errors[:name]).to include "can't be blank"
+        expect(ingredient.errors[:name]).to include("can't be blank")
       end
     end
 
@@ -26,7 +26,7 @@ RSpec.describe Ingredient, type: :model do
       it 'must be at least 0' do
         ingredient.unit_weight = -2.7
         validate
-        expect(ingredient.errors[:unit_weight]).to include 'must be greater than or equal to 0'
+        expect(ingredient.errors[:unit_weight]).to include('must be greater than or equal to 0')
       end
     end
 
@@ -53,7 +53,7 @@ RSpec.describe Ingredient, type: :model do
     context 'when there are no matching canonical ingredients' do
       it 'is invalid' do
         validate
-        expect(ingredient.errors[:base]).to include "doesn't match any item that exists in Skyrim"
+        expect(ingredient.errors[:base]).to include("doesn't match any item that exists in Skyrim")
       end
     end
 
@@ -115,7 +115,7 @@ RSpec.describe Ingredient, type: :model do
 
           it 'is invalid' do
             validate
-            expect(ingredient.errors[:base]).to include 'is a duplicate of a unique in-game item'
+            expect(ingredient.errors[:base]).to include('is a duplicate of a unique in-game item')
           end
         end
       end
@@ -129,7 +129,7 @@ RSpec.describe Ingredient, type: :model do
       let(:ingredient) { create(:ingredient_with_matching_canonical) }
 
       it 'returns the canonical model' do
-        expect(canonical_model).to eq ingredient.canonical_ingredient
+        expect(canonical_model).to eq(ingredient.canonical_ingredient)
       end
     end
 
@@ -151,7 +151,7 @@ RSpec.describe Ingredient, type: :model do
         let(:ingredient) { create(:ingredient, name: 'Blue Mountain Flower') }
 
         it 'returns all the matching canonical ingredients' do
-          expect(ingredient.canonical_models).to eq matching_canonicals
+          expect(ingredient.canonical_models).to eq(matching_canonicals)
         end
       end
 
@@ -164,7 +164,7 @@ RSpec.describe Ingredient, type: :model do
         end
 
         it 'returns all the matching canonical ingredients' do
-          expect(ingredient.canonical_models).to eq matching_canonicals
+          expect(ingredient.canonical_models).to eq(matching_canonicals)
         end
       end
 
@@ -275,7 +275,7 @@ RSpec.describe Ingredient, type: :model do
 
       it 'sets the canonical_ingredient' do
         validate
-        expect(ingredient.canonical_ingredient).to eq matching_canonical
+        expect(ingredient.canonical_ingredient).to eq(matching_canonical)
       end
     end
 
@@ -322,8 +322,8 @@ RSpec.describe Ingredient, type: :model do
 
           validate
 
-          expect(ingredient.name).to eq 'Horseradish'
-          expect(ingredient.unit_weight).to eq 0.2
+          expect(ingredient.name).to eq('Horseradish')
+          expect(ingredient.unit_weight).to eq(0.2)
         end
       end
 
@@ -352,7 +352,7 @@ RSpec.describe Ingredient, type: :model do
 
           validate
 
-          expect(ingredient.name).to eq 'horseradish'
+          expect(ingredient.name).to eq('horseradish')
           expect(ingredient.unit_weight).to be_nil
         end
       end

@@ -23,7 +23,7 @@ RSpec.describe 'Games', type: :request do
       context 'when the user has no games' do
         it 'returns status 200' do
           get_games
-          expect(response.status).to eq 200
+          expect(response.status).to eq(200)
         end
 
         it 'returns an empty array' do
@@ -40,7 +40,7 @@ RSpec.describe 'Games', type: :request do
 
         it 'returns status 200' do
           get_games
-          expect(response.status).to eq 200
+          expect(response.status).to eq(200)
         end
 
         it "returns the authenticated user's games" do
@@ -56,7 +56,7 @@ RSpec.describe 'Games', type: :request do
 
         it 'returns status 500' do
           get_games
-          expect(response.status).to eq 500
+          expect(response.status).to eq(500)
         end
 
         it 'returns the error message' do
@@ -74,7 +74,7 @@ RSpec.describe 'Games', type: :request do
 
       it 'returns status 401' do
         get_games
-        expect(response.status).to eq 401
+        expect(response.status).to eq(401)
       end
 
       it "doesn't return any data" do
@@ -104,12 +104,12 @@ RSpec.describe 'Games', type: :request do
 
         it 'returns status 201' do
           create_game
-          expect(response.status).to eq 201
+          expect(response.status).to eq(201)
         end
 
         it 'returns the game' do
           create_game
-          expect(response.body).to eq user.games.last.to_json
+          expect(response.body).to eq(user.games.last.to_json)
         end
       end
 
@@ -123,7 +123,7 @@ RSpec.describe 'Games', type: :request do
 
         it 'returns status 422' do
           create_game
-          expect(response.status).to eq 422
+          expect(response.status).to eq(422)
         end
 
         it 'returns the errors in the response body' do
@@ -141,7 +141,7 @@ RSpec.describe 'Games', type: :request do
 
         it 'returns a 500 status' do
           create_game
-          expect(response.status).to eq 500
+          expect(response.status).to eq(500)
         end
 
         it 'returns the error message' do
@@ -167,7 +167,7 @@ RSpec.describe 'Games', type: :request do
 
       it 'returns status 401' do
         create_game
-        expect(response.status).to eq 401
+        expect(response.status).to eq(401)
       end
 
       it "doesn't return any data" do
@@ -193,12 +193,12 @@ RSpec.describe 'Games', type: :request do
 
         it 'updates the game' do
           update_game
-          expect(game.reload.name).to eq 'New Name'
+          expect(game.reload.name).to eq('New Name')
         end
 
         it 'returns status 200' do
           update_game
-          expect(response.status).to eq 200
+          expect(response.status).to eq(200)
         end
 
         it 'returns the game in the response body' do
@@ -210,7 +210,7 @@ RSpec.describe 'Games', type: :request do
           game_attributes_without_timestamps = game.reload.attributes.except('created_at', 'updated_at')
           response_body_without_timestamps = JSON.parse(response.body).except('created_at', 'updated_at')
 
-          expect(response_body_without_timestamps).to eq game_attributes_without_timestamps
+          expect(response_body_without_timestamps).to eq(game_attributes_without_timestamps)
         end
       end
 
@@ -221,7 +221,7 @@ RSpec.describe 'Games', type: :request do
 
         it 'returns status 422' do
           update_game
-          expect(response.status).to eq 422
+          expect(response.status).to eq(422)
         end
 
         it 'returns the errors' do
@@ -236,7 +236,7 @@ RSpec.describe 'Games', type: :request do
 
         it 'returns status 404' do
           update_game
-          expect(response.status).to eq 404
+          expect(response.status).to eq(404)
         end
 
         it "doesn't return any data" do
@@ -256,7 +256,7 @@ RSpec.describe 'Games', type: :request do
 
         it 'returns status 404' do
           update_game
-          expect(response.status).to eq 404
+          expect(response.status).to eq(404)
         end
       end
 
@@ -270,7 +270,7 @@ RSpec.describe 'Games', type: :request do
 
         it 'returns a 500 status' do
           update_game
-          expect(response.status).to eq 500
+          expect(response.status).to eq(500)
         end
 
         it 'returns the error message' do
@@ -291,12 +291,12 @@ RSpec.describe 'Games', type: :request do
 
       it "doesn't update the game" do
         update_game
-        expect(game.reload.name).not_to eq 'Changed Name'
+        expect(game.reload.name).not_to eq('Changed Name')
       end
 
       it 'returns status 401' do
         update_game
-        expect(response.status).to eq 401
+        expect(response.status).to eq(401)
       end
 
       it "doesn't return any data" do
@@ -322,12 +322,12 @@ RSpec.describe 'Games', type: :request do
 
         it 'updates the game' do
           update_game
-          expect(game.reload.name).to eq 'New Name'
+          expect(game.reload.name).to eq('New Name')
         end
 
         it 'returns status 200' do
           update_game
-          expect(response.status).to eq 200
+          expect(response.status).to eq(200)
         end
 
         it 'returns the game in the response body' do
@@ -339,7 +339,7 @@ RSpec.describe 'Games', type: :request do
           game_attributes_without_timestamps = game.reload.attributes.except('created_at', 'updated_at')
           response_body_without_timestamps = JSON.parse(response.body).except('created_at', 'updated_at')
 
-          expect(response_body_without_timestamps).to eq game_attributes_without_timestamps
+          expect(response_body_without_timestamps).to eq(game_attributes_without_timestamps)
         end
       end
 
@@ -350,7 +350,7 @@ RSpec.describe 'Games', type: :request do
 
         it 'returns status 422' do
           update_game
-          expect(response.status).to eq 422
+          expect(response.status).to eq(422)
         end
 
         it 'returns the errors' do
@@ -365,7 +365,7 @@ RSpec.describe 'Games', type: :request do
 
         it 'returns status 404' do
           update_game
-          expect(response.status).to eq 404
+          expect(response.status).to eq(404)
         end
 
         it "doesn't return any data" do
@@ -385,7 +385,7 @@ RSpec.describe 'Games', type: :request do
 
         it 'returns status 404' do
           update_game
-          expect(response.status).to eq 404
+          expect(response.status).to eq(404)
         end
       end
 
@@ -399,7 +399,7 @@ RSpec.describe 'Games', type: :request do
 
         it 'returns a 500 status' do
           update_game
-          expect(response.status).to eq 500
+          expect(response.status).to eq(500)
         end
 
         it 'returns the error message' do
@@ -420,12 +420,12 @@ RSpec.describe 'Games', type: :request do
 
       it "doesn't update the game" do
         update_game
-        expect(game.reload.name).not_to eq 'Changed Name'
+        expect(game.reload.name).not_to eq('Changed Name')
       end
 
       it 'returns status 401' do
         update_game
-        expect(response.status).to eq 401
+        expect(response.status).to eq(401)
       end
 
       it "doesn't return any data" do
@@ -455,7 +455,7 @@ RSpec.describe 'Games', type: :request do
 
         it 'returns status 204' do
           destroy_game
-          expect(response.status).to eq 204
+          expect(response.status).to eq(204)
         end
 
         it "doesn't return any data" do
@@ -469,7 +469,7 @@ RSpec.describe 'Games', type: :request do
 
         it 'returns status 404' do
           destroy_game
-          expect(response.status).to eq 404
+          expect(response.status).to eq(404)
         end
 
         it "doesn't return any data" do
@@ -488,7 +488,7 @@ RSpec.describe 'Games', type: :request do
 
         it 'returns status 404' do
           destroy_game
-          expect(response.status).to eq 404
+          expect(response.status).to eq(404)
         end
       end
 
@@ -501,7 +501,7 @@ RSpec.describe 'Games', type: :request do
 
         it 'returns status 500' do
           destroy_game
-          expect(response.status).to eq 500
+          expect(response.status).to eq(500)
         end
 
         it 'returns the error in the body' do
@@ -526,7 +526,7 @@ RSpec.describe 'Games', type: :request do
 
       it 'returns status 401' do
         destroy_game
-        expect(response.status).to eq 401
+        expect(response.status).to eq(401)
       end
 
       it "doesn't return any data" do

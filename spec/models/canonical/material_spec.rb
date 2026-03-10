@@ -33,7 +33,7 @@ RSpec.describe Canonical::Material, type: :model do
 
         validate
 
-        expect(material.errors[:source_material]).to include 'must form a unique combination with craftable item'
+        expect(material.errors[:source_material]).to include('must form a unique combination with craftable item')
       end
 
       it 'must form a unique combination with temperable, if present' do
@@ -45,7 +45,7 @@ RSpec.describe Canonical::Material, type: :model do
 
         validate
 
-        expect(material.errors[:source_material]).to include 'must form a unique combination with temperable item'
+        expect(material.errors[:source_material]).to include('must form a unique combination with temperable item')
       end
 
       it 'is valid when the combination is unique' do
@@ -57,13 +57,13 @@ RSpec.describe Canonical::Material, type: :model do
       it 'must be an integer' do
         material.quantity = 2.25
         validate
-        expect(material.errors[:quantity]).to include 'must be an integer'
+        expect(material.errors[:quantity]).to include('must be an integer')
       end
 
       it 'must be positive' do
         material.quantity = 0
         validate
-        expect(material.errors[:quantity]).to include 'must be greater than 0'
+        expect(material.errors[:quantity]).to include('must be greater than 0')
       end
     end
 
@@ -72,7 +72,7 @@ RSpec.describe Canonical::Material, type: :model do
         it 'is invalid with neither a craftable nor a temperable' do
           material.temperable = nil
           validate
-          expect(material.errors[:base]).to include 'must have either a craftable or a temperable association'
+          expect(material.errors[:base]).to include('must have either a craftable or a temperable association')
         end
       end
 
@@ -80,7 +80,7 @@ RSpec.describe Canonical::Material, type: :model do
         it 'is invalid' do
           material.craftable = create(:canonical_jewelry_item)
           validate
-          expect(material.errors[:base]).to include 'must have either a craftable or a temperable association, not both'
+          expect(material.errors[:base]).to include('must have either a craftable or a temperable association, not both')
         end
       end
     end
@@ -132,7 +132,7 @@ RSpec.describe Canonical::Material, type: :model do
       end
 
       it 'is delegated to the source material' do
-        expect(name).to eq 'Iron Ingot'
+        expect(name).to eq('Iron Ingot')
       end
     end
   end

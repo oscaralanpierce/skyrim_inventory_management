@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
+require 'service/internal_server_error_result'
 require 'service/method_not_allowed_result'
 require 'service/not_found_result'
 require 'service/ok_result'
-require 'service/internal_server_error_result'
 
 class WishListsController < ApplicationController
   class DestroyService
@@ -27,7 +27,7 @@ class WishListsController < ApplicationController
     rescue ActiveRecord::RecordNotFound
       Service::NotFoundResult.new
     rescue StandardError => e
-      Rails.logger.error "Internal Server Error: #{e.message}"
+      Rails.logger.error("Internal Server Error: #{e.message}")
       Service::InternalServerErrorResult.new(errors: [e.message])
     end
 

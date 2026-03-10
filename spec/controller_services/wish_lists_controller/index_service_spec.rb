@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 require 'rails_helper'
-require 'service/ok_result'
 require 'service/not_found_result'
+require 'service/ok_result'
 
 RSpec.describe WishListsController::IndexService do
   describe '#perform' do
@@ -45,7 +45,7 @@ RSpec.describe WishListsController::IndexService do
       end
 
       it 'sets the resource to be an empty array' do
-        expect(perform.resource).to eq []
+        expect(perform.resource).to eq([])
       end
     end
 
@@ -58,7 +58,7 @@ RSpec.describe WishListsController::IndexService do
       end
 
       it "sets the resource to the game's wish lists" do
-        expect(perform.resource).to eq game.wish_lists.index_order
+        expect(perform.resource).to eq(game.wish_lists.index_order)
       end
     end
 

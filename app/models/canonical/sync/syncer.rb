@@ -3,23 +3,23 @@
 module Canonical
   module Sync
     class Syncer
-      def self.perform(preserve_existing_records)
-        new(preserve_existing_records).perform
+      def self.perform(preserve_existing_records:)
+        new(preserve_existing_records:).perform
       end
 
-      def initialize(preserve_existing_records)
+      def initialize(preserve_existing_records:)
         @preserve_existing_records = preserve_existing_records
       end
 
       def perform
-        Rails.logger.info "Syncing #{model_name.downcase.pluralize}..."
+        Rails.logger.info("Syncing #{model_name.downcase.pluralize}...")
 
         ActiveRecord::Base.transaction do
           destroy_existing_models unless preserve_existing_records
 
           json_data.each {|object| create_or_update_model(object[:attributes]) }
         rescue StandardError => e
-          Rails.logger.error "Unexpected error #{e.class} while syncing #{model_name.downcase.pluralize}: #{e.message}"
+          Rails.logger.error("Unexpected error #{e.class} while syncing #{model_name.downcase.pluralize}: #{e.message}")
           raise e
         end
       end
@@ -54,10 +54,10 @@ module Canonical
         model.save!
         model
       rescue ActiveRecord::RecordInvalid => e
-        Rails.logger.error "Error saving #{model_name.downcase} \"#{attributes[model_identifier]}\": #{e.message}"
+        Rails.logger.error("Error saving #{model_name.downcase} \"#{attributes[model_identifier]}\": #{e.message}")
         raise e
       rescue StandardError => e
-        Rails.logger.error "Unexpected error #{e.class} saving #{model_name.downcase} \"#{attributes[model_identifier]}\": #{e.message}"
+        Rails.logger.error("Unexpected error #{e.class} saving #{model_name.downcase} \"#{attributes[model_identifier]}\": #{e.message}")
         raise e
       end
 

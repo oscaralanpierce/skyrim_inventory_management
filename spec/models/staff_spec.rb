@@ -12,7 +12,7 @@ RSpec.describe Staff, type: :model do
       it 'is invalid without a name' do
         staff.name = nil
         validate
-        expect(staff.errors[:name]).to include "can't be blank"
+        expect(staff.errors[:name]).to include("can't be blank")
       end
     end
 
@@ -20,7 +20,7 @@ RSpec.describe Staff, type: :model do
       it 'is invalid with a negative unit weight' do
         staff.unit_weight = -2
         validate
-        expect(staff.errors[:unit_weight]).to include 'must be greater than or equal to 0'
+        expect(staff.errors[:unit_weight]).to include('must be greater than or equal to 0')
       end
 
       it 'can be nil' do
@@ -84,7 +84,7 @@ RSpec.describe Staff, type: :model do
 
           it 'is invalid' do
             validate
-            expect(staff.errors[:base]).to include 'is a duplicate of a unique in-game item'
+            expect(staff.errors[:base]).to include('is a duplicate of a unique in-game item')
           end
         end
       end
@@ -132,14 +132,14 @@ RSpec.describe Staff, type: :model do
 
           it 'is invalid' do
             staff.validate
-            expect(staff.errors[:base]).to include 'is a duplicate of a unique in-game item'
+            expect(staff.errors[:base]).to include('is a duplicate of a unique in-game item')
           end
         end
 
         context 'when there are no matching canonical staves' do
           it 'is invalid' do
             validate
-            expect(staff.errors[:base]).to include "doesn't match any item that exists in Skyrim"
+            expect(staff.errors[:base]).to include("doesn't match any item that exists in Skyrim")
           end
         end
       end
@@ -153,7 +153,7 @@ RSpec.describe Staff, type: :model do
       let(:staff) { build(:staff, :with_matching_canonical) }
 
       it 'returns the canonical staff' do
-        expect(canonical_model).to eq staff.canonical_staff
+        expect(canonical_model).to eq(staff.canonical_staff)
       end
     end
 
@@ -243,14 +243,14 @@ RSpec.describe Staff, type: :model do
 
       it 'associates the canonical staff' do
         validate
-        expect(staff.canonical_staff).to eq canonical_staff
+        expect(staff.canonical_staff).to eq(canonical_staff)
       end
 
       it 'sets values from the canonical model', :aggregate_failures do
         validate
-        expect(staff.name).to eq 'My Staff'
-        expect(staff.unit_weight).to eq 8
-        expect(staff.magical_effects).to eq 'Does stuff'
+        expect(staff.name).to eq('My Staff')
+        expect(staff.unit_weight).to eq(8)
+        expect(staff.magical_effects).to eq('Does stuff')
       end
     end
 

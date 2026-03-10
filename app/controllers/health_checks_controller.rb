@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-require 'service/ok_result'
 require 'controller/response'
+require 'service/ok_result'
 
 class HealthChecksController < ApplicationController
   skip_before_action :authenticate_user!

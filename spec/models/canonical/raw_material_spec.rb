@@ -12,7 +12,7 @@ RSpec.describe Canonical::RawMaterial, type: :model do
       it 'is invalid without a name' do
         material.name = nil
         validate
-        expect(material.errors[:name]).to include "can't be blank"
+        expect(material.errors[:name]).to include("can't be blank")
       end
     end
 
@@ -20,13 +20,13 @@ RSpec.describe Canonical::RawMaterial, type: :model do
       it 'is invalid without an item code' do
         material.item_code = nil
         validate
-        expect(material.errors[:item_code]).to include "can't be blank"
+        expect(material.errors[:item_code]).to include("can't be blank")
       end
 
       it 'is invalid with a duplicate item code' do
         create(:canonical_raw_material, item_code: material.item_code)
         validate
-        expect(material.errors[:item_code]).to include 'must be unique'
+        expect(material.errors[:item_code]).to include('must be unique')
       end
     end
 
@@ -34,19 +34,19 @@ RSpec.describe Canonical::RawMaterial, type: :model do
       it 'is invalid without a unit weight' do
         material.unit_weight = nil
         validate
-        expect(material.errors[:unit_weight]).to include "can't be blank"
+        expect(material.errors[:unit_weight]).to include("can't be blank")
       end
 
       it 'is invalid with a non-numeric unit weight' do
         material.unit_weight = 'bar'
         validate
-        expect(material.errors[:unit_weight]).to include 'is not a number'
+        expect(material.errors[:unit_weight]).to include('is not a number')
       end
 
       it 'is invalid without a negative unit weight' do
         material.unit_weight = -4.0
         validate
-        expect(material.errors[:unit_weight]).to include 'must be greater than or equal to 0'
+        expect(material.errors[:unit_weight]).to include('must be greater than or equal to 0')
       end
     end
 
@@ -54,13 +54,13 @@ RSpec.describe Canonical::RawMaterial, type: :model do
       it "can't be blank" do
         material.add_on = nil
         validate
-        expect(material.errors[:add_on]).to include "can't be blank"
+        expect(material.errors[:add_on]).to include("can't be blank")
       end
 
       it 'must be a supported add-on' do
         material.add_on = 'fishing'
         validate
-        expect(material.errors[:add_on]).to include 'must be a SIM-supported add-on or DLC'
+        expect(material.errors[:add_on]).to include('must be a SIM-supported add-on or DLC')
       end
     end
   end
@@ -68,7 +68,7 @@ RSpec.describe Canonical::RawMaterial, type: :model do
   describe 'default behavior' do
     it 'upcases item codes' do
       material = create(:canonical_raw_material, item_code: 'abc123')
-      expect(material.reload.item_code).to eq 'ABC123'
+      expect(material.reload.item_code).to eq('ABC123')
     end
   end
 
@@ -230,7 +230,7 @@ RSpec.describe Canonical::RawMaterial, type: :model do
   describe 'class methods' do
     describe '::unique_identifier' do
       it 'returns :item_code' do
-        expect(described_class.unique_identifier).to eq :item_code
+        expect(described_class.unique_identifier).to eq(:item_code)
       end
     end
   end

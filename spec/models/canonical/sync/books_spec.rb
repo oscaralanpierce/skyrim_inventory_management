@@ -14,13 +14,13 @@ RSpec.describe Canonical::Sync::Books do
   end
 
   describe '::perform' do
-    subject(:perform) { described_class.perform(preserve_existing_records) }
+    subject(:perform) { described_class.perform(preserve_existing_records:) }
 
     context 'when preserve_existing_records is false' do
       let(:preserve_existing_records) { false }
 
       context 'when there are no existing books in the database' do
-        let(:syncer) { described_class.new(preserve_existing_records) }
+        let(:syncer) { described_class.new(preserve_existing_records:) }
 
         before do
           create(:canonical_ingredient, item_code: '00052695')
@@ -30,20 +30,20 @@ RSpec.describe Canonical::Sync::Books do
         it 'instantiates itself' do
           allow(described_class).to receive(:new).and_return(syncer)
           perform
-          expect(described_class).to have_received(:new).with(preserve_existing_records)
+          expect(described_class).to have_received(:new).with(preserve_existing_records:)
         end
 
         it 'populates the models from the JSON file' do
           perform
-          expect(Canonical::Book.count).to eq 4
+          expect(Canonical::Book.count).to eq(4)
         end
 
         it 'creates the associations to canonical ingredients where they exist', :aggregate_failures do
           perform
-          expect(Canonical::Book.find_by(item_code: '0001AFD9').canonical_ingredients.length).to eq 0
-          expect(Canonical::Book.find_by(item_code: '0001ACE5').canonical_ingredients.length).to eq 0
-          expect(Canonical::Book.find_by(item_code: '000F5CB8').canonical_ingredients.length).to eq 2
-          expect(Canonical::Book.find_by(item_code: 'XX030C9A').canonical_ingredients.length).to eq 0
+          expect(Canonical::Book.find_by(item_code: '0001AFD9').canonical_ingredients.length).to eq(0)
+          expect(Canonical::Book.find_by(item_code: '0001ACE5').canonical_ingredients.length).to eq(0)
+          expect(Canonical::Book.find_by(item_code: '000F5CB8').canonical_ingredients.length).to eq(2)
+          expect(Canonical::Book.find_by(item_code: 'XX030C9A').canonical_ingredients.length).to eq(0)
         end
       end
 
@@ -57,7 +57,7 @@ RSpec.describe Canonical::Sync::Books do
         end
 
         let!(:book_not_in_json) { create(:canonical_book, item_code: '12345678') }
-        let(:syncer) { described_class.new(preserve_existing_records) }
+        let(:syncer) { described_class.new(preserve_existing_records:) }
 
         before do
           create(:canonical_ingredient, item_code: '00052695')
@@ -67,12 +67,12 @@ RSpec.describe Canonical::Sync::Books do
         it 'instantiates itself' do
           allow(described_class).to receive(:new).and_return(syncer)
           perform
-          expect(described_class).to have_received(:new).with(preserve_existing_records)
+          expect(described_class).to have_received(:new).with(preserve_existing_records:)
         end
 
         it 'updates models that were already in the database' do
           perform
-          expect(book_in_json.reload.title).to eq 'Cure Disease Potion Recipe'
+          expect(book_in_json.reload.title).to eq('Cure Disease Potion Recipe')
         end
 
         it "removes models in the database that aren't in the JSON data" do
@@ -107,7 +107,7 @@ RSpec.describe Canonical::Sync::Books do
 
         it 'adds canonical ingredients if they exist' do
           perform
-          expect(book_in_json.canonical_ingredients.count).to eq 2
+          expect(book_in_json.canonical_ingredients.count).to eq(2)
         end
       end
 
@@ -124,7 +124,7 @@ RSpec.describe Canonical::Sync::Books do
             .to have_received(:error)
                   .with('Prerequisite(s) not met: sync Canonical::Ingredient before canonical books')
 
-          expect(Canonical::Book.count).to eq 0
+          expect(Canonical::Book.count).to eq(0)
         end
       end
 
@@ -138,7 +138,7 @@ RSpec.describe Canonical::Sync::Books do
 
         it 'logs a validation error', :aggregate_failures do
           expect { perform }
-            .to raise_error ActiveRecord::RecordInvalid
+            .to raise_error(ActiveRecord::RecordInvalid)
 
           expect(Rails.logger)
             .to have_received(:error)
@@ -148,7 +148,7 @@ RSpec.describe Canonical::Sync::Books do
     end
 
     context 'when preserve_existing_records is true' do
-      let(:syncer) { described_class.new(preserve_existing_records) }
+      let(:syncer) { described_class.new(preserve_existing_records:) }
       let(:preserve_existing_records) { true }
       let!(:book_in_json) { create(:canonical_recipe, item_code: '000F5CB8', title: 'Rich Dad, Poor Dad') }
       let!(:book_not_in_json) { create(:canonical_book, item_code: '12345678') }
@@ -162,12 +162,12 @@ RSpec.describe Canonical::Sync::Books do
       it 'instantiates itself' do
         allow(described_class).to receive(:new).and_return(syncer)
         perform
-        expect(described_class).to have_received(:new).with(preserve_existing_records)
+        expect(described_class).to have_received(:new).with(preserve_existing_records:)
       end
 
       it 'updates models found in the JSON data' do
         perform
-        expect(book_in_json.reload.title).to eq 'Cure Disease Potion Recipe'
+        expect(book_in_json.reload.title).to eq('Cure Disease Potion Recipe')
       end
 
       it 'adds models not already in the database', :aggregate_failures do
@@ -184,7 +184,7 @@ RSpec.describe Canonical::Sync::Books do
 
       it "doesn't destroy associations" do
         perform
-        expect(book_in_json.reload.canonical_ingredients.length).to eq 5
+        expect(book_in_json.reload.canonical_ingredients.length).to eq(5)
       end
     end
 

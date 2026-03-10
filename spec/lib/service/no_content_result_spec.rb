@@ -11,7 +11,7 @@ RSpec.describe Service::NoContentResult do
 
   describe '#status' do
     it 'is :no_content' do
-      expect(result.status).to eq :no_content
+      expect(result.status).to eq(:no_content)
     end
   end
 end

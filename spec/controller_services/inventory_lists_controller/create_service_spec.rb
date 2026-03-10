@@ -2,9 +2,9 @@
 
 require 'rails_helper'
 require 'service/created_result'
-require 'service/unprocessable_entity_result'
-require 'service/not_found_result'
 require 'service/internal_server_error_result'
+require 'service/not_found_result'
+require 'service/unprocessable_entity_result'
 
 RSpec.describe InventoryListsController::CreateService do
   describe '#perform' do
@@ -29,7 +29,7 @@ RSpec.describe InventoryListsController::CreateService do
 
         it 'creates a regular inventory list for the given game' do
           perform
-          expect(game.inventory_lists.last.title).to eq 'Hjerim'
+          expect(game.inventory_lists.last.title).to eq('Hjerim')
         end
 
         it 'updates the game' do
@@ -45,7 +45,7 @@ RSpec.describe InventoryListsController::CreateService do
         end
 
         it 'sets the resource to include both lists' do
-          expect(perform.resource).to eq [game.aggregate_inventory_list, game.inventory_lists.last]
+          expect(perform.resource).to eq([game.aggregate_inventory_list, game.inventory_lists.last])
         end
       end
 
@@ -64,7 +64,7 @@ RSpec.describe InventoryListsController::CreateService do
         end
 
         it 'sets the resource to the created list' do
-          expect(perform.resource).to eq game.inventory_lists.last
+          expect(perform.resource).to eq(game.inventory_lists.last)
         end
       end
     end
@@ -84,7 +84,7 @@ RSpec.describe InventoryListsController::CreateService do
       end
 
       it 'sets the errors' do
-        expect(perform.errors).to eq ["Title can only contain alphanumeric characters, spaces, commas (,), hyphens (-), and apostrophes (')"]
+        expect(perform.errors).to eq(["Title can only contain alphanumeric characters, spaces, commas (,), hyphens (-), and apostrophes (')"])
       end
     end
 
@@ -151,7 +151,7 @@ RSpec.describe InventoryListsController::CreateService do
       end
 
       it 'sets the errors' do
-        expect(perform.errors).to eq ['Something went horribly wrong']
+        expect(perform.errors).to eq(['Something went horribly wrong'])
       end
     end
   end

@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
+require 'service/internal_server_error_result'
+require 'service/not_found_result'
 require 'service/ok_result'
 require 'service/unprocessable_entity_result'
-require 'service/not_found_result'
-require 'service/internal_server_error_result'
 
 class GamesController < ApplicationController
   class UpdateService

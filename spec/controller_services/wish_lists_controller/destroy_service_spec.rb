@@ -53,7 +53,7 @@ RSpec.describe WishListsController::DestroyService do
         end
 
         it 'includes the deleted list ID and the aggregate list as the resource' do
-          expect(perform.resource).to eq expected_resource
+          expect(perform.resource).to eq(expected_resource)
         end
 
         describe 'updating the aggregate list' do
@@ -112,7 +112,7 @@ RSpec.describe WishListsController::DestroyService do
         end
 
         it 'returns an array of deleted list IDs as the resource' do
-          expect(perform.resource).to eq expected_resource
+          expect(perform.resource).to eq(expected_resource)
         end
       end
     end
@@ -126,7 +126,7 @@ RSpec.describe WishListsController::DestroyService do
       end
 
       it 'sets the errors' do
-        expect(perform.errors).to eq ['Cannot manually delete an aggregate wish list']
+        expect(perform.errors).to eq(['Cannot manually delete an aggregate wish list'])
       end
     end
 
@@ -176,7 +176,7 @@ RSpec.describe WishListsController::DestroyService do
       end
 
       it 'sets the errors' do
-        expect(perform.errors).to eq ['Something went horribly wrong']
+        expect(perform.errors).to eq(['Something went horribly wrong'])
       end
     end
   end

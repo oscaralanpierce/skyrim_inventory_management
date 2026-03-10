@@ -42,7 +42,7 @@ RSpec.describe 'InventoryItems', type: :request do
 
             it 'returns status 201' do
               create_item
-              expect(response.status).to eq 201
+              expect(response.status).to eq(201)
             end
 
             it 'returns the regular list item and the aggregate list item' do
@@ -70,12 +70,12 @@ RSpec.describe 'InventoryItems', type: :request do
 
               it 'updates the item on the aggregate list' do
                 create_item
-                expect(aggregate_list.reload.list_items.first.quantity).to eq 7
+                expect(aggregate_list.reload.list_items.first.quantity).to eq(7)
               end
 
               it 'returns status 201' do
                 create_item
-                expect(response.status).to eq 201
+                expect(response.status).to eq(201)
               end
 
               it 'returns the aggregate list item and the regular list item' do
@@ -95,19 +95,19 @@ RSpec.describe 'InventoryItems', type: :request do
 
               it 'updates the item on the aggregate list', :aggregate_failures do
                 create_item
-                expect(aggregate_list.reload.list_items.first.quantity).to eq 7
-                expect(aggregate_list.reload.list_items.first.unit_weight).to eq 1
+                expect(aggregate_list.reload.list_items.first.quantity).to eq(7)
+                expect(aggregate_list.reload.list_items.first.unit_weight).to eq(1)
               end
 
               it 'updates the unit weight of the other regular-list item', :aggregate_failures do
                 create_item
-                expect(other_item.reload.unit_weight).to eq 1
-                expect(other_item.reload.quantity).to eq 2
+                expect(other_item.reload.unit_weight).to eq(1)
+                expect(other_item.reload.quantity).to eq(2)
               end
 
               it 'returns status 201' do
                 create_item
-                expect(response.status).to eq 201
+                expect(response.status).to eq(201)
               end
 
               it 'returns all items that were created or updated' do
@@ -137,17 +137,17 @@ RSpec.describe 'InventoryItems', type: :request do
 
             it 'combines with the existing item' do
               create_item
-              expect(list_item.reload.quantity).to eq 8
+              expect(list_item.reload.quantity).to eq(8)
             end
 
             it 'updates the item on the aggregate list' do
               create_item
-              expect(aggregate_list.reload.list_items.first.quantity).to eq 10
+              expect(aggregate_list.reload.list_items.first.quantity).to eq(10)
             end
 
             it 'returns status 200' do
               create_item
-              expect(response.status).to eq 200
+              expect(response.status).to eq(200)
             end
 
             it 'returns the requested item and the aggregate list item' do
@@ -167,25 +167,25 @@ RSpec.describe 'InventoryItems', type: :request do
 
             it 'combines it with the existing item', :aggregate_failures do
               create_item
-              expect(list_item.reload.quantity).to eq 5
-              expect(list_item.unit_weight).to eq 1
+              expect(list_item.reload.quantity).to eq(5)
+              expect(list_item.unit_weight).to eq(1)
             end
 
             it 'updates the item on the aggregate list', :aggregate_failures do
               create_item
-              expect(aggregate_list.reload.list_items.first.quantity).to eq 7
-              expect(aggregate_list.list_items.first.unit_weight).to eq 1
+              expect(aggregate_list.reload.list_items.first.quantity).to eq(7)
+              expect(aggregate_list.list_items.first.unit_weight).to eq(1)
             end
 
             it 'updates only the unit_weight on the other item', :aggregate_failures do
               create_item
-              expect(other_item.reload.unit_weight).to eq 1
-              expect(other_item.quantity).to eq 2
+              expect(other_item.reload.unit_weight).to eq(1)
+              expect(other_item.quantity).to eq(2)
             end
 
             it 'returns status 200' do
               create_item
-              expect(response.status).to eq 200
+              expect(response.status).to eq(200)
             end
 
             it 'returns all items that have been updated' do
@@ -203,7 +203,7 @@ RSpec.describe 'InventoryItems', type: :request do
 
         it 'returns status 404' do
           create_item
-          expect(response.status).to eq 404
+          expect(response.status).to eq(404)
         end
 
         it "doesn't return any data" do
@@ -223,7 +223,7 @@ RSpec.describe 'InventoryItems', type: :request do
 
         it 'returns status 404' do
           create_item
-          expect(response.status).to eq 404
+          expect(response.status).to eq(404)
         end
 
         it "doesn't return any data" do
@@ -242,7 +242,7 @@ RSpec.describe 'InventoryItems', type: :request do
 
         it 'returns status 422' do
           create_item
-          expect(response.status).to eq 422
+          expect(response.status).to eq(422)
         end
 
         it 'returns the error array' do
@@ -262,7 +262,7 @@ RSpec.describe 'InventoryItems', type: :request do
 
         it 'returns status 405' do
           create_item
-          expect(response.status).to eq 405
+          expect(response.status).to eq(405)
         end
 
         it 'returns the error' do
@@ -281,7 +281,7 @@ RSpec.describe 'InventoryItems', type: :request do
 
         it 'returns status 500' do
           create_item
-          expect(response.status).to eq 500
+          expect(response.status).to eq(500)
         end
 
         it 'returns the error' do
@@ -305,7 +305,7 @@ RSpec.describe 'InventoryItems', type: :request do
 
       it 'returns status 401' do
         create_item
-        expect(response.status).to eq 401
+        expect(response.status).to eq(401)
       end
 
       # Error message comes from login fixture data
@@ -341,17 +341,17 @@ RSpec.describe 'InventoryItems', type: :request do
 
           it 'updates the list item' do
             update_item
-            expect(list_item.reload.quantity).to eq 10
+            expect(list_item.reload.quantity).to eq(10)
           end
 
           it 'updates the aggregate list item' do
             update_item
-            expect(aggregate_list_item.quantity).to eq 10
+            expect(aggregate_list_item.quantity).to eq(10)
           end
 
           it 'returns status 200' do
             update_item
-            expect(response.status).to eq 200
+            expect(response.status).to eq(200)
           end
 
           it 'returns the regular list item and the aggregate list item' do
@@ -376,12 +376,12 @@ RSpec.describe 'InventoryItems', type: :request do
 
             it 'updates the list item' do
               update_item
-              expect(list_item.reload.quantity).to eq 10
+              expect(list_item.reload.quantity).to eq(10)
             end
 
             it 'updates the aggregate list item' do
               update_item
-              expect(aggregate_list_item.quantity).to eq 14
+              expect(aggregate_list_item.quantity).to eq(14)
             end
 
             it 'updates the regular list' do
@@ -410,7 +410,7 @@ RSpec.describe 'InventoryItems', type: :request do
 
             it 'returns status 200' do
               update_item
-              expect(response.status).to eq 200
+              expect(response.status).to eq(200)
             end
 
             it 'returns the list item and the aggregate list item' do
@@ -424,20 +424,20 @@ RSpec.describe 'InventoryItems', type: :request do
 
             it 'updates the list item', :aggregate_failures do
               update_item
-              expect(list_item.reload.quantity).to eq 10
-              expect(list_item.unit_weight).to eq 2
+              expect(list_item.reload.quantity).to eq(10)
+              expect(list_item.unit_weight).to eq(2)
             end
 
             it 'updates the aggregate list item', :aggregate_failures do
               update_item
-              expect(aggregate_list_item.quantity).to eq 14
-              expect(aggregate_list_item.unit_weight).to eq 2
+              expect(aggregate_list_item.quantity).to eq(14)
+              expect(aggregate_list_item.unit_weight).to eq(2)
             end
 
             it 'updates only the unit weight of the other list item', :aggregate_failures do
               update_item
-              expect(other_item.reload.quantity).to eq 4
-              expect(other_item.unit_weight).to eq 2
+              expect(other_item.reload.quantity).to eq(4)
+              expect(other_item.unit_weight).to eq(2)
             end
 
             it 'updates the regular list' do
@@ -474,7 +474,7 @@ RSpec.describe 'InventoryItems', type: :request do
 
             it 'returns status 200' do
               update_item
-              expect(response.status).to eq 200
+              expect(response.status).to eq(200)
             end
 
             it 'returns all items that were changed' do
@@ -491,7 +491,7 @@ RSpec.describe 'InventoryItems', type: :request do
 
         it 'returns status 404' do
           update_item
-          expect(response.status).to eq 404
+          expect(response.status).to eq(404)
         end
 
         it "doesn't return any data" do
@@ -511,7 +511,7 @@ RSpec.describe 'InventoryItems', type: :request do
 
         it 'returns status 404' do
           update_item
-          expect(response.status).to eq 404
+          expect(response.status).to eq(404)
         end
 
         it "doesn't return any data" do
@@ -526,7 +526,7 @@ RSpec.describe 'InventoryItems', type: :request do
 
         it 'returns status 405' do
           update_item
-          expect(response.status).to eq 405
+          expect(response.status).to eq(405)
         end
 
         it 'returns an error array' do
@@ -549,18 +549,18 @@ RSpec.describe 'InventoryItems', type: :request do
 
         it "doesn't update the aggregate list item", :aggregate_failures do
           update_item
-          expect(aggregate_list_item.quantity).to eq 3
-          expect(aggregate_list_item.unit_weight).to be nil
+          expect(aggregate_list_item.quantity).to eq(3)
+          expect(aggregate_list_item.unit_weight).to be_nil
         end
 
         it "doesn't update the unit weight of the other list item" do
           update_item
-          expect(other_item.reload.unit_weight).to be nil
+          expect(other_item.reload.unit_weight).to be_nil
         end
 
         it 'returns status 422' do
           update_item
-          expect(response.status).to eq 422
+          expect(response.status).to eq(422)
         end
 
         it 'returns the errors in an array' do
@@ -582,7 +582,7 @@ RSpec.describe 'InventoryItems', type: :request do
 
         it 'returns status 500' do
           update_item
-          expect(response.status).to eq 500
+          expect(response.status).to eq(500)
         end
 
         it 'returns the error array' do
@@ -607,7 +607,7 @@ RSpec.describe 'InventoryItems', type: :request do
 
       it 'returns status 401' do
         update_item
-        expect(response.status).to eq 401
+        expect(response.status).to eq(401)
       end
 
       it "doesn't return any data" do
@@ -642,17 +642,17 @@ RSpec.describe 'InventoryItems', type: :request do
 
           it 'updates the list item' do
             update_item
-            expect(list_item.reload.quantity).to eq 10
+            expect(list_item.reload.quantity).to eq(10)
           end
 
           it 'updates the aggregate list item' do
             update_item
-            expect(aggregate_list_item.quantity).to eq 10
+            expect(aggregate_list_item.quantity).to eq(10)
           end
 
           it 'returns status 200' do
             update_item
-            expect(response.status).to eq 200
+            expect(response.status).to eq(200)
           end
 
           it 'returns the regular list item and the aggregate list item' do
@@ -677,12 +677,12 @@ RSpec.describe 'InventoryItems', type: :request do
 
             it 'updates the list item' do
               update_item
-              expect(list_item.reload.quantity).to eq 10
+              expect(list_item.reload.quantity).to eq(10)
             end
 
             it 'updates the aggregate list item' do
               update_item
-              expect(aggregate_list_item.quantity).to eq 14
+              expect(aggregate_list_item.quantity).to eq(14)
             end
 
             it 'updates the regular list' do
@@ -711,7 +711,7 @@ RSpec.describe 'InventoryItems', type: :request do
 
             it 'returns status 200' do
               update_item
-              expect(response.status).to eq 200
+              expect(response.status).to eq(200)
             end
 
             it 'returns the list item and the aggregate list item' do
@@ -725,20 +725,20 @@ RSpec.describe 'InventoryItems', type: :request do
 
             it 'updates the list item', :aggregate_failures do
               update_item
-              expect(list_item.reload.quantity).to eq 10
-              expect(list_item.unit_weight).to eq 2
+              expect(list_item.reload.quantity).to eq(10)
+              expect(list_item.unit_weight).to eq(2)
             end
 
             it 'updates the aggregate list item', :aggregate_failures do
               update_item
-              expect(aggregate_list_item.quantity).to eq 14
-              expect(aggregate_list_item.unit_weight).to eq 2
+              expect(aggregate_list_item.quantity).to eq(14)
+              expect(aggregate_list_item.unit_weight).to eq(2)
             end
 
             it 'updates only the unit weight of the other list item', :aggregate_failures do
               update_item
-              expect(other_item.reload.quantity).to eq 4
-              expect(other_item.unit_weight).to eq 2
+              expect(other_item.reload.quantity).to eq(4)
+              expect(other_item.unit_weight).to eq(2)
             end
 
             it 'updates the regular list' do
@@ -775,7 +775,7 @@ RSpec.describe 'InventoryItems', type: :request do
 
             it 'returns status 200' do
               update_item
-              expect(response.status).to eq 200
+              expect(response.status).to eq(200)
             end
 
             it 'returns all items that were changed' do
@@ -792,7 +792,7 @@ RSpec.describe 'InventoryItems', type: :request do
 
         it 'returns status 404' do
           update_item
-          expect(response.status).to eq 404
+          expect(response.status).to eq(404)
         end
 
         it "doesn't return any data" do
@@ -812,7 +812,7 @@ RSpec.describe 'InventoryItems', type: :request do
 
         it 'returns status 404' do
           update_item
-          expect(response.status).to eq 404
+          expect(response.status).to eq(404)
         end
 
         it "doesn't return any data" do
@@ -827,7 +827,7 @@ RSpec.describe 'InventoryItems', type: :request do
 
         it 'returns status 405' do
           update_item
-          expect(response.status).to eq 405
+          expect(response.status).to eq(405)
         end
 
         it 'returns an error array' do
@@ -850,18 +850,18 @@ RSpec.describe 'InventoryItems', type: :request do
 
         it "doesn't update the aggregate list item", :aggregate_failures do
           update_item
-          expect(aggregate_list_item.quantity).to eq 3
-          expect(aggregate_list_item.unit_weight).to be nil
+          expect(aggregate_list_item.quantity).to eq(3)
+          expect(aggregate_list_item.unit_weight).to be_nil
         end
 
         it "doesn't update the unit weight of the other list item" do
           update_item
-          expect(other_item.reload.unit_weight).to be nil
+          expect(other_item.reload.unit_weight).to be_nil
         end
 
         it 'returns status 422' do
           update_item
-          expect(response.status).to eq 422
+          expect(response.status).to eq(422)
         end
 
         it 'returns the errors in an array' do
@@ -883,7 +883,7 @@ RSpec.describe 'InventoryItems', type: :request do
 
         it 'returns status 500' do
           update_item
-          expect(response.status).to eq 500
+          expect(response.status).to eq(500)
         end
 
         it 'returns the error array' do
@@ -908,7 +908,7 @@ RSpec.describe 'InventoryItems', type: :request do
 
       it 'returns status 401' do
         update_item
-        expect(response.status).to eq 401
+        expect(response.status).to eq(401)
       end
 
       it "doesn't return any data" do
@@ -970,7 +970,7 @@ RSpec.describe 'InventoryItems', type: :request do
 
           it 'returns status 204' do
             destroy_item
-            expect(response.status).to eq 204
+            expect(response.status).to eq(204)
           end
         end
 
@@ -1015,7 +1015,7 @@ RSpec.describe 'InventoryItems', type: :request do
 
           it 'returns status 200' do
             destroy_item
-            expect(response.status).to eq 200
+            expect(response.status).to eq(200)
           end
 
           it 'returns the updated aggregate list item' do
@@ -1030,7 +1030,7 @@ RSpec.describe 'InventoryItems', type: :request do
 
         it 'returns status 404' do
           destroy_item
-          expect(response.status).to eq 404
+          expect(response.status).to eq(404)
         end
 
         it "doesn't return any data" do
@@ -1049,7 +1049,7 @@ RSpec.describe 'InventoryItems', type: :request do
 
         it 'returns status 404' do
           destroy_item
-          expect(response.status).to eq 404
+          expect(response.status).to eq(404)
         end
 
         it "doesn't return any data" do
@@ -1068,7 +1068,7 @@ RSpec.describe 'InventoryItems', type: :request do
 
         it 'returns status 405' do
           destroy_item
-          expect(response.status).to eq 405
+          expect(response.status).to eq(405)
         end
 
         it 'returns an error message' do
@@ -1086,7 +1086,7 @@ RSpec.describe 'InventoryItems', type: :request do
 
         it 'returns status 500' do
           destroy_item
-          expect(response.status).to eq 500
+          expect(response.status).to eq(500)
         end
 
         it 'returns the error' do
@@ -1110,7 +1110,7 @@ RSpec.describe 'InventoryItems', type: :request do
 
       it 'returns status 401' do
         destroy_item
-        expect(response.status).to eq 401
+        expect(response.status).to eq(401)
       end
 
       it "doesn't return any data" do

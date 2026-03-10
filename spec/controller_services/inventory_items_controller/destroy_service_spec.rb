@@ -1,11 +1,11 @@
 # frozen_string_literal: true
 
 require 'rails_helper'
-require 'service/no_content_result'
-require 'service/ok_result'
-require 'service/not_found_result'
-require 'service/method_not_allowed_result'
 require 'service/internal_server_error_result'
+require 'service/method_not_allowed_result'
+require 'service/no_content_result'
+require 'service/not_found_result'
+require 'service/ok_result'
 
 RSpec.describe InventoryItemsController::DestroyService do
   describe '#perform' do
@@ -60,7 +60,7 @@ RSpec.describe InventoryItemsController::DestroyService do
         end
 
         it 'returns the aggregate list item', :aggregate_failures do
-          expect(perform.resource).to eq aggregate_list.list_items.first
+          expect(perform.resource).to eq(aggregate_list.list_items.first)
         end
       end
     end
@@ -125,7 +125,7 @@ RSpec.describe InventoryItemsController::DestroyService do
       end
 
       it 'sets the errors' do
-        expect(perform.errors).to eq ['Something went horribly wrong']
+        expect(perform.errors).to eq(['Something went horribly wrong'])
       end
     end
   end

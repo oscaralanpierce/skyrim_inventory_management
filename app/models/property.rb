@@ -96,7 +96,7 @@ class Property < ApplicationRecord
   end
 
   def ensure_max
-    Rails.logger.error "Cannot create property \"#{name}\" in hold \"#{hold}\": this game already has #{Canonical::Property::TOTAL_PROPERTY_COUNT} properties"
+    Rails.logger.error("Cannot create property \"#{name}\" in hold \"#{hold}\": this game already has #{Canonical::Property::TOTAL_PROPERTY_COUNT} properties")
     errors.add(:game, 'already has max number of ownable properties')
   end
 

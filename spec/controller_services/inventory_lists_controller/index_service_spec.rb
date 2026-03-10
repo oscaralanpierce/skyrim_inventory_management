@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
 require 'rails_helper'
-require 'service/ok_result'
-require 'service/not_found_result'
 require 'service/internal_server_error_result'
+require 'service/not_found_result'
+require 'service/ok_result'
 
 RSpec.describe InventoryListsController::IndexService do
   describe '#perform' do
@@ -19,7 +19,7 @@ RSpec.describe InventoryListsController::IndexService do
       end
 
       it 'returns the empty list' do
-        expect(perform.resource).to eq []
+        expect(perform.resource).to eq([])
       end
     end
 
@@ -31,7 +31,7 @@ RSpec.describe InventoryListsController::IndexService do
       end
 
       it 'returns the inventory lists' do
-        expect(perform.resource).to eq game.inventory_lists
+        expect(perform.resource).to eq(game.inventory_lists)
       end
     end
 
@@ -72,7 +72,7 @@ RSpec.describe InventoryListsController::IndexService do
       end
 
       it 'returns an array with the error message' do
-        expect(perform.errors).to eq ['Something went horribly wrong']
+        expect(perform.errors).to eq(['Something went horribly wrong'])
       end
     end
   end

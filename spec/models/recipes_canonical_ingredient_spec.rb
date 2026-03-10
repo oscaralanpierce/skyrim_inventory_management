@@ -9,7 +9,7 @@ RSpec.describe RecipesCanonicalIngredient, type: :model do
       model = build(:recipes_canonical_ingredient, recipe: book)
 
       model.validate
-      expect(model.errors[:recipe]).to include 'must be a recipe'
+      expect(model.errors[:recipe]).to include('must be a recipe')
     end
 
     it 'is valid if the book is a recipe' do
@@ -27,7 +27,7 @@ RSpec.describe RecipesCanonicalIngredient, type: :model do
 
       model.validate
 
-      expect(model.errors[:recipe_id]).to include 'must form a unique combination with canonical ingredient'
+      expect(model.errors[:recipe_id]).to include('must form a unique combination with canonical ingredient')
     end
   end
 end

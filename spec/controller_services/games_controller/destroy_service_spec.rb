@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
 require 'rails_helper'
+require 'service/internal_server_error_result'
 require 'service/no_content_result'
 require 'service/not_found_result'
-require 'service/internal_server_error_result'
 
 RSpec.describe GamesController::DestroyService do
   describe '#perform' do
