@@ -3,7 +3,7 @@
 module Canonical
   module Sync
     class Ingredients < AssociationSyncer
-      def self.perform(preserve_existing_records)
+      def self.perform(preserve_existing_records:)
         Rails.logger.warn('Ingredient syncer cannot preserve existing records') if preserve_existing_records
         super
       end

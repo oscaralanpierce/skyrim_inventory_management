@@ -23,13 +23,13 @@ RSpec.describe Canonical::Sync::Potions do
   end
 
   describe '::perform' do
-    subject(:perform) { described_class.perform(preserve_existing_records) }
+    subject(:perform) { described_class.perform(preserve_existing_records:) }
 
     context 'when preserve_existing_records is false' do
       let(:preserve_existing_records) { false }
 
       context 'when there are no existing potions in the database' do
-        let(:syncer) { described_class.new(preserve_existing_records) }
+        let(:syncer) { described_class.new(preserve_existing_records:) }
 
         before do
           alchemical_property_names.each {|name| create(:alchemical_property, name:) }
@@ -38,7 +38,7 @@ RSpec.describe Canonical::Sync::Potions do
         it 'instantiates itseslf' do
           allow(described_class).to receive(:new).and_return(syncer)
           perform
-          expect(described_class).to have_received(:new).with(preserve_existing_records)
+          expect(described_class).to have_received(:new).with(preserve_existing_records:)
         end
 
         it 'populates the models from the JSON file' do
@@ -58,7 +58,7 @@ RSpec.describe Canonical::Sync::Potions do
       context 'when there are existing potion records in the database' do
         let!(:item_in_json) { create(:canonical_potion, item_code: '0003EB2E', unit_weight: 1) }
         let!(:item_not_in_json) { create(:canonical_potion, item_code: '12345678') }
-        let(:syncer) { described_class.new(preserve_existing_records) }
+        let(:syncer) { described_class.new(preserve_existing_records:) }
 
         before do
           alchemical_property_names.each {|name| create(:alchemical_property, name:) }
@@ -67,7 +67,7 @@ RSpec.describe Canonical::Sync::Potions do
         it 'instantiates itself' do
           allow(described_class).to receive(:new).and_return(syncer)
           perform
-          expect(described_class).to have_received(:new).with(preserve_existing_records)
+          expect(described_class).to have_received(:new).with(preserve_existing_records:)
         end
 
         it 'updates models that were already in the database' do
@@ -141,7 +141,7 @@ RSpec.describe Canonical::Sync::Potions do
 
     context 'when preserve_existing_records is true' do
       let(:preserve_existing_records) { true }
-      let(:syncer) { described_class.new(preserve_existing_records) }
+      let(:syncer) { described_class.new(preserve_existing_records:) }
       let!(:item_in_json) { create(:canonical_potion, item_code: '0003EB2E', unit_weight: 1) }
       let!(:item_not_in_json) { create(:canonical_potion, item_code: '12345678') }
 
@@ -154,7 +154,7 @@ RSpec.describe Canonical::Sync::Potions do
       it 'instantiates itself' do
         allow(described_class).to receive(:new).and_return(syncer)
         perform
-        expect(described_class).to have_received(:new).with(preserve_existing_records)
+        expect(described_class).to have_received(:new).with(preserve_existing_records:)
       end
 
       it 'updates models found in the JSON data' do

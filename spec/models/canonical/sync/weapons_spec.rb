@@ -24,13 +24,13 @@ RSpec.describe Canonical::Sync::Weapons do
   end
 
   describe '::perform' do
-    subject(:perform) { described_class.perform(preserve_existing_records) }
+    subject(:perform) { described_class.perform(preserve_existing_records:) }
 
     context 'when preserve_existing_records is false' do
       let(:preserve_existing_records) { false }
 
       context 'when there are no existing canonical weapons in the database' do
-        let(:syncer) { described_class.new(preserve_existing_records) }
+        let(:syncer) { described_class.new(preserve_existing_records:) }
 
         before do
           create(:enchantment, name: 'Frost Damage')
@@ -40,7 +40,7 @@ RSpec.describe Canonical::Sync::Weapons do
 
         it 'instantiates itseslf' do
           perform
-          expect(described_class).to have_received(:new).with(preserve_existing_records)
+          expect(described_class).to have_received(:new).with(preserve_existing_records:)
         end
 
         it 'populates the models from the JSON file' do
@@ -68,7 +68,7 @@ RSpec.describe Canonical::Sync::Weapons do
       context 'when there are existing canonical weapon records in the database' do
         let!(:item_in_json) { create(:canonical_weapon, item_code: '0005BF06', base_damage: 13) }
         let!(:item_not_in_json) { create(:canonical_weapon, item_code: '12345678') }
-        let(:syncer) { described_class.new(preserve_existing_records) }
+        let(:syncer) { described_class.new(preserve_existing_records:) }
 
         before do
           create(:enchantment, name: 'Frost Damage')
@@ -78,7 +78,7 @@ RSpec.describe Canonical::Sync::Weapons do
         it 'instantiates itself' do
           allow(described_class).to receive(:new).and_return(syncer)
           perform
-          expect(described_class).to have_received(:new).with(preserve_existing_records)
+          expect(described_class).to have_received(:new).with(preserve_existing_records:)
         end
 
         it 'updates models that were already in the database' do
@@ -153,7 +153,7 @@ RSpec.describe Canonical::Sync::Weapons do
 
     context 'when preserve_existing_records is true' do
       let(:preserve_existing_records) { true }
-      let(:syncer) { described_class.new(preserve_existing_records) }
+      let(:syncer) { described_class.new(preserve_existing_records:) }
       let!(:item_in_json) { create(:canonical_weapon, item_code: '0005BF06', base_damage: 13) }
       let!(:item_not_in_json) { create(:canonical_weapon, item_code: '12345678') }
 
@@ -165,7 +165,7 @@ RSpec.describe Canonical::Sync::Weapons do
       it 'instantiates itself' do
         allow(described_class).to receive(:new).and_return(syncer)
         perform
-        expect(described_class).to have_received(:new).with(preserve_existing_records)
+        expect(described_class).to have_received(:new).with(preserve_existing_records:)
       end
 
       it 'updates models found in the JSON data' do

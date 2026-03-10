@@ -4,10 +4,10 @@ module Canonical
   module Sync
     class Syncer
       def self.perform(preserve_existing_records:)
-        new(preserve_existing_records).perform
+        new(preserve_existing_records:).perform
       end
 
-      def initialize(preserve_existing_records)
+      def initialize(preserve_existing_records:)
         @preserve_existing_records = preserve_existing_records
       end
 

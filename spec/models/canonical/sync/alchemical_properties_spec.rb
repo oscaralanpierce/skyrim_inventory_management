@@ -14,11 +14,11 @@ RSpec.describe Canonical::Sync::AlchemicalProperties do
   end
 
   describe '::perform' do
-    subject(:perform) { described_class.perform(preserve_existing_records) }
+    subject(:perform) { described_class.perform(preserve_existing_records:) }
 
     context 'when preserve_existing_records is false' do
       let(:preserve_existing_records) { false }
-      let(:syncer) { described_class.new(preserve_existing_records) }
+      let(:syncer) { described_class.new(preserve_existing_records:) }
 
       before do
         allow(described_class).to receive(:new).and_return(syncer)
@@ -26,7 +26,7 @@ RSpec.describe Canonical::Sync::AlchemicalProperties do
 
       it 'instantiates itself' do
         perform
-        expect(described_class).to have_received(:new).with(preserve_existing_records)
+        expect(described_class).to have_received(:new).with(preserve_existing_records:)
       end
 
       context 'when there are no existing records in the database' do
@@ -64,7 +64,7 @@ RSpec.describe Canonical::Sync::AlchemicalProperties do
 
     context 'when preserve_existing_records is true' do
       let(:preserve_existing_records) { true }
-      let(:syncer) { described_class.new(preserve_existing_records) }
+      let(:syncer) { described_class.new(preserve_existing_records:) }
       let!(:property_in_json) { create(:alchemical_property, name: 'Cure Disease', strength_unit: 'percentage') }
       let!(:property_not_in_json) { create(:alchemical_property, name: 'Restore Health') }
 
@@ -74,7 +74,7 @@ RSpec.describe Canonical::Sync::AlchemicalProperties do
 
       it 'instantiates itself' do
         perform
-        expect(described_class).to have_received(:new).with(preserve_existing_records)
+        expect(described_class).to have_received(:new).with(preserve_existing_records:)
       end
 
       it 'updates properties found in the JSON data' do

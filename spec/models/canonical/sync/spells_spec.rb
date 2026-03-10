@@ -14,11 +14,11 @@ RSpec.describe Canonical::Sync::Spells do
   end
 
   describe '::perform' do
-    subject(:perform) { described_class.perform(preserve_existing_records) }
+    subject(:perform) { described_class.perform(preserve_existing_records:) }
 
     context 'when preserve_existing_records is false' do
       let(:preserve_existing_records) { false }
-      let(:syncer) { described_class.new(preserve_existing_records) }
+      let(:syncer) { described_class.new(preserve_existing_records:) }
 
       before do
         allow(described_class).to receive(:new).and_return(syncer)
@@ -26,7 +26,7 @@ RSpec.describe Canonical::Sync::Spells do
 
       it 'instantiates itself' do
         perform
-        expect(described_class).to have_received(:new).with(preserve_existing_records)
+        expect(described_class).to have_received(:new).with(preserve_existing_records:)
       end
 
       context 'when there are no existing records in the database' do
@@ -42,12 +42,12 @@ RSpec.describe Canonical::Sync::Spells do
       context 'when there are existing records in the database' do
         let!(:spell_in_json) { create(:spell, name: 'Bound Battleaxe', strength_unit: 'point', strength: 50) }
         let!(:spell_not_in_json) { create(:spell, name: 'My Awesome Spell') }
-        let(:syncer) { described_class.new(preserve_existing_records) }
+        let(:syncer) { described_class.new(preserve_existing_records:) }
 
         it 'instantiates itself' do
           allow(described_class).to receive(:new).and_return(syncer)
           perform
-          expect(described_class).to have_received(:new).with(preserve_existing_records)
+          expect(described_class).to have_received(:new).with(preserve_existing_records:)
         end
 
         it 'updates models that were already in the database', :aggregate_failures do
@@ -72,7 +72,7 @@ RSpec.describe Canonical::Sync::Spells do
 
     context 'when preserve_existing_records is true' do
       let(:preserve_existing_records) { true }
-      let(:syncer) { described_class.new(preserve_existing_records) }
+      let(:syncer) { described_class.new(preserve_existing_records:) }
       let!(:spell_in_json) { create(:spell, name: 'Bound Bow', strength_unit: 'percentage', strength: 20) }
       let!(:spell_not_in_json) { create(:spell, name: 'My Awesome Spell') }
 
@@ -82,7 +82,7 @@ RSpec.describe Canonical::Sync::Spells do
 
       it 'instantiates itself' do
         perform
-        expect(described_class).to have_received(:new).with(preserve_existing_records)
+        expect(described_class).to have_received(:new).with(preserve_existing_records:)
       end
 
       it 'updates models found in the JSON data', :aggregate_failures do

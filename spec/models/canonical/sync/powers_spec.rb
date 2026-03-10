@@ -14,11 +14,11 @@ RSpec.describe Canonical::Sync::Powers do
   end
 
   describe '::perform' do
-    subject(:perform) { described_class.perform(preserve_existing_records) }
+    subject(:perform) { described_class.perform(preserve_existing_records:) }
 
     context 'when preserve_existing_records is false' do
       let(:preserve_existing_records) { false }
-      let(:syncer) { described_class.new(preserve_existing_records) }
+      let(:syncer) { described_class.new(preserve_existing_records:) }
 
       before do
         allow(described_class).to receive(:new).and_return(syncer)
@@ -26,7 +26,7 @@ RSpec.describe Canonical::Sync::Powers do
 
       it 'instantiates itself' do
         perform
-        expect(described_class).to have_received(:new).with(preserve_existing_records)
+        expect(described_class).to have_received(:new).with(preserve_existing_records:)
       end
 
       context 'when there are no existing records in the database' do
@@ -64,14 +64,14 @@ RSpec.describe Canonical::Sync::Powers do
 
     context 'when preserve_existing_records is true' do
       let(:preserve_existing_records) { true }
-      let(:syncer) { described_class.new(preserve_existing_records) }
+      let(:syncer) { described_class.new(preserve_existing_records:) }
       let!(:power_in_json) { create(:power, name: "Ancestor's Wrath", power_type: 'ability') }
       let!(:power_not_in_json) { create(:power, name: 'My Power') }
 
       it 'instantiates itself' do
         allow(described_class).to receive(:new).and_return(syncer)
         perform
-        expect(described_class).to have_received(:new).with(preserve_existing_records)
+        expect(described_class).to have_received(:new).with(preserve_existing_records:)
       end
 
       it 'updates models found in the JSON data' do
