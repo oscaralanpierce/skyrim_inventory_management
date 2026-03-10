@@ -29,11 +29,11 @@ module Canonical
 
     module_function
 
-    def perform(model = :all, preserve_existing_records = false)
+    def perform(model: :all, preserve_existing_records: false)
       if model == :all
-        SYNCERS.each_value {|syncer| syncer.perform(preserve_existing_records) }
+        SYNCERS.each_value {|syncer| syncer.perform(preserve_existing_records:) }
       else
-        SYNCERS[model].perform(preserve_existing_records)
+        SYNCERS[model].perform(preserve_existing_records:)
       end
     end
   end

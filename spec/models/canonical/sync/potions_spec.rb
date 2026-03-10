@@ -48,10 +48,10 @@ RSpec.describe Canonical::Sync::Potions do
 
         it 'creates the associations to alchemical properties where they exist', :aggregate_failures do
           perform
-          expect(Canonical::Potion.find_by(item_code: '0003EB2E').alchemical_properties.length).to eq 1
-          expect(Canonical::Potion.find_by(item_code: '00065C39').alchemical_properties.length).to eq 1
-          expect(Canonical::Potion.find_by(item_code: '000E6DF5').alchemical_properties.length).to eq 0
-          expect(Canonical::Potion.find_by(item_code: '000F84AB').alchemical_properties.length).to eq 2
+          expect(Canonical::Potion.find_by(item_code: '0003EB2E').alchemical_properties.length).to eq(1)
+          expect(Canonical::Potion.find_by(item_code: '00065C39').alchemical_properties.length).to eq(1)
+          expect(Canonical::Potion.find_by(item_code: '000E6DF5').alchemical_properties.length).to eq(0)
+          expect(Canonical::Potion.find_by(item_code: '000F84AB').alchemical_properties.length).to eq(2)
         end
       end
 
@@ -72,7 +72,7 @@ RSpec.describe Canonical::Sync::Potions do
 
         it 'updates models that were already in the database' do
           perform
-          expect(item_in_json.reload.unit_weight).to eq 0.5
+          expect(item_in_json.reload.unit_weight).to eq(0.5)
         end
 
         it "removes models in the database that aren't in the JSON data" do
@@ -99,7 +99,7 @@ RSpec.describe Canonical::Sync::Potions do
 
         it 'adds alchemical properties if they exist' do
           perform
-          expect(item_in_json.alchemical_properties.pluck(:name)).to eq ['Fortify Smithing']
+          expect(item_in_json.alchemical_properties.pluck(:name)).to eq(['Fortify Smithing'])
         end
       end
 
@@ -116,7 +116,7 @@ RSpec.describe Canonical::Sync::Potions do
             .to have_received(:error)
                   .with('Prerequisite(s) not met: sync AlchemicalProperty before canonical potions')
 
-          expect(Canonical::Potion.count).to eq 0
+          expect(Canonical::Potion.count).to eq(0)
         end
       end
 
@@ -130,7 +130,7 @@ RSpec.describe Canonical::Sync::Potions do
 
         it 'logs a validation error', :aggregate_failures do
           expect { perform }
-            .to raise_error ActiveRecord::RecordInvalid
+            .to raise_error(ActiveRecord::RecordInvalid)
 
           expect(Rails.logger)
             .to have_received(:error)
@@ -159,7 +159,7 @@ RSpec.describe Canonical::Sync::Potions do
 
       it 'updates models found in the JSON data' do
         perform
-        expect(item_in_json.reload.unit_weight).to eq 0.5
+        expect(item_in_json.reload.unit_weight).to eq(0.5)
       end
 
       it 'adds models not already in the database', :aggregate_failures do
@@ -176,7 +176,7 @@ RSpec.describe Canonical::Sync::Potions do
 
       it "doesn't destroy associations" do
         perform
-        expect(item_in_json.reload.alchemical_properties.length).to eq 2
+        expect(item_in_json.reload.alchemical_properties.length).to eq(2)
       end
     end
 

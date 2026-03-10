@@ -12,7 +12,7 @@ module Canonical
       end
 
       def perform
-        Rails.logger.info 'Syncing canonical crafting materials...'
+        Rails.logger.info('Syncing canonical crafting materials...')
 
         raise PrerequisiteNotMetError.new(prerequisite_error_message) unless prerequisite_conditions_met?
 
@@ -95,9 +95,9 @@ module Canonical
       def create_or_update_model(attributes)
         model_class.find_or_create_by!(**attributes)
       rescue ActiveRecord::RecordInvalid => e
-        Rails.logger.error "Error saving #{model_name.downcase} with attributes #{attributes}: #{e.message}"
+        Rails.logger.error("Error saving #{model_name.downcase} with attributes #{attributes}: #{e.message}")
       rescue StandardError => e
-        Rails.logger.error "Unexpected error #{e.class} saving #{model_name.downcase} with attributes #{attributes}: #{e.message}"
+        Rails.logger.error("Unexpected error #{e.class} saving #{model_name.downcase} with attributes #{attributes}: #{e.message}")
       end
     end
   end

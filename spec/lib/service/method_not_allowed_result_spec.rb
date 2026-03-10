@@ -7,7 +7,7 @@ RSpec.describe Service::MethodNotAllowedResult do
 
   describe '#status' do
     it 'is :method_not_allowed' do
-      expect(result.status).to eq :method_not_allowed
+      expect(result.status).to eq(:method_not_allowed)
     end
   end
 end

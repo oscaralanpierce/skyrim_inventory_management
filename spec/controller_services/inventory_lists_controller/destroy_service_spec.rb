@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
 require 'rails_helper'
-require 'service/ok_result'
-require 'service/no_content_result'
 require 'service/method_not_allowed_result'
+require 'service/no_content_result'
 require 'service/not_found_result'
+require 'service/ok_result'
 
 RSpec.describe InventoryListsController::DestroyService do
   describe '#perform' do
@@ -51,11 +51,11 @@ RSpec.describe InventoryListsController::DestroyService do
         end
 
         it 'returns a Service::OkResult' do
-          expect(perform).to be_a Service::OkResult
+          expect(perform).to be_a(Service::OkResult)
         end
 
         it 'sets the resource as the aggregate list' do
-          expect(perform.resource).to eq aggregate_list
+          expect(perform.resource).to eq(aggregate_list)
         end
       end
 
@@ -92,7 +92,7 @@ RSpec.describe InventoryListsController::DestroyService do
       end
 
       it 'sets the errors' do
-        expect(perform.errors).to eq ['Cannot manually delete an aggregate inventory list']
+        expect(perform.errors).to eq(['Cannot manually delete an aggregate inventory list'])
       end
     end
 
@@ -139,7 +139,7 @@ RSpec.describe InventoryListsController::DestroyService do
       end
 
       it 'sets the errors' do
-        expect(perform.errors).to eq ['Something went horribly wrong']
+        expect(perform.errors).to eq(['Something went horribly wrong'])
       end
     end
   end

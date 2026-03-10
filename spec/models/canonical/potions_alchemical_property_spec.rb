@@ -10,7 +10,7 @@ RSpec.describe Canonical::PotionsAlchemicalProperty, type: :model do
         model2 = build(:canonical_potions_alchemical_property, potion: model1.potion, alchemical_property: model1.alchemical_property)
 
         model2.validate
-        expect(model2.errors[:alchemical_property_id]).to include 'must form a unique combination with canonical potion'
+        expect(model2.errors[:alchemical_property_id]).to include('must form a unique combination with canonical potion')
       end
     end
 
@@ -25,21 +25,21 @@ RSpec.describe Canonical::PotionsAlchemicalProperty, type: :model do
         model = build(:canonical_potions_alchemical_property, strength: 'foo')
 
         model.validate
-        expect(model.errors[:strength]).to include 'is not a number'
+        expect(model.errors[:strength]).to include('is not a number')
       end
 
       it 'must be an integer' do
         model = build(:canonical_potions_alchemical_property, strength: 3.14159)
 
         model.validate
-        expect(model.errors[:strength]).to include 'must be an integer'
+        expect(model.errors[:strength]).to include('must be an integer')
       end
 
       it 'must be greater than zero' do
         model = build(:canonical_potions_alchemical_property, strength: 0)
 
         model.validate
-        expect(model.errors[:strength]).to include 'must be greater than 0'
+        expect(model.errors[:strength]).to include('must be greater than 0')
       end
     end
 
@@ -54,21 +54,21 @@ RSpec.describe Canonical::PotionsAlchemicalProperty, type: :model do
         model = build(:canonical_potions_alchemical_property, duration: 'foo')
 
         model.validate
-        expect(model.errors[:duration]).to include 'is not a number'
+        expect(model.errors[:duration]).to include('is not a number')
       end
 
       it 'must be an integer' do
         model = build(:canonical_potions_alchemical_property, duration: 3.14159)
 
         model.validate
-        expect(model.errors[:duration]).to include 'must be an integer'
+        expect(model.errors[:duration]).to include('must be an integer')
       end
 
       it 'must be greater than zero' do
         model = build(:canonical_potions_alchemical_property, duration: 0)
 
         model.validate
-        expect(model.errors[:duration]).to include 'must be greater than 0'
+        expect(model.errors[:duration]).to include('must be greater than 0')
       end
     end
 
@@ -107,7 +107,7 @@ RSpec.describe Canonical::PotionsAlchemicalProperty, type: :model do
           model = build(:canonical_potions_alchemical_property, potion:)
           model.validate
 
-          expect(model.errors[:potion]).to include 'can have a maximum of 4 effects'
+          expect(model.errors[:potion]).to include('can have a maximum of 4 effects')
         end
       end
     end

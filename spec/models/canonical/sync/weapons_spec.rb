@@ -50,18 +50,18 @@ RSpec.describe Canonical::Sync::Weapons do
 
         it 'creates the associations to enchantments where they exist', :aggregate_failures do
           perform
-          expect(Canonical::Weapon.find_by(item_code: '00034182').enchantments.length).to eq 0
-          expect(Canonical::Weapon.find_by(item_code: '0005BF06').enchantments.length).to eq 1
-          expect(Canonical::Weapon.find_by(item_code: '000139B4').enchantments.length).to eq 0
-          expect(Canonical::Weapon.find_by(item_code: 'XX018ED5').enchantments.length).to eq 0
+          expect(Canonical::Weapon.find_by(item_code: '00034182').enchantments.length).to eq(0)
+          expect(Canonical::Weapon.find_by(item_code: '0005BF06').enchantments.length).to eq(1)
+          expect(Canonical::Weapon.find_by(item_code: '000139B4').enchantments.length).to eq(0)
+          expect(Canonical::Weapon.find_by(item_code: 'XX018ED5').enchantments.length).to eq(0)
         end
 
         it 'creates the associations to powers where they exist', :aggregate_failures do
           perform
-          expect(Canonical::Weapon.find_by(item_code: '00034182').powers.length).to eq 0
-          expect(Canonical::Weapon.find_by(item_code: '0005BF06').powers.length).to eq 0
-          expect(Canonical::Weapon.find_by(item_code: '000139B4').powers.length).to eq 0
-          expect(Canonical::Weapon.find_by(item_code: 'XX018ED5').powers.length).to eq 1
+          expect(Canonical::Weapon.find_by(item_code: '00034182').powers.length).to eq(0)
+          expect(Canonical::Weapon.find_by(item_code: '0005BF06').powers.length).to eq(0)
+          expect(Canonical::Weapon.find_by(item_code: '000139B4').powers.length).to eq(0)
+          expect(Canonical::Weapon.find_by(item_code: 'XX018ED5').powers.length).to eq(1)
         end
       end
 
@@ -83,7 +83,7 @@ RSpec.describe Canonical::Sync::Weapons do
 
         it 'updates models that were already in the database' do
           perform
-          expect(item_in_json.reload.base_damage).to eq 18
+          expect(item_in_json.reload.base_damage).to eq(18)
         end
 
         it "removes models in the database that aren't in the JSON data" do
@@ -127,7 +127,7 @@ RSpec.describe Canonical::Sync::Weapons do
             .to have_received(:error)
                   .with('Prerequisite(s) not met: sync Enchantment, Power before canonical weapons')
 
-          expect(Canonical::Weapon.count).to eq 0
+          expect(Canonical::Weapon.count).to eq(0)
         end
       end
 
@@ -142,7 +142,7 @@ RSpec.describe Canonical::Sync::Weapons do
 
         it 'logs a validation error', :aggregate_failures do
           expect { perform }
-            .to raise_error ActiveRecord::RecordInvalid
+            .to raise_error(ActiveRecord::RecordInvalid)
 
           expect(Rails.logger)
             .to have_received(:error)
@@ -170,7 +170,7 @@ RSpec.describe Canonical::Sync::Weapons do
 
       it 'updates models found in the JSON data' do
         perform
-        expect(item_in_json.reload.base_damage).to eq 18
+        expect(item_in_json.reload.base_damage).to eq(18)
       end
 
       it 'adds models not already in the database', :aggregate_failures do

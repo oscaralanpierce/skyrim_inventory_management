@@ -1,11 +1,11 @@
 # frozen_string_literal: true
 
 require 'rails_helper'
-require 'service/ok_result'
+require 'service/internal_server_error_result'
 require 'service/method_not_allowed_result'
 require 'service/not_found_result'
+require 'service/ok_result'
 require 'service/unprocessable_entity_result'
-require 'service/internal_server_error_result'
 
 RSpec.describe WishListsController::UpdateService do
   describe '#perform' do
@@ -21,7 +21,7 @@ RSpec.describe WishListsController::UpdateService do
 
       it 'updates the wish list' do
         perform
-        expect(wish_list.reload.title).to eq 'My New Title'
+        expect(wish_list.reload.title).to eq('My New Title')
       end
 
       it 'returns a Service::OkResult' do
@@ -29,7 +29,7 @@ RSpec.describe WishListsController::UpdateService do
       end
 
       it 'sets the resource to the updated wish list' do
-        expect(perform.resource).to eq wish_list
+        expect(perform.resource).to eq(wish_list)
       end
 
       it 'updates the game' do

@@ -31,7 +31,7 @@ RSpec.describe InventoryList, type: :model do
       let!(:lists) { create_list(:inventory_list_with_list_items, 2, game:) }
 
       it 'includes the inventory list items' do
-        expect(includes_items).to eq game.inventory_lists.includes(:list_items)
+        expect(includes_items).to eq(game.inventory_lists.includes(:list_items))
       end
     end
 
@@ -114,7 +114,7 @@ RSpec.describe InventoryList, type: :model do
 
         it 'is invalid', :aggregate_failures do
           expect(aggregate_list).not_to be_valid
-          expect(aggregate_list.errors[:aggregate]).to eq ['can only be one list per game']
+          expect(aggregate_list.errors[:aggregate]).to eq(['can only be one list per game'])
         end
       end
     end
@@ -130,7 +130,7 @@ RSpec.describe InventoryList, type: :model do
         it 'is not allowed for a regular list', :aggregate_failures do
           list = build(:inventory_list, title: 'all items')
           expect(list).not_to be_valid
-          expect(list.errors[:title]).to include 'cannot be "All Items"'
+          expect(list.errors[:title]).to include('cannot be "All Items"')
         end
       end
 
@@ -153,21 +153,21 @@ RSpec.describe InventoryList, type: :model do
           list = build(:inventory_list, title: "My\nList 1  ")
 
           list.validate
-          expect(list.errors[:title]).to include "can only contain alphanumeric characters, spaces, commas (,), hyphens (-), and apostrophes (')"
+          expect(list.errors[:title]).to include("can only contain alphanumeric characters, spaces, commas (,), hyphens (-), and apostrophes (')")
         end
 
         it "doesn't allow other non-space whitespace", :aggregate_failures do
           list = build(:inventory_list, title: "My\tList 1")
 
           list.validate
-          expect(list.errors[:title]).to include "can only contain alphanumeric characters, spaces, commas (,), hyphens (-), and apostrophes (')"
+          expect(list.errors[:title]).to include("can only contain alphanumeric characters, spaces, commas (,), hyphens (-), and apostrophes (')")
         end
 
         it "doesn't allow special characters", :aggregate_failures do
           list = build(:inventory_list, title: 'My^List&1')
 
           list.validate
-          expect(list.errors[:title]).to include "can only contain alphanumeric characters, spaces, commas (,), hyphens (-), and apostrophes (')"
+          expect(list.errors[:title]).to include("can only contain alphanumeric characters, spaces, commas (,), hyphens (-), and apostrophes (')")
         end
 
         # Leading and trailing whitespace characters will be stripped anyway so no need to validate
@@ -186,7 +186,7 @@ RSpec.describe InventoryList, type: :model do
     let(:inventory_list) { create(:inventory_list, game: aggregate_list.game) }
 
     it 'returns the aggregate list that tracks it' do
-      expect(inventory_list.aggregate_list).to eq aggregate_list
+      expect(inventory_list.aggregate_list).to eq(aggregate_list)
     end
   end
 
@@ -203,7 +203,7 @@ RSpec.describe InventoryList, type: :model do
           let(:game) { create(:game) }
 
           it 'keeps the title the user has set' do
-            expect(title).to eq 'Heljarchen Hall'
+            expect(title).to eq('Heljarchen Hall')
           end
         end
 
@@ -219,7 +219,7 @@ RSpec.describe InventoryList, type: :model do
             end
 
             it 'sets the title based on the highest numbered default title' do
-              expect(title).to eq 'My List 3'
+              expect(title).to eq('My List 3')
             end
           end
 
@@ -232,7 +232,7 @@ RSpec.describe InventoryList, type: :model do
             end
 
             it 'uses the next highest number in default lists' do
-              expect(title).to eq 'My List 3'
+              expect(title).to eq('My List 3')
             end
           end
 
@@ -243,7 +243,7 @@ RSpec.describe InventoryList, type: :model do
             end
 
             it 'sets the title based on the highest numbered list called "My List N"' do
-              expect(title).to eq 'My List 3'
+              expect(title).to eq('My List 3')
             end
           end
 
@@ -254,7 +254,7 @@ RSpec.describe InventoryList, type: :model do
             end
 
             it 'sets the title based on the highest numbered list called "My List N"' do
-              expect(title).to eq 'My List 3'
+              expect(title).to eq('My List 3')
             end
           end
 
@@ -264,7 +264,7 @@ RSpec.describe InventoryList, type: :model do
             end
 
             it 'ignores the list title with the negative integer' do
-              expect(title).to eq 'My List 1'
+              expect(title).to eq('My List 1')
             end
           end
         end
@@ -276,7 +276,7 @@ RSpec.describe InventoryList, type: :model do
           subject(:title) { game.inventory_lists.create!(aggregate: true, title: 'Something other than all items').title }
 
           it 'overrides the title the user has set' do
-            expect(title).to eq 'All Items'
+            expect(title).to eq('All Items')
           end
         end
 
@@ -284,7 +284,7 @@ RSpec.describe InventoryList, type: :model do
           subject(:title) { game.inventory_lists.create!(aggregate: true).title }
 
           it 'sets the title to "All Items"' do
-            expect(title).to eq 'All Items'
+            expect(title).to eq('All Items')
           end
         end
       end
@@ -293,12 +293,12 @@ RSpec.describe InventoryList, type: :model do
     context 'when the request includes sloppy data' do
       it 'uses intelligent title capitalisation' do
         list = create(:inventory_list, title: 'lord oF thE rIngs')
-        expect(list.title).to eq 'Lord of the Rings'
+        expect(list.title).to eq('Lord of the Rings')
       end
 
       it 'strips trailing and leading whitespace' do
         list = create(:inventory_list, title: " lord oF tHe RiNgs\n")
-        expect(list.title).to eq 'Lord of the Rings'
+        expect(list.title).to eq('Lord of the Rings')
       end
     end
   end
@@ -426,7 +426,7 @@ RSpec.describe InventoryList, type: :model do
 
           it 'combines the quantities but not the notes values', :aggregate_failures do
             add_item
-            expect(existing_list_item.reload.quantity).to eq 5
+            expect(existing_list_item.reload.quantity).to eq(5)
             expect(existing_list_item.reload.notes).to be_nil
           end
         end
@@ -452,12 +452,12 @@ RSpec.describe InventoryList, type: :model do
 
           it 'leaves the unit weight as-is on the existing item' do
             add_item
-            expect(existing_list_item.reload.unit_weight).to eq 0.3
+            expect(existing_list_item.reload.unit_weight).to eq(0.3)
           end
 
           it 'leaves the unit weight as-is on the other regular list item' do
             add_item
-            expect(item_on_other_list.reload.unit_weight).to eq 0.3
+            expect(item_on_other_list.reload.unit_weight).to eq(0.3)
           end
         end
 
@@ -482,12 +482,12 @@ RSpec.describe InventoryList, type: :model do
 
           it 'updates the unit weight of the existing item' do
             add_item
-            expect(existing_list_item.reload.unit_weight).to eq 0.2
+            expect(existing_list_item.reload.unit_weight).to eq(0.2)
           end
 
           it 'updates the unit weight of the item on the other list' do
             add_item
-            expect(item_on_other_list.reload.unit_weight).to eq 0.2
+            expect(item_on_other_list.reload.unit_weight).to eq(0.2)
           end
         end
       end
@@ -571,7 +571,7 @@ RSpec.describe InventoryList, type: :model do
 
         it 'adjusts the quantity on the aggregate list' do
           remove_item
-          expect(aggregate_list.list_items.last.quantity).to eq 1
+          expect(aggregate_list.list_items.last.quantity).to eq(1)
         end
       end
 
@@ -609,7 +609,7 @@ RSpec.describe InventoryList, type: :model do
 
         it 'increases the quantity by the delta' do
           update_item
-          expect(aggregate_list.list_items.first.quantity).to eq 3
+          expect(aggregate_list.list_items.first.quantity).to eq(3)
         end
       end
 
@@ -630,7 +630,7 @@ RSpec.describe InventoryList, type: :model do
 
         it 'decreases the quantity by the delta' do
           update_item
-          expect(aggregate_list.list_items.first.quantity).to eq 5
+          expect(aggregate_list.list_items.first.quantity).to eq(5)
         end
       end
 
@@ -691,12 +691,12 @@ RSpec.describe InventoryList, type: :model do
 
         it 'updates the unit_weight on the aggregate list' do
           update_item
-          expect(aggregate_list_item.reload.unit_weight).to eq 2
+          expect(aggregate_list_item.reload.unit_weight).to eq(2)
         end
 
         it 'updates the other matching list item' do
           update_item
-          expect(item_on_other_list.reload.unit_weight).to eq 2
+          expect(item_on_other_list.reload.unit_weight).to eq(2)
         end
       end
 
@@ -827,7 +827,7 @@ RSpec.describe InventoryList, type: :model do
       list = described_class.new(aggregate_list:)
 
       list.validate
-      expect(list.errors[:game]).to include 'must exist'
+      expect(list.errors[:game]).to include('must exist')
     end
   end
 end

@@ -12,7 +12,7 @@ RSpec.describe JewelryItem, type: :model do
       it 'is invalid without a name' do
         item.name = nil
         validate
-        expect(item.errors[:name]).to include "can't be blank"
+        expect(item.errors[:name]).to include("can't be blank")
       end
     end
 
@@ -20,7 +20,7 @@ RSpec.describe JewelryItem, type: :model do
       it 'is invalid if less than 0' do
         item.unit_weight = -5
         validate
-        expect(item.errors[:unit_weight]).to include 'must be greater than or equal to 0'
+        expect(item.errors[:unit_weight]).to include('must be greater than or equal to 0')
       end
 
       it 'can be blank' do
@@ -84,7 +84,7 @@ RSpec.describe JewelryItem, type: :model do
 
           it 'is invalid' do
             validate
-            expect(item.errors[:base]).to include 'is a duplicate of a unique in-game item'
+            expect(item.errors[:base]).to include('is a duplicate of a unique in-game item')
           end
         end
       end
@@ -118,7 +118,7 @@ RSpec.describe JewelryItem, type: :model do
 
         it 'adds errors' do
           item.validate
-          expect(item.errors[:base]).to include "doesn't match any item that exists in Skyrim"
+          expect(item.errors[:base]).to include("doesn't match any item that exists in Skyrim")
         end
       end
     end
@@ -132,7 +132,7 @@ RSpec.describe JewelryItem, type: :model do
       let(:item) { create(:jewelry_item, name: 'Gold Diamond Ring', canonical_jewelry_item:) }
 
       it 'uses the values from the canonical model' do
-        expect(crafting_materials).to eq canonical_jewelry_item.crafting_materials
+        expect(crafting_materials).to eq(canonical_jewelry_item.crafting_materials)
       end
     end
 
@@ -297,7 +297,7 @@ RSpec.describe JewelryItem, type: :model do
         expect { add_enchantment }
           .to raise_error(ActiveRecord::RecordInvalid)
 
-        expect(item.enchantments.reload.length).to eq 0
+        expect(item.enchantments.reload.length).to eq(0)
       end
     end
 
@@ -322,7 +322,7 @@ RSpec.describe JewelryItem, type: :model do
 
       it 'adds missing enchantments' do
         add_enchantment
-        expect(item.enchantments.reload.length).to eq 2
+        expect(item.enchantments.reload.length).to eq(2)
       end
     end
 
@@ -338,7 +338,7 @@ RSpec.describe JewelryItem, type: :model do
 
       it "doesn't add additional enchantments" do
         add_enchantment
-        expect(item.enchantments.reload.length).to eq 1
+        expect(item.enchantments.reload.length).to eq(1)
       end
     end
   end
@@ -351,7 +351,7 @@ RSpec.describe JewelryItem, type: :model do
       let(:canonical_jewelry_item) { create(:canonical_jewelry_item, jewelry_type: 'amulet') }
 
       it 'returns the jewelry type of the canonical' do
-        expect(jewelry_type).to eq 'amulet'
+        expect(jewelry_type).to eq('amulet')
       end
     end
 
@@ -393,14 +393,14 @@ RSpec.describe JewelryItem, type: :model do
 
       it 'assigns the canonical jewelry item' do
         validate
-        expect(item.canonical_jewelry_item).to eq matching_canonical
+        expect(item.canonical_jewelry_item).to eq(matching_canonical)
       end
 
       it 'sets the attributes', :aggregate_failures do
         validate
-        expect(item.name).to eq 'Gold Diamond Ring'
-        expect(item.unit_weight).to eq 0.2
-        expect(item.magical_effects).to eq 'Some magical effects to differentiate'
+        expect(item.name).to eq('Gold Diamond Ring')
+        expect(item.unit_weight).to eq(0.2)
+        expect(item.magical_effects).to eq('Some magical effects to differentiate')
       end
     end
 
@@ -472,8 +472,8 @@ RSpec.describe JewelryItem, type: :model do
 
           validate
 
-          expect(item.name).to eq 'Silver Jeweled Necklace'
-          expect(item.unit_weight).to eq 3
+          expect(item.name).to eq('Silver Jeweled Necklace')
+          expect(item.unit_weight).to eq(3)
         end
 
         it 'removes automatically added enchantments', :aggregate_failures do
@@ -483,7 +483,7 @@ RSpec.describe JewelryItem, type: :model do
           validate
           item.enchantables_enchantments.reload
 
-          expect(item.enchantables_enchantments.count).to eq 1
+          expect(item.enchantables_enchantments.count).to eq(1)
           expect(item.enchantables_enchantments.pluck(:added_automatically)).to be_all(false)
         end
       end
@@ -513,7 +513,7 @@ RSpec.describe JewelryItem, type: :model do
 
           validate
 
-          expect(item.name).to eq 'silver jeweled necklace'
+          expect(item.name).to eq('silver jeweled necklace')
           expect(item.unit_weight).to be_nil
         end
 
@@ -524,7 +524,7 @@ RSpec.describe JewelryItem, type: :model do
           validate
           item.enchantables_enchantments.reload
 
-          expect(item.enchantables_enchantments.count).to eq 1
+          expect(item.enchantables_enchantments.count).to eq(1)
           expect(item.enchantables_enchantments.pluck(:added_automatically)).to be_all(false)
         end
       end
@@ -545,7 +545,7 @@ RSpec.describe JewelryItem, type: :model do
           validate
           item.enchantables_enchantments.reload
 
-          expect(item.enchantables_enchantments.count).to eq 1
+          expect(item.enchantables_enchantments.count).to eq(1)
           expect(item.enchantables_enchantments.pluck(:added_automatically)).to be_all(false)
         end
       end
@@ -574,7 +574,7 @@ RSpec.describe JewelryItem, type: :model do
 
         it 'adds enchantments from the canonical model' do
           item.save!
-          expect(item.enchantments.length).to eq 2
+          expect(item.enchantments.length).to eq(2)
         end
 
         it 'sets "added_automatically" to true on new associations' do
@@ -591,7 +591,7 @@ RSpec.describe JewelryItem, type: :model do
               model.enchantment == join_model.enchantment && model.strength == join_model.strength
             end
 
-            expect(has_matching).to be true
+            expect(has_matching).to be(true)
           end
         end
       end
@@ -607,14 +607,14 @@ RSpec.describe JewelryItem, type: :model do
 
         it "doesn't remove the existing enchantments" do
           item.save!
-          expect(item.enchantments.reload.length).to eq 4
+          expect(item.enchantments.reload.length).to eq(4)
         end
 
         it 'sets "added_automatically" only on the new associations' do
           item.save!
 
           expect(item.enchantables_enchantments.pluck(:added_automatically))
-            .to eq [true, true, false, false]
+            .to eq([true, true, false, false])
         end
       end
     end
@@ -630,7 +630,7 @@ RSpec.describe JewelryItem, type: :model do
       end
 
       it "doesn't set enchantments" do
-        expect(item.enchantables_enchantments.length).to eq 0
+        expect(item.enchantables_enchantments.length).to eq(0)
       end
     end
   end

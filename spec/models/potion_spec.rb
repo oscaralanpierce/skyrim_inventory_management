@@ -16,7 +16,7 @@ RSpec.describe Potion, type: :model do
       it "can't be blank" do
         potion.name = nil
         validate
-        expect(potion.errors[:name]).to include "can't be blank"
+        expect(potion.errors[:name]).to include("can't be blank")
       end
     end
 
@@ -30,7 +30,7 @@ RSpec.describe Potion, type: :model do
       it 'must be at least 0' do
         potion.unit_weight = -0.5
         validate
-        expect(potion.errors[:unit_weight]).to include 'must be greater than or equal to 0'
+        expect(potion.errors[:unit_weight]).to include('must be greater than or equal to 0')
       end
     end
 
@@ -88,7 +88,7 @@ RSpec.describe Potion, type: :model do
 
           it 'is invalid' do
             validate
-            expect(potion.errors[:base]).to include 'is a duplicate of a unique in-game item'
+            expect(potion.errors[:base]).to include('is a duplicate of a unique in-game item')
           end
         end
       end
@@ -136,7 +136,7 @@ RSpec.describe Potion, type: :model do
 
         it 'adds an error' do
           validate
-          expect(potion.errors[:name]).to include 'must be a valid potion or poison name'
+          expect(potion.errors[:name]).to include('must be a valid potion or poison name')
         end
       end
     end
@@ -149,7 +149,7 @@ RSpec.describe Potion, type: :model do
       let(:potion) { create(:potion, :with_matching_canonical) }
 
       it 'returns the canonical potion' do
-        expect(canonical_model).to eq potion.canonical_potion
+        expect(canonical_model).to eq(potion.canonical_potion)
       end
     end
 
@@ -245,7 +245,7 @@ RSpec.describe Potion, type: :model do
       it 'returns an empty ActiveRecord relation', :aggregate_failures do
         potion.name = 'My Special Potion'
 
-        expect(canonical_models).to be_an ActiveRecord::Relation
+        expect(canonical_models).to be_an(ActiveRecord::Relation)
         expect(canonical_models).to be_empty
       end
     end
@@ -571,14 +571,14 @@ RSpec.describe Potion, type: :model do
 
       it 'sets the canonical_potion' do
         validate
-        expect(potion.canonical_potion).to eq matching_canonical
+        expect(potion.canonical_potion).to eq(matching_canonical)
       end
 
       it 'sets the name, unit weight, and magical effects', :aggregate_failures do
         validate
-        expect(potion.name).to eq matching_canonical.name
-        expect(potion.unit_weight).to eq matching_canonical.unit_weight
-        expect(potion.magical_effects).to eq matching_canonical.magical_effects
+        expect(potion.name).to eq(matching_canonical.name)
+        expect(potion.unit_weight).to eq(matching_canonical.unit_weight)
+        expect(potion.magical_effects).to eq(matching_canonical.magical_effects)
       end
     end
 
@@ -652,7 +652,7 @@ RSpec.describe Potion, type: :model do
 
           validate
 
-          expect(potion.name).to eq 'My Special Potion'
+          expect(potion.name).to eq('My Special Potion')
         end
 
         it 'removes automatically added alchemical properties', :aggregate_failures do
@@ -661,7 +661,7 @@ RSpec.describe Potion, type: :model do
           validate
           potion.potions_alchemical_properties.reload
 
-          expect(potion.potions_alchemical_properties.count).to eq 1
+          expect(potion.potions_alchemical_properties.count).to eq(1)
           expect(potion.potions_alchemical_properties.pluck(:added_automatically)).to be_all(false)
         end
       end
@@ -688,7 +688,7 @@ RSpec.describe Potion, type: :model do
 
           validate
 
-          expect(potion.name).to eq 'my special potion'
+          expect(potion.name).to eq('my special potion')
         end
 
         it 'removes automatically-added alchemical properties', :aggregate_failures do
@@ -697,7 +697,7 @@ RSpec.describe Potion, type: :model do
           validate
           potion.potions_alchemical_properties.reload
 
-          expect(potion.potions_alchemical_properties.count).to eq 1
+          expect(potion.potions_alchemical_properties.count).to eq(1)
           expect(potion.potions_alchemical_properties.pluck(:added_automatically)).to be_all(false)
         end
       end
@@ -717,7 +717,7 @@ RSpec.describe Potion, type: :model do
           validate
           potion.potions_alchemical_properties.reload
 
-          expect(potion.potions_alchemical_properties.count).to eq 1
+          expect(potion.potions_alchemical_properties.count).to eq(1)
           expect(potion.potions_alchemical_properties.pluck(:added_automatically)).to be_all(false)
         end
       end

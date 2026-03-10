@@ -7,7 +7,7 @@ RSpec.describe Service::NotFoundResult do
 
   describe '#status' do
     it 'is :not_found' do
-      expect(result.status).to eq :not_found
+      expect(result.status).to eq(:not_found)
     end
   end
 end

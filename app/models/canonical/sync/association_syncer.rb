@@ -6,8 +6,8 @@ module Canonical
       def perform
         raise PrerequisiteNotMetError.new(prerequisite_error_message) unless prerequisite_conditions_met?
 
-        Rails.logger.info "Syncing #{model_name.downcase.pluralize}..."
-        Rails.logger.warn "preserve_existing_records mode does not preserve associations for #{model_name.downcase.pluralize}" if preserve_existing_records && !preserve_associations?
+        Rails.logger.info("Syncing #{model_name.downcase.pluralize}...")
+        Rails.logger.warn("preserve_existing_records mode does not preserve associations for #{model_name.downcase.pluralize}") if preserve_existing_records && !preserve_associations?
 
         ActiveRecord::Base.transaction do
           destroy_existing_models unless preserve_existing_records
@@ -30,27 +30,27 @@ module Canonical
               if !preserve_existing_records || !preserve_associations?
                 identifiers = object[association].pluck(associated_model_identifier)
                 assn_ids = associated_model_class.where(associated_model_identifier => identifiers).ids
-                model.send(association_name).where.not(associated_fk => assn_ids).destroy_all
+                model.public_send(association_name).where.not(associated_fk => assn_ids).destroy_all
               end
 
               object[association].each do |assn|
                 join_model = model
-                               .send(association_name)
+                               .public_send(association_name)
                                .find_or_initialize_by(associated_model => associated_model_class.find_by(associated_model_identifier => assn.delete(associated_model_identifier)))
                 join_model.assign_attributes(assn)
                 join_model.save!
               rescue ActiveRecord::RecordInvalid => e
-                Rails.logger.error "Validation error saving associations for #{model_name.downcase} \"#{model.send(model_identifier)}\": #{e.message}"
+                Rails.logger.error("Validation error saving associations for #{model_name.downcase} \"#{model.public_send(model_identifier)}\": #{e.message}")
                 raise e
               end
             end
           end
         rescue StandardError => e
-          Rails.logger.error "Unexpected error #{e.class} while syncing #{model_name.downcase.pluralize}: #{e.message}"
+          Rails.logger.error("Unexpected error #{e.class} while syncing #{model_name.downcase.pluralize}: #{e.message}")
           raise e
         end
       rescue PrerequisiteNotMetError => e
-        Rails.logger.error e.message
+        Rails.logger.error(e.message)
         raise e
       end
 

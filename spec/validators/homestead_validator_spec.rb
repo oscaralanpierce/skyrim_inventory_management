@@ -25,67 +25,67 @@ RSpec.describe HomesteadValidator do
     it 'validates that there is no cellar' do
       property.has_cellar = true
       validate
-      expect(property.errors[:has_cellar]).to include 'cannot be true because this property cannot have a cellar in Skyrim'
+      expect(property.errors[:has_cellar]).to include('cannot be true because this property cannot have a cellar in Skyrim')
     end
 
     it 'validates that there is no main hall' do
       property.has_main_hall = true
       validate
-      expect(property.errors[:has_main_hall]).to include 'cannot be true because this property cannot have a main hall in Skyrim'
+      expect(property.errors[:has_main_hall]).to include('cannot be true because this property cannot have a main hall in Skyrim')
     end
 
     it "validates that there is no enchanter's tower" do
       property.has_enchanters_tower = true
       validate
-      expect(property.errors[:has_enchanters_tower]).to include "cannot be true because this property cannot have an enchanter's tower in Skyrim"
+      expect(property.errors[:has_enchanters_tower]).to include("cannot be true because this property cannot have an enchanter's tower in Skyrim")
     end
 
     it 'validates that there is no alchemy tower' do
       property.has_alchemy_tower = true
       validate
-      expect(property.errors[:has_alchemy_tower]).to include 'cannot be true because this property cannot have an alchemy tower in Skyrim'
+      expect(property.errors[:has_alchemy_tower]).to include('cannot be true because this property cannot have an alchemy tower in Skyrim')
     end
 
     it 'validates that there is no library' do
       property.has_library = true
       validate
-      expect(property.errors[:has_library]).to include 'cannot be true because this property cannot have a library in Skyrim'
+      expect(property.errors[:has_library]).to include('cannot be true because this property cannot have a library in Skyrim')
     end
 
     it 'validates that there are no bedrooms' do
       property.has_bedrooms = true
       validate
-      expect(property.errors[:has_bedrooms]).to include 'cannot be true because this property cannot have bedrooms in Skyrim'
+      expect(property.errors[:has_bedrooms]).to include('cannot be true because this property cannot have bedrooms in Skyrim')
     end
 
     it 'validates that there is no storage room' do
       property.has_storage_room = true
       validate
-      expect(property.errors[:has_storage_room]).to include 'cannot be true because this property cannot have a storage room in Skyrim'
+      expect(property.errors[:has_storage_room]).to include('cannot be true because this property cannot have a storage room in Skyrim')
     end
 
     it 'validates that there is no armory' do
       property.has_armory = true
       validate
-      expect(property.errors[:has_armory]).to include 'cannot be true because this property cannot have an armory in Skyrim'
+      expect(property.errors[:has_armory]).to include('cannot be true because this property cannot have an armory in Skyrim')
     end
 
     it 'validates that there is no greenhouse' do
       property.has_greenhouse = true
       validate
-      expect(property.errors[:has_greenhouse]).to include 'cannot be true because this property cannot have a greenhouse in Skyrim'
+      expect(property.errors[:has_greenhouse]).to include('cannot be true because this property cannot have a greenhouse in Skyrim')
     end
 
     it 'validates that there is no trophy room' do
       property.has_trophy_room = true
       validate
-      expect(property.errors[:has_trophy_room]).to include 'cannot be true because this property cannot have a trophy room in Skyrim'
+      expect(property.errors[:has_trophy_room]).to include('cannot be true because this property cannot have a trophy room in Skyrim')
     end
 
     it 'validates that there is no kitchen' do
       property.has_kitchen = true
       validate
-      expect(property.errors[:has_kitchen]).to include 'cannot be true because this property cannot have a kitchen in Skyrim'
+      expect(property.errors[:has_kitchen]).to include('cannot be true because this property cannot have a kitchen in Skyrim')
     end
   end
 
@@ -105,7 +105,7 @@ RSpec.describe HomesteadValidator do
             property.has_enchanters_tower = true
             property.has_bedrooms = true
             validate
-            expect(property.errors[:west_wing]).to include "can only have one of enchanter's tower, bedrooms, or greenhouse"
+            expect(property.errors[:west_wing]).to include("can only have one of enchanter's tower, bedrooms, or greenhouse")
           end
         end
 
@@ -114,7 +114,7 @@ RSpec.describe HomesteadValidator do
             property.has_enchanters_tower = true
             property.has_greenhouse = true
             validate
-            expect(property.errors[:west_wing]).to include "can only have one of enchanter's tower, bedrooms, or greenhouse"
+            expect(property.errors[:west_wing]).to include("can only have one of enchanter's tower, bedrooms, or greenhouse")
           end
         end
 
@@ -123,7 +123,7 @@ RSpec.describe HomesteadValidator do
             property.has_bedrooms = true
             property.has_greenhouse = true
             validate
-            expect(property.errors[:west_wing]).to include "can only have one of enchanter's tower, bedrooms, or greenhouse"
+            expect(property.errors[:west_wing]).to include("can only have one of enchanter's tower, bedrooms, or greenhouse")
           end
         end
 
@@ -133,7 +133,7 @@ RSpec.describe HomesteadValidator do
             property.has_bedrooms = true
             property.has_greenhouse = true
             validate
-            expect(property.errors[:west_wing]).to include "can only have one of enchanter's tower, bedrooms, or greenhouse"
+            expect(property.errors[:west_wing]).to include("can only have one of enchanter's tower, bedrooms, or greenhouse")
           end
         end
       end
@@ -179,7 +179,7 @@ RSpec.describe HomesteadValidator do
             property.has_alchemy_tower = true
             property.has_storage_room = true
             validate
-            expect(property.errors[:north_wing]).to include 'can only have one of alchemy tower, storage room, or trophy room'
+            expect(property.errors[:north_wing]).to include('can only have one of alchemy tower, storage room, or trophy room')
           end
         end
 
@@ -188,7 +188,7 @@ RSpec.describe HomesteadValidator do
             property.has_alchemy_tower = true
             property.has_trophy_room = true
             validate
-            expect(property.errors[:north_wing]).to include 'can only have one of alchemy tower, storage room, or trophy room'
+            expect(property.errors[:north_wing]).to include('can only have one of alchemy tower, storage room, or trophy room')
           end
         end
 
@@ -197,7 +197,7 @@ RSpec.describe HomesteadValidator do
             property.has_storage_room = true
             property.has_trophy_room = true
             validate
-            expect(property.errors[:north_wing]).to include 'can only have one of alchemy tower, storage room, or trophy room'
+            expect(property.errors[:north_wing]).to include('can only have one of alchemy tower, storage room, or trophy room')
           end
         end
 
@@ -207,7 +207,7 @@ RSpec.describe HomesteadValidator do
             property.has_storage_room = true
             property.has_trophy_room = true
             validate
-            expect(property.errors[:north_wing]).to include 'can only have one of alchemy tower, storage room, or trophy room'
+            expect(property.errors[:north_wing]).to include('can only have one of alchemy tower, storage room, or trophy room')
           end
         end
       end
@@ -253,7 +253,7 @@ RSpec.describe HomesteadValidator do
             property.has_library = true
             property.has_armory = true
             validate
-            expect(property.errors[:east_wing]).to include 'can only have one of library, armory, or kitchen'
+            expect(property.errors[:east_wing]).to include('can only have one of library, armory, or kitchen')
           end
         end
 
@@ -262,7 +262,7 @@ RSpec.describe HomesteadValidator do
             property.has_library = true
             property.has_kitchen = true
             validate
-            expect(property.errors[:east_wing]).to include 'can only have one of library, armory, or kitchen'
+            expect(property.errors[:east_wing]).to include('can only have one of library, armory, or kitchen')
           end
         end
 
@@ -271,7 +271,7 @@ RSpec.describe HomesteadValidator do
             property.has_armory = true
             property.has_kitchen = true
             validate
-            expect(property.errors[:east_wing]).to include 'can only have one of library, armory, or kitchen'
+            expect(property.errors[:east_wing]).to include('can only have one of library, armory, or kitchen')
           end
         end
 
@@ -281,7 +281,7 @@ RSpec.describe HomesteadValidator do
             property.has_armory = true
             property.has_kitchen = true
             validate
-            expect(property.errors[:east_wing]).to include 'can only have one of library, armory, or kitchen'
+            expect(property.errors[:east_wing]).to include('can only have one of library, armory, or kitchen')
           end
         end
       end

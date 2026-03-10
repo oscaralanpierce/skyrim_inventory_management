@@ -34,34 +34,34 @@ RSpec.describe Property, type: :model do
 
     it 'is invalid without a game' do
       validate
-      expect(property.errors[:game]).to include 'must exist'
+      expect(property.errors[:game]).to include('must exist')
     end
 
     it 'is invalid without a canonical property' do
       validate
-      expect(property.errors[:base]).to include "doesn't match any ownable property that exists in Skyrim"
+      expect(property.errors[:base]).to include("doesn't match any ownable property that exists in Skyrim")
     end
 
     it 'must have a name' do
       validate
-      expect(property.errors[:name]).to include "can't be blank"
+      expect(property.errors[:name]).to include("can't be blank")
     end
 
     it 'must have a valid name' do
       property.name = 'Camelot'
       validate
-      expect(property.errors[:name]).to include "must be an ownable property in Skyrim, or the Arch-Mage's Quarters"
+      expect(property.errors[:name]).to include("must be an ownable property in Skyrim, or the Arch-Mage's Quarters")
     end
 
     it 'must have a hold' do
       validate
-      expect(property.errors[:hold]).to include "can't be blank"
+      expect(property.errors[:hold]).to include("can't be blank")
     end
 
     it 'must have a valid hold' do
       property.hold = 'Leyawiin'
       validate
-      expect(property.errors[:hold]).to include 'must be one of the nine Skyrim holds, or Solstheim'
+      expect(property.errors[:hold]).to include('must be one of the nine Skyrim holds, or Solstheim')
     end
 
     it 'only allows up to 10 per game', :aggregate_failures do
@@ -78,7 +78,7 @@ RSpec.describe Property, type: :model do
       property.name = 'Vlindrel Hall'
       property.hold = 'The Reach'
       validate
-      expect(property.errors[:game]).to include 'already has max number of ownable properties'
+      expect(property.errors[:game]).to include('already has max number of ownable properties')
       expect(Rails.logger)
         .to have_received(:error)
               .with('Cannot create property "Vlindrel Hall" in hold "The Reach": this game already has 10 properties')
@@ -108,17 +108,17 @@ RSpec.describe Property, type: :model do
 
       it 'has a unique combination of game and canonical property' do
         validate
-        expect(property.errors[:canonical_property]).to include 'must be unique per game'
+        expect(property.errors[:canonical_property]).to include('must be unique per game')
       end
 
       it 'has a unique name per game' do
         validate
-        expect(property.errors[:name]).to include 'must be unique per game'
+        expect(property.errors[:name]).to include('must be unique per game')
       end
 
       it 'has a unique hold per game' do
         validate
-        expect(property.errors[:hold]).to include 'must be unique per game'
+        expect(property.errors[:hold]).to include('must be unique per game')
       end
     end
 
@@ -129,7 +129,7 @@ RSpec.describe Property, type: :model do
         it 'cannot have an arcane enchanter' do
           property.has_arcane_enchanter = true
           validate
-          expect(property.errors[:has_arcane_enchanter]).to include 'cannot be true because this property cannot have an arcane enchanter in Skyrim'
+          expect(property.errors[:has_arcane_enchanter]).to include('cannot be true because this property cannot have an arcane enchanter in Skyrim')
         end
       end
 
@@ -157,7 +157,7 @@ RSpec.describe Property, type: :model do
         it 'cannot have a forge' do
           property.has_forge = true
           validate
-          expect(property.errors[:has_forge]).to include 'cannot be true because this property cannot have a forge in Skyrim'
+          expect(property.errors[:has_forge]).to include('cannot be true because this property cannot have a forge in Skyrim')
         end
       end
 
@@ -185,7 +185,7 @@ RSpec.describe Property, type: :model do
         it 'cannot have an apiary' do
           property.has_apiary = true
           validate
-          expect(property.errors[:has_apiary]).to include 'cannot be true because this property cannot have an apiary in Skyrim'
+          expect(property.errors[:has_apiary]).to include('cannot be true because this property cannot have an apiary in Skyrim')
         end
       end
 
@@ -213,7 +213,7 @@ RSpec.describe Property, type: :model do
         it 'cannot have a grain mill' do
           property.has_grain_mill = true
           validate
-          expect(property.errors[:has_grain_mill]).to include 'cannot be true because this property cannot have a grain mill in Skyrim'
+          expect(property.errors[:has_grain_mill]).to include('cannot be true because this property cannot have a grain mill in Skyrim')
         end
       end
 
@@ -241,7 +241,7 @@ RSpec.describe Property, type: :model do
         it 'cannot have a fish hatchery' do
           property.has_fish_hatchery = true
           validate
-          expect(property.errors[:has_fish_hatchery]).to include 'cannot be true because this property cannot have a fish hatchery in Skyrim'
+          expect(property.errors[:has_fish_hatchery]).to include('cannot be true because this property cannot have a fish hatchery in Skyrim')
         end
       end
 
@@ -270,7 +270,7 @@ RSpec.describe Property, type: :model do
     let(:canonical_property) { Canonical::Property.find_by(name: 'Proudspire Manor') }
 
     it 'returns the canonical property' do
-      expect(canonical_model).to eq canonical_property
+      expect(canonical_model).to eq(canonical_property)
     end
   end
 
@@ -293,7 +293,7 @@ RSpec.describe Property, type: :model do
 
       it 'sets the canonical property', :aggregate_failures do
         validate
-        expect(property.canonical_property).to eq canonical_property
+        expect(property.canonical_property).to eq(canonical_property)
       end
     end
 
@@ -319,9 +319,9 @@ RSpec.describe Property, type: :model do
 
       it 'sets the property name, city, and hold', :aggregate_failures do
         validate
-        expect(property.name).to eq 'Hjerim'
-        expect(property.city).to eq 'Windhelm'
-        expect(property.hold).to eq 'Eastmarch'
+        expect(property.name).to eq('Hjerim')
+        expect(property.city).to eq('Windhelm')
+        expect(property.hold).to eq('Eastmarch')
       end
     end
   end

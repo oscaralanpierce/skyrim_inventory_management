@@ -7,7 +7,7 @@ RSpec.describe Service::UnprocessableEntityResult do
 
   describe '#status' do
     it 'is :unprocessable_entity' do
-      expect(result.status).to eq :unprocessable_entity
+      expect(result.status).to eq(:unprocessable_entity)
     end
   end
 end

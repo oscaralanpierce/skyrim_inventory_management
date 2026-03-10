@@ -28,7 +28,7 @@ RSpec.describe ApplicationController::AuthorizationService do
       end
 
       it 'sets an error' do
-        expect(perform.errors).to include 'No Google OAuth 2.0 access token found'
+        expect(perform.errors).to include('No Google OAuth 2.0 access token found')
       end
 
       it "doesn't set current user" do
@@ -138,7 +138,7 @@ RSpec.describe ApplicationController::AuthorizationService do
         end
 
         it 'returns an informative error message' do
-          expect(perform.errors).to include 'Token validation response did not include a user'
+          expect(perform.errors).to include('Token validation response did not include a user')
         end
 
         it 'logs the error' do
@@ -177,7 +177,7 @@ RSpec.describe ApplicationController::AuthorizationService do
         end
 
         it 'returns an informative error message' do
-          expect(perform.errors).to include 'Token validation response did not include a user'
+          expect(perform.errors).to include('Token validation response did not include a user')
         end
 
         it 'logs the error' do
@@ -216,7 +216,7 @@ RSpec.describe ApplicationController::AuthorizationService do
         end
 
         it 'returns an informative error message' do
-          expect(perform.errors).to include 'Token validation response included multiple users'
+          expect(perform.errors).to include('Token validation response included multiple users')
         end
 
         it 'logs the error' do
@@ -260,7 +260,7 @@ RSpec.describe ApplicationController::AuthorizationService do
       end
 
       it 'includes a generic error message' do
-        expect(perform.errors).to include 'Unable to validate user access token.'
+        expect(perform.errors).to include('Unable to validate user access token.')
       end
 
       it 'logs the response body in debug mode' do
@@ -291,7 +291,7 @@ RSpec.describe ApplicationController::AuthorizationService do
       end
 
       it 'returns the error message' do
-        expect(perform.errors).to include 'Something went wrong'
+        expect(perform.errors).to include('Something went wrong')
       end
 
       it 'logs the error' do

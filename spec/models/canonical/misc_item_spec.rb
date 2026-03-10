@@ -13,7 +13,7 @@ RSpec.describe Canonical::MiscItem, type: :model do
         model.name = nil
         validate
 
-        expect(model.errors[:name]).to include "can't be blank"
+        expect(model.errors[:name]).to include("can't be blank")
       end
     end
 
@@ -22,7 +22,7 @@ RSpec.describe Canonical::MiscItem, type: :model do
         model.item_code = nil
         validate
 
-        expect(model.errors[:item_code]).to include "can't be blank"
+        expect(model.errors[:item_code]).to include("can't be blank")
       end
 
       it 'must be unique' do
@@ -30,7 +30,7 @@ RSpec.describe Canonical::MiscItem, type: :model do
         model.item_code = 'foo'
         validate
 
-        expect(model.errors[:item_code]).to include 'must be unique'
+        expect(model.errors[:item_code]).to include('must be unique')
       end
     end
 
@@ -39,21 +39,21 @@ RSpec.describe Canonical::MiscItem, type: :model do
         model.unit_weight = nil
         validate
 
-        expect(model.errors[:unit_weight]).to include "can't be blank"
+        expect(model.errors[:unit_weight]).to include("can't be blank")
       end
 
       it 'must be a number' do
         model.unit_weight = 'foo'
         validate
 
-        expect(model.errors[:unit_weight]).to include 'is not a number'
+        expect(model.errors[:unit_weight]).to include('is not a number')
       end
 
       it 'must be at least zero' do
         model.unit_weight = -2
         validate
 
-        expect(model.errors[:unit_weight]).to include 'must be greater than or equal to 0'
+        expect(model.errors[:unit_weight]).to include('must be greater than or equal to 0')
       end
     end
 
@@ -62,14 +62,14 @@ RSpec.describe Canonical::MiscItem, type: :model do
         model.item_types = nil
         validate
 
-        expect(model.errors[:item_types]).to include "can't be blank"
+        expect(model.errors[:item_types]).to include("can't be blank")
       end
 
       it 'must include at least one valid type' do
         model.item_types = []
         validate
 
-        expect(model.errors[:item_types]).to include 'must include at least one item type'
+        expect(model.errors[:item_types]).to include('must include at least one item type')
       end
 
       it 'must include only valid types' do
@@ -79,7 +79,7 @@ RSpec.describe Canonical::MiscItem, type: :model do
         ]
         validate
 
-        expect(model.errors[:item_types]).to include 'can only include valid item types'
+        expect(model.errors[:item_types]).to include('can only include valid item types')
       end
     end
 
@@ -88,14 +88,14 @@ RSpec.describe Canonical::MiscItem, type: :model do
         model.add_on = nil
         validate
 
-        expect(model.errors[:add_on]).to include "can't be blank"
+        expect(model.errors[:add_on]).to include("can't be blank")
       end
 
       it 'must be a supported add-on' do
         model.add_on = 'fishing'
         validate
 
-        expect(model.errors[:add_on]).to include 'must be a SIM-supported add-on or DLC'
+        expect(model.errors[:add_on]).to include('must be a SIM-supported add-on or DLC')
       end
     end
 
@@ -110,14 +110,14 @@ RSpec.describe Canonical::MiscItem, type: :model do
         model.max_quantity = 0
         validate
 
-        expect(model.errors[:max_quantity]).to include 'must be an integer of at least 1'
+        expect(model.errors[:max_quantity]).to include('must be an integer of at least 1')
       end
 
       it 'must be an integer' do
         model.max_quantity = 2.7
         validate
 
-        expect(model.errors[:max_quantity]).to include 'must be an integer of at least 1'
+        expect(model.errors[:max_quantity]).to include('must be an integer of at least 1')
       end
     end
 
@@ -126,7 +126,7 @@ RSpec.describe Canonical::MiscItem, type: :model do
         model.purchasable = nil
         validate
 
-        expect(model.errors[:purchasable]).to include 'must be true or false'
+        expect(model.errors[:purchasable]).to include('must be true or false')
       end
     end
 
@@ -135,7 +135,7 @@ RSpec.describe Canonical::MiscItem, type: :model do
         model.collectible = nil
         validate
 
-        expect(model.errors[:collectible]).to include 'must be true or false'
+        expect(model.errors[:collectible]).to include('must be true or false')
       end
     end
 
@@ -144,7 +144,7 @@ RSpec.describe Canonical::MiscItem, type: :model do
         model.unique_item = nil
         validate
 
-        expect(model.errors[:unique_item]).to include 'must be true or false'
+        expect(model.errors[:unique_item]).to include('must be true or false')
       end
 
       it 'must be true if max_quantity is 1' do
@@ -153,7 +153,7 @@ RSpec.describe Canonical::MiscItem, type: :model do
 
         validate
 
-        expect(model.errors[:unique_item]).to include 'must be true if max quantity is 1'
+        expect(model.errors[:unique_item]).to include('must be true if max quantity is 1')
       end
 
       it 'must be false if max quantity is not 1' do
@@ -162,7 +162,7 @@ RSpec.describe Canonical::MiscItem, type: :model do
 
         validate
 
-        expect(model.errors[:unique_item]).to include 'must correspond to a max quantity of 1'
+        expect(model.errors[:unique_item]).to include('must correspond to a max quantity of 1')
       end
     end
 
@@ -171,7 +171,7 @@ RSpec.describe Canonical::MiscItem, type: :model do
         model.rare_item = nil
         validate
 
-        expect(model.errors[:rare_item]).to include 'must be true or false'
+        expect(model.errors[:rare_item]).to include('must be true or false')
       end
 
       it 'must be true if unique_item is true' do
@@ -179,7 +179,7 @@ RSpec.describe Canonical::MiscItem, type: :model do
         model.rare_item = false
         validate
 
-        expect(model.errors[:rare_item]).to include 'must be true if item is unique'
+        expect(model.errors[:rare_item]).to include('must be true if item is unique')
       end
     end
 
@@ -188,7 +188,7 @@ RSpec.describe Canonical::MiscItem, type: :model do
         model.quest_item = nil
         validate
 
-        expect(model.errors[:quest_item]).to include 'must be true or false'
+        expect(model.errors[:quest_item]).to include('must be true or false')
       end
     end
 
@@ -197,7 +197,7 @@ RSpec.describe Canonical::MiscItem, type: :model do
         model.quest_reward = nil
         validate
 
-        expect(model.errors[:quest_reward]).to include 'must be true or false'
+        expect(model.errors[:quest_reward]).to include('must be true or false')
       end
     end
   end
@@ -205,14 +205,14 @@ RSpec.describe Canonical::MiscItem, type: :model do
   describe 'default behavior' do
     it 'upcases the item code' do
       item = create(:canonical_misc_item, item_code: 'abc123')
-      expect(item.reload.item_code).to eq 'ABC123'
+      expect(item.reload.item_code).to eq('ABC123')
     end
   end
 
   describe 'class methods' do
     describe '::unique_identifier' do
       it 'returns ":item_code"' do
-        expect(described_class.unique_identifier).to eq :item_code
+        expect(described_class.unique_identifier).to eq(:item_code)
       end
     end
   end

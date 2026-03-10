@@ -42,7 +42,7 @@ RSpec.describe User, type: :model do
 
       it 'updates the attributes' do
         create_or_update
-        expect(user.reload.photo_url).to eq 'https://example.com/user_images/89'
+        expect(user.reload.photo_url).to eq('https://example.com/user_images/89')
       end
     end
   end
@@ -107,7 +107,7 @@ RSpec.describe User, type: :model do
       user1_list_items = game1.wish_list_items.to_a + game2.wish_list_items.to_a
       user1_list_items.sort!
 
-      expect(wish_list_items).to eq user1_list_items
+      expect(wish_list_items).to eq(user1_list_items)
     end
   end
 
@@ -125,7 +125,7 @@ RSpec.describe User, type: :model do
       user1_list_items = game1.inventory_items.to_a + game2.inventory_items.to_a
       user1_list_items.sort!
 
-      expect(inventory_items).to eq user1_list_items
+      expect(inventory_items).to eq(user1_list_items)
     end
   end
 end

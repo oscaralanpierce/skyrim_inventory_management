@@ -11,7 +11,7 @@ RSpec.describe Service::Result do
     describe 'status' do
       it 'raises a NotImplementedError on the base class' do
         expect { result.status }
-          .to raise_error NotImplementedError
+          .to raise_error(NotImplementedError)
       end
     end
 
@@ -43,7 +43,7 @@ RSpec.describe Service::Result do
       let(:options) { {} }
 
       it 'sets the resource to nil' do
-        expect(result.resource).to be nil
+        expect(result.resource).to be(nil)
       end
     end
 
@@ -55,7 +55,7 @@ RSpec.describe Service::Result do
       end
 
       it 'sets the errors array to a flattened value' do
-        expect(result.errors).to eq %w[foo bar baz qux]
+        expect(result.errors).to eq(%w[foo bar baz qux])
       end
     end
 
@@ -67,7 +67,7 @@ RSpec.describe Service::Result do
       end
 
       it 'sets the errors to an array' do
-        expect(result.errors).to eq %w[foobar]
+        expect(result.errors).to eq(%w[foobar])
       end
     end
 
@@ -75,7 +75,7 @@ RSpec.describe Service::Result do
       let(:options) { {} }
 
       it 'sets the errors to an empty array' do
-        expect(result.errors).to eq []
+        expect(result.errors).to eq([])
       end
     end
   end

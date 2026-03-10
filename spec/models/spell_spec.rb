@@ -12,7 +12,7 @@ RSpec.describe Spell, type: :model do
       it "can't be blank" do
         spell.name = nil
         validate
-        expect(spell.errors[:name]).to include "can't be blank"
+        expect(spell.errors[:name]).to include("can't be blank")
       end
 
       it 'must be unique' do
@@ -20,7 +20,7 @@ RSpec.describe Spell, type: :model do
         spell.name = 'Clairvoyance'
 
         validate
-        expect(spell.errors[:name]).to include 'must be unique'
+        expect(spell.errors[:name]).to include('must be unique')
       end
     end
 
@@ -28,13 +28,13 @@ RSpec.describe Spell, type: :model do
       it "can't be blank" do
         spell.school = nil
         validate
-        expect(spell.errors[:school]).to include "can't be blank"
+        expect(spell.errors[:school]).to include("can't be blank")
       end
 
       it 'must be a valid school of magic' do
         spell.school = 'Alternation'
         validate
-        expect(spell.errors[:school]).to include 'must be a valid school of magic'
+        expect(spell.errors[:school]).to include('must be a valid school of magic')
       end
     end
 
@@ -42,13 +42,13 @@ RSpec.describe Spell, type: :model do
       it "can't be blank" do
         spell.level = nil
         validate
-        expect(spell.errors[:level]).to include "can't be blank"
+        expect(spell.errors[:level]).to include("can't be blank")
       end
 
       it 'must be a valid level' do
         spell.level = 'Legendary'
         validate
-        expect(spell.errors[:level]).to include 'must be "Novice", "Apprentice", "Adept", "Expert", or "Master"'
+        expect(spell.errors[:level]).to include('must be "Novice", "Apprentice", "Adept", "Expert", or "Master"')
       end
     end
 
@@ -56,7 +56,7 @@ RSpec.describe Spell, type: :model do
       it "can't be blank" do
         spell.description = nil
         validate
-        expect(spell.errors[:description]).to include "can't be blank"
+        expect(spell.errors[:description]).to include("can't be blank")
       end
     end
 
@@ -78,19 +78,19 @@ RSpec.describe Spell, type: :model do
       it 'is invalid with a strength but no strength_unit' do
         spell.strength = 50
         validate
-        expect(spell.errors[:strength_unit]).to include 'must be present if strength is given'
+        expect(spell.errors[:strength_unit]).to include('must be present if strength is given')
       end
 
       it 'is invalid with a strength_unit but no strength' do
         spell.strength_unit = 'percentage'
         validate
-        expect(spell.errors[:strength]).to include 'must be present if strength unit is given'
+        expect(spell.errors[:strength]).to include('must be present if strength unit is given')
       end
 
       it 'requires a valid strength_unit value' do
         spell.strength_unit = 'foo'
         validate
-        expect(spell.errors[:strength_unit]).to include 'must be "point", "percentage", or the "level" of affected targets'
+        expect(spell.errors[:strength_unit]).to include('must be "point", "percentage", or the "level" of affected targets')
       end
     end
 
@@ -98,13 +98,13 @@ RSpec.describe Spell, type: :model do
       it "can't be blank" do
         spell.add_on = nil
         validate
-        expect(spell.errors[:add_on]).to include "can't be blank"
+        expect(spell.errors[:add_on]).to include("can't be blank")
       end
 
       it 'must be a supported add-on' do
         spell.add_on = 'fishing'
         validate
-        expect(spell.errors[:add_on]).to include 'must be a SIM-supported add-on or DLC'
+        expect(spell.errors[:add_on]).to include('must be a SIM-supported add-on or DLC')
       end
     end
   end
@@ -114,7 +114,7 @@ RSpec.describe Spell, type: :model do
       subject(:unique_identifier) { described_class.unique_identifier }
 
       it 'returns :name' do
-        expect(unique_identifier).to eq :name
+        expect(unique_identifier).to eq(:name)
       end
     end
   end

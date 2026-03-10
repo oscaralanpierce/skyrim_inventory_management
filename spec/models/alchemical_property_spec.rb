@@ -12,7 +12,7 @@ RSpec.describe AlchemicalProperty, type: :model do
       it "can't be blank" do
         model.name = nil
         validate
-        expect(model.errors[:name]).to include "can't be blank"
+        expect(model.errors[:name]).to include("can't be blank")
       end
 
       it 'must be unique' do
@@ -21,7 +21,7 @@ RSpec.describe AlchemicalProperty, type: :model do
 
         validate
 
-        expect(model.errors[:name]).to include 'must be unique'
+        expect(model.errors[:name]).to include('must be unique')
       end
     end
 
@@ -29,7 +29,7 @@ RSpec.describe AlchemicalProperty, type: :model do
       it "can't be blank" do
         model.description = nil
         validate
-        expect(model.errors[:description]).to include "can't be blank"
+        expect(model.errors[:description]).to include("can't be blank")
       end
     end
 
@@ -43,7 +43,7 @@ RSpec.describe AlchemicalProperty, type: :model do
       it 'must be one of "point" or "percentage"' do
         model.strength_unit = 'foobar'
         validate
-        expect(model.errors[:strength_unit]).to include 'must be "point", "percentage", or the "level" of affected targets'
+        expect(model.errors[:strength_unit]).to include('must be "point", "percentage", or the "level" of affected targets')
       end
     end
 
@@ -61,13 +61,13 @@ RSpec.describe AlchemicalProperty, type: :model do
       it "can't be blank" do
         model.effect_type = nil
         validate
-        expect(model.errors[:effect_type]).to include "can't be blank"
+        expect(model.errors[:effect_type]).to include("can't be blank")
       end
 
       it "can't be another value" do
         model.effect_type = 'mixed'
         validate
-        expect(model.errors[:effect_type]).to include 'must be "potion" or "poison"'
+        expect(model.errors[:effect_type]).to include('must be "potion" or "poison"')
       end
     end
 
@@ -75,13 +75,13 @@ RSpec.describe AlchemicalProperty, type: :model do
       it "can't be blank" do
         model.add_on = nil
         validate
-        expect(model.errors[:add_on]).to include "can't be blank"
+        expect(model.errors[:add_on]).to include("can't be blank")
       end
 
       it 'must be a SIM-supported add-on' do
         model.add_on = 'fishing'
         validate
-        expect(model.errors[:add_on]).to include 'must be a SIM-supported add-on or DLC'
+        expect(model.errors[:add_on]).to include('must be a SIM-supported add-on or DLC')
       end
     end
   end
@@ -89,7 +89,7 @@ RSpec.describe AlchemicalProperty, type: :model do
   describe 'class methods' do
     describe '::unique_identifier' do
       it 'returns :name' do
-        expect(described_class.unique_identifier).to eq :name
+        expect(described_class.unique_identifier).to eq(:name)
       end
     end
   end

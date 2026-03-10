@@ -9,13 +9,13 @@ RSpec.describe ClothingItem, type: :model do
     it 'is invalid without a name' do
       item.name = nil
       item.validate
-      expect(item.errors[:name]).to include "can't be blank"
+      expect(item.errors[:name]).to include("can't be blank")
     end
 
     it 'is invalid with unit weight less than 0' do
       item.unit_weight = -1
       item.validate
-      expect(item.errors[:unit_weight]).to include 'must be greater than or equal to 0'
+      expect(item.errors[:unit_weight]).to include('must be greater than or equal to 0')
     end
 
     describe '#canonical_clothing_item' do
@@ -72,7 +72,7 @@ RSpec.describe ClothingItem, type: :model do
 
           it 'is invalid' do
             item.validate
-            expect(item.errors[:base]).to include 'is a duplicate of a unique in-game item'
+            expect(item.errors[:base]).to include('is a duplicate of a unique in-game item')
           end
         end
       end
@@ -107,13 +107,13 @@ RSpec.describe ClothingItem, type: :model do
 
       it 'assigns the canonical clothing item' do
         validate
-        expect(item.canonical_clothing_item).to eq matching_canonical
+        expect(item.canonical_clothing_item).to eq(matching_canonical)
       end
 
       it 'sets the attributes', :aggregate_failures do
         validate
-        expect(item.name).to eq 'Fine Clothes'
-        expect(item.magical_effects).to eq 'Something'
+        expect(item.name).to eq('Fine Clothes')
+        expect(item.magical_effects).to eq('Something')
       end
     end
 
@@ -137,7 +137,7 @@ RSpec.describe ClothingItem, type: :model do
 
       it "doesn't set other attributes", :aggregate_failures do
         validate
-        expect(item.name).to eq 'Fine clothes'
+        expect(item.name).to eq('Fine clothes')
         expect(item.unit_weight).to be_nil
         expect(item.magical_effects).to be_nil
       end
@@ -148,7 +148,7 @@ RSpec.describe ClothingItem, type: :model do
 
       it 'is invalid' do
         validate
-        expect(item.errors[:base]).to include "doesn't match any item that exists in Skyrim"
+        expect(item.errors[:base]).to include("doesn't match any item that exists in Skyrim")
       end
     end
 
@@ -201,8 +201,8 @@ RSpec.describe ClothingItem, type: :model do
 
           validate
 
-          expect(item.name).to eq 'Roughspun Tunic'
-          expect(item.unit_weight).to eq 5
+          expect(item.name).to eq('Roughspun Tunic')
+          expect(item.unit_weight).to eq(5)
         end
 
         it 'removes automatically added enchantments', :aggregate_failures do
@@ -212,7 +212,7 @@ RSpec.describe ClothingItem, type: :model do
           validate
           item.enchantables_enchantments.reload
 
-          expect(item.enchantables_enchantments.count).to eq 1
+          expect(item.enchantables_enchantments.count).to eq(1)
           expect(item.enchantables_enchantments.pluck(:added_automatically)).to be_all(false)
         end
       end
@@ -242,7 +242,7 @@ RSpec.describe ClothingItem, type: :model do
 
           validate
 
-          expect(item.name).to eq 'roughspun tunic'
+          expect(item.name).to eq('roughspun tunic')
           expect(item.unit_weight).to be_nil
         end
 
@@ -253,7 +253,7 @@ RSpec.describe ClothingItem, type: :model do
           validate
           item.enchantables_enchantments.reload
 
-          expect(item.enchantables_enchantments.count).to eq 1
+          expect(item.enchantables_enchantments.count).to eq(1)
           expect(item.enchantables_enchantments.pluck(:added_automatically)).to be_all(false)
         end
       end
@@ -275,7 +275,7 @@ RSpec.describe ClothingItem, type: :model do
           validate
           item.enchantables_enchantments.reload
 
-          expect(item.enchantables_enchantments.count).to eq 1
+          expect(item.enchantables_enchantments.count).to eq(1)
           expect(item.enchantables_enchantments.pluck(:added_automatically)).to be_all(false)
         end
       end
@@ -305,7 +305,7 @@ RSpec.describe ClothingItem, type: :model do
 
         it 'adds enchantments from the canonical model' do
           item.save!
-          expect(item.enchantments.length).to eq 2
+          expect(item.enchantments.length).to eq(2)
         end
 
         it 'sets "added_automatically" to true on new associations' do
@@ -322,7 +322,7 @@ RSpec.describe ClothingItem, type: :model do
               model.enchantment == join_model.enchantment && model.strength == join_model.strength
             end
 
-            expect(has_matching).to be true
+            expect(has_matching).to be(true)
           end
         end
       end
@@ -339,14 +339,14 @@ RSpec.describe ClothingItem, type: :model do
 
         it "doesn't remove the existing enchantments" do
           item.save!
-          expect(item.enchantments.reload.length).to eq 4
+          expect(item.enchantments.reload.length).to eq(4)
         end
 
         it 'sets "added_automatically" only on the new associations' do
           item.save!
 
           expect(item.enchantables_enchantments.pluck(:added_automatically))
-            .to eq [true, true, false, false]
+            .to eq([true, true, false, false])
         end
       end
     end
@@ -386,7 +386,7 @@ RSpec.describe ClothingItem, type: :model do
         let(:item) { build(:clothing_item, unit_weight: nil) }
 
         it 'returns all matching items' do
-          expect(canonical_models).to eq matching_canonicals
+          expect(canonical_models).to eq(matching_canonicals)
         end
       end
 
@@ -400,7 +400,7 @@ RSpec.describe ClothingItem, type: :model do
         end
 
         it 'returns only the items for which all values match' do
-          expect(canonical_models).to eq matching_canonicals
+          expect(canonical_models).to eq(matching_canonicals)
         end
       end
 
@@ -495,7 +495,7 @@ RSpec.describe ClothingItem, type: :model do
         expect { add_enchantment }
           .to raise_error(ActiveRecord::RecordInvalid)
 
-        expect(item.enchantments.reload.length).to eq 0
+        expect(item.enchantments.reload.length).to eq(0)
       end
     end
 
@@ -520,7 +520,7 @@ RSpec.describe ClothingItem, type: :model do
 
       it 'adds missing enchantments' do
         add_enchantment
-        expect(item.enchantments.reload.length).to eq 2
+        expect(item.enchantments.reload.length).to eq(2)
       end
     end
 
@@ -536,7 +536,7 @@ RSpec.describe ClothingItem, type: :model do
 
       it "doesn't add additional enchantments" do
         add_enchantment
-        expect(item.enchantments.reload.length).to eq 1
+        expect(item.enchantments.reload.length).to eq(1)
       end
     end
   end

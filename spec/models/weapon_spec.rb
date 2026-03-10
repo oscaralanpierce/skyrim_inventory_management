@@ -11,25 +11,25 @@ RSpec.describe Weapon, type: :model do
     it 'is invalid without a name' do
       weapon.name = nil
       validate
-      expect(weapon.errors[:name]).to include "can't be blank"
+      expect(weapon.errors[:name]).to include("can't be blank")
     end
 
     it 'is invalid with an invalid category name' do
       weapon.category = 'foo'
       validate
-      expect(weapon.errors[:category]).to include 'must be "one-handed", "two-handed", or "archery"'
+      expect(weapon.errors[:category]).to include('must be "one-handed", "two-handed", or "archery"')
     end
 
     it 'is invalid with an invalid weapon type' do
       weapon.weapon_type = 'foo'
       validate
-      expect(weapon.errors[:weapon_type]).to include 'must be a valid type of weapon that occurs in Skyrim'
+      expect(weapon.errors[:weapon_type]).to include('must be a valid type of weapon that occurs in Skyrim')
     end
 
     it 'is invalid with a negative unit weight' do
       weapon.unit_weight = -0.5
       validate
-      expect(weapon.errors[:unit_weight]).to include 'must be greater than or equal to 0'
+      expect(weapon.errors[:unit_weight]).to include('must be greater than or equal to 0')
     end
 
     describe 'canonical weapon validations' do
@@ -86,7 +86,7 @@ RSpec.describe Weapon, type: :model do
 
           it 'is invalid' do
             validate
-            expect(weapon.errors[:base]).to include 'is a duplicate of a unique in-game item'
+            expect(weapon.errors[:base]).to include('is a duplicate of a unique in-game item')
           end
         end
       end
@@ -100,7 +100,7 @@ RSpec.describe Weapon, type: :model do
       let(:weapon) { create(:weapon, :with_matching_canonical) }
 
       it 'returns the canonical weapon' do
-        expect(canonical_model).to eq weapon.canonical_weapon
+        expect(canonical_model).to eq(weapon.canonical_weapon)
       end
     end
 
@@ -267,11 +267,11 @@ RSpec.describe Weapon, type: :model do
 
         it 'sets values on the weapon model', :aggregate_failures do
           validate
-          expect(weapon.name).to eq matching_canonical.name
-          expect(weapon.category).to eq matching_canonical.category
-          expect(weapon.weapon_type).to eq matching_canonical.weapon_type
-          expect(weapon.unit_weight).to eq matching_canonical.unit_weight
-          expect(weapon.magical_effects).to eq matching_canonical.magical_effects
+          expect(weapon.name).to eq(matching_canonical.name)
+          expect(weapon.category).to eq(matching_canonical.category)
+          expect(weapon.weapon_type).to eq(matching_canonical.weapon_type)
+          expect(weapon.unit_weight).to eq(matching_canonical.unit_weight)
+          expect(weapon.magical_effects).to eq(matching_canonical.magical_effects)
         end
 
         it "doesn't set enchantments" do
@@ -317,16 +317,16 @@ RSpec.describe Weapon, type: :model do
 
         it 'assigns the canonical_weapon' do
           validate
-          expect(weapon.canonical_weapon).to eq canonicals.first
+          expect(weapon.canonical_weapon).to eq(canonicals.first)
         end
 
         it 'sets values on the weapon model', :aggregate_failures do
           validate
-          expect(weapon.name).to eq canonicals.first.name
-          expect(weapon.category).to eq canonicals.first.category
-          expect(weapon.weapon_type).to eq canonicals.first.weapon_type
-          expect(weapon.unit_weight).to eq canonicals.first.unit_weight
-          expect(weapon.magical_effects).to eq canonicals.first.magical_effects
+          expect(weapon.name).to eq(canonicals.first.name)
+          expect(weapon.category).to eq(canonicals.first.category)
+          expect(weapon.weapon_type).to eq(canonicals.first.weapon_type)
+          expect(weapon.unit_weight).to eq(canonicals.first.unit_weight)
+          expect(weapon.magical_effects).to eq(canonicals.first.magical_effects)
         end
       end
     end
@@ -346,7 +346,7 @@ RSpec.describe Weapon, type: :model do
 
         it "doesn't set values", :aggregate_failures do
           validate
-          expect(weapon.name).to eq 'foobar'
+          expect(weapon.name).to eq('foobar')
           expect(weapon.category).to be_nil
           expect(weapon.weapon_type).to be_nil
           expect(weapon.unit_weight).to be_nil
@@ -370,7 +370,7 @@ RSpec.describe Weapon, type: :model do
 
           it "doesn't set values", :aggregate_failures do
             validate
-            expect(weapon.name).to eq 'foobar'
+            expect(weapon.name).to eq('foobar')
             expect(weapon.category).to be_nil
             expect(weapon.weapon_type).to be_nil
             expect(weapon.unit_weight).to be_nil
@@ -416,7 +416,7 @@ RSpec.describe Weapon, type: :model do
 
           it "doesn't set values", :aggregate_failures do
             validate
-            expect(weapon.name).to eq 'foobar'
+            expect(weapon.name).to eq('foobar')
             expect(weapon.category).to be_nil
             expect(weapon.weapon_type).to be_nil
             expect(weapon.unit_weight).to be_nil
@@ -445,7 +445,7 @@ RSpec.describe Weapon, type: :model do
 
       it 'adds an error' do
         validate
-        expect(weapon.errors[:base]).to include "doesn't match any item that exists in Skyrim"
+        expect(weapon.errors[:base]).to include("doesn't match any item that exists in Skyrim")
       end
     end
 
@@ -504,10 +504,10 @@ RSpec.describe Weapon, type: :model do
 
           validate
 
-          expect(weapon.name).to eq 'Elven Battleaxe of Shocks'
-          expect(weapon.unit_weight).to eq 24
-          expect(weapon.weapon_type).to eq 'battleaxe'
-          expect(weapon.category).to eq 'two-handed'
+          expect(weapon.name).to eq('Elven Battleaxe of Shocks')
+          expect(weapon.unit_weight).to eq(24)
+          expect(weapon.weapon_type).to eq('battleaxe')
+          expect(weapon.category).to eq('two-handed')
         end
 
         it 'removes automatically added enchantments', :aggregate_failures do
@@ -519,7 +519,7 @@ RSpec.describe Weapon, type: :model do
           validate
           weapon.enchantables_enchantments.reload
 
-          expect(weapon.enchantables_enchantments.count).to eq 1
+          expect(weapon.enchantables_enchantments.count).to eq(1)
           expect(weapon.enchantables_enchantments.pluck(:added_automatically)).to be_all(false)
         end
       end
@@ -546,7 +546,7 @@ RSpec.describe Weapon, type: :model do
 
           validate
 
-          expect(weapon.name).to eq 'iron mace of burning'
+          expect(weapon.name).to eq('iron mace of burning')
         end
 
         it 'removes automatically-added enchantments', :aggregate_failures do
@@ -555,7 +555,7 @@ RSpec.describe Weapon, type: :model do
           validate
           weapon.enchantables_enchantments.reload
 
-          expect(weapon.enchantables_enchantments.count).to eq 1
+          expect(weapon.enchantables_enchantments.count).to eq(1)
           expect(weapon.enchantables_enchantments.pluck(:added_automatically)).to be_all(false)
         end
       end
@@ -575,7 +575,7 @@ RSpec.describe Weapon, type: :model do
           validate
           weapon.enchantables_enchantments.reload
 
-          expect(weapon.enchantables_enchantments.count).to eq 1
+          expect(weapon.enchantables_enchantments.count).to eq(1)
           expect(weapon.enchantables_enchantments.pluck(:added_automatically)).to be_all(false)
         end
       end
@@ -602,7 +602,7 @@ RSpec.describe Weapon, type: :model do
 
         it 'adds enchantments from the canonical weapon' do
           weapon.save!
-          expect(weapon.enchantments.length).to eq 2
+          expect(weapon.enchantments.length).to eq(2)
         end
 
         it 'sets "added_automatically" to true on new associations' do
@@ -619,7 +619,7 @@ RSpec.describe Weapon, type: :model do
               model.enchantment == join_model.enchantment && model.strength == join_model.strength
             end
 
-            expect(has_matching).to be true
+            expect(has_matching).to be(true)
           end
         end
       end
@@ -634,12 +634,12 @@ RSpec.describe Weapon, type: :model do
         end
 
         it "doesn't remove the existing enchantments" do
-          expect(weapon.enchantments.reload.length).to eq 4
+          expect(weapon.enchantments.reload.length).to eq(4)
         end
 
         it 'sets "added_automatically" only on the new associations' do
           expect(weapon.enchantables_enchantments.pluck(:added_automatically))
-            .to eq [true, true, false, false]
+            .to eq([true, true, false, false])
         end
       end
     end
@@ -680,7 +680,7 @@ RSpec.describe Weapon, type: :model do
         end
 
         it 'returns the crafting materials for the canonical' do
-          expect(crafting_materials).to eq canonical_weapon.crafting_materials
+          expect(crafting_materials).to eq(canonical_weapon.crafting_materials)
         end
       end
 
@@ -715,7 +715,7 @@ RSpec.describe Weapon, type: :model do
         end
 
         it 'returns the tempering materials for the canonical' do
-          expect(tempering_materials).to eq canonical_weapon.tempering_materials
+          expect(tempering_materials).to eq(canonical_weapon.tempering_materials)
         end
       end
 
@@ -759,7 +759,7 @@ RSpec.describe Weapon, type: :model do
         expect { add_enchantment }
           .to raise_error(ActiveRecord::RecordInvalid)
 
-        expect(weapon.enchantments.reload.length).to eq 0
+        expect(weapon.enchantments.reload.length).to eq(0)
       end
     end
 
@@ -784,7 +784,7 @@ RSpec.describe Weapon, type: :model do
 
       it 'adds missing enchantments' do
         add_enchantment
-        expect(weapon.enchantments.reload.length).to eq 2
+        expect(weapon.enchantments.reload.length).to eq(2)
       end
     end
 
@@ -800,7 +800,7 @@ RSpec.describe Weapon, type: :model do
 
       it "doesn't add additional enchantments" do
         add_enchantment
-        expect(weapon.enchantments.reload.length).to eq 1
+        expect(weapon.enchantments.reload.length).to eq(1)
       end
     end
   end

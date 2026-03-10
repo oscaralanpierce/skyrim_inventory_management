@@ -39,10 +39,10 @@ RSpec.describe Canonical::Sync::JewelryItems do
 
         it 'creates the associations to enchantments where they exist', :aggregate_failures do
           perform
-          expect(Canonical::JewelryItem.find_by(item_code: '00094E3E').enchantments.length).to eq 1
-          expect(Canonical::JewelryItem.find_by(item_code: '000F5A1D').enchantments.length).to eq 0
-          expect(Canonical::JewelryItem.find_by(item_code: '000DA735').enchantments.length).to eq 0
-          expect(Canonical::JewelryItem.find_by(item_code: 'XX01AA0B').enchantments.length).to eq 0
+          expect(Canonical::JewelryItem.find_by(item_code: '00094E3E').enchantments.length).to eq(1)
+          expect(Canonical::JewelryItem.find_by(item_code: '000F5A1D').enchantments.length).to eq(0)
+          expect(Canonical::JewelryItem.find_by(item_code: '000DA735').enchantments.length).to eq(0)
+          expect(Canonical::JewelryItem.find_by(item_code: 'XX01AA0B').enchantments.length).to eq(0)
         end
       end
 
@@ -63,7 +63,7 @@ RSpec.describe Canonical::Sync::JewelryItems do
 
         it 'updates models that were already in the database' do
           perform
-          expect(item_in_json.reload.jewelry_type).to eq 'amulet'
+          expect(item_in_json.reload.jewelry_type).to eq('amulet')
         end
 
         it "removes models in the database that aren't in the JSON data" do
@@ -80,7 +80,7 @@ RSpec.describe Canonical::Sync::JewelryItems do
 
         it 'adds associations if they exist' do
           perform
-          expect(item_in_json.enchantments.length).to eq 1
+          expect(item_in_json.enchantments.length).to eq(1)
         end
       end
 
@@ -96,7 +96,7 @@ RSpec.describe Canonical::Sync::JewelryItems do
           expect(Rails.logger)
             .to have_received(:error)
                   .with('Prerequisite(s) not met: sync Enchantment before canonical jewelry items')
-          expect(Canonical::JewelryItem.count).to eq 0
+          expect(Canonical::JewelryItem.count).to eq(0)
         end
       end
 
@@ -111,7 +111,7 @@ RSpec.describe Canonical::Sync::JewelryItems do
 
         it 'logs a validation error', :aggregate_failures do
           expect { perform }
-            .to raise_error ActiveRecord::RecordInvalid
+            .to raise_error(ActiveRecord::RecordInvalid)
 
           expect(Rails.logger)
             .to have_received(:error)
@@ -138,7 +138,7 @@ RSpec.describe Canonical::Sync::JewelryItems do
 
       it 'updates models found in the JSON data' do
         perform
-        expect(item_in_json.reload.jewelry_type).to eq 'amulet'
+        expect(item_in_json.reload.jewelry_type).to eq('amulet')
       end
 
       it 'adds models not already in the database', :aggregate_failures do

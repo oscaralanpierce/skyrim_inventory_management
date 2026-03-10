@@ -13,7 +13,7 @@ RSpec.describe Service::CreatedResult do
 
   describe '#status' do
     it 'is :created' do
-      expect(result.status).to eq :created
+      expect(result.status).to eq(:created)
     end
   end
 end

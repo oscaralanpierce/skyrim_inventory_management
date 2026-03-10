@@ -20,7 +20,7 @@ RSpec.describe IngredientsAlchemicalProperty, type: :model do
           new_association = build(:ingredients_alchemical_property, ingredient:)
 
           new_association.validate
-          expect(new_association.errors[:ingredient]).to include 'already has 4 alchemical properties'
+          expect(new_association.errors[:ingredient]).to include('already has 4 alchemical properties')
         end
       end
 
@@ -73,7 +73,7 @@ RSpec.describe IngredientsAlchemicalProperty, type: :model do
               model.ingredient = new_ingredient
               model.validate
 
-              expect(model.errors[:ingredient]).to include 'already has 4 alchemical properties'
+              expect(model.errors[:ingredient]).to include('already has 4 alchemical properties')
             end
           end
         end
@@ -132,7 +132,7 @@ RSpec.describe IngredientsAlchemicalProperty, type: :model do
 
         it 'is invalid' do
           model.validate
-          expect(model.errors[:base]).to include 'is not consistent with any ingredient that exists in Skyrim'
+          expect(model.errors[:base]).to include('is not consistent with any ingredient that exists in Skyrim')
         end
       end
     end
@@ -148,21 +148,21 @@ RSpec.describe IngredientsAlchemicalProperty, type: :model do
         model = build(:ingredients_alchemical_property, priority: 0)
 
         model.validate
-        expect(model.errors[:priority]).to include 'must be greater than or equal to 1'
+        expect(model.errors[:priority]).to include('must be greater than or equal to 1')
       end
 
       it "can't be more than 4" do
         model = build(:ingredients_alchemical_property, priority: 5)
 
         model.validate
-        expect(model.errors[:priority]).to include 'must be less than or equal to 4'
+        expect(model.errors[:priority]).to include('must be less than or equal to 4')
       end
 
       it 'must be an integer' do
         model = build(:ingredients_alchemical_property, priority: 3.2)
 
         model.validate
-        expect(model.errors[:priority]).to include 'must be an integer'
+        expect(model.errors[:priority]).to include('must be an integer')
       end
 
       describe 'uniqueness' do
@@ -183,7 +183,7 @@ RSpec.describe IngredientsAlchemicalProperty, type: :model do
           )
 
           model.validate
-          expect(model.errors[:priority]).to include 'must be unique per ingredient'
+          expect(model.errors[:priority]).to include('must be unique per ingredient')
         end
 
         it "doesn't have to be globally unique" do
@@ -205,7 +205,7 @@ RSpec.describe IngredientsAlchemicalProperty, type: :model do
         )
 
         model.validate
-        expect(model.errors[:alchemical_property_id]).to include 'must form a unique combination with ingredient'
+        expect(model.errors[:alchemical_property_id]).to include('must form a unique combination with ingredient')
       end
 
       it "doesn't have to be globally unique" do
@@ -300,7 +300,7 @@ RSpec.describe IngredientsAlchemicalProperty, type: :model do
       end
 
       it 'returns the model' do
-        expect(canonical_model).to eq canonical_ingredient.canonical_ingredients_alchemical_properties.second
+        expect(canonical_model).to eq(canonical_ingredient.canonical_ingredients_alchemical_properties.second)
       end
     end
 
@@ -354,13 +354,13 @@ RSpec.describe IngredientsAlchemicalProperty, type: :model do
         end
 
         it "returns the canonical model's strength_modifier" do
-          expect(strength_modifier).to eq 1.3
+          expect(strength_modifier).to eq(1.3)
         end
       end
 
       context 'when the canonical model does not have a strength_modifier set' do
         it 'returns 1' do
-          expect(strength_modifier).to eq 1
+          expect(strength_modifier).to eq(1)
         end
       end
     end
@@ -420,13 +420,13 @@ RSpec.describe IngredientsAlchemicalProperty, type: :model do
         end
 
         it "returns the canonical model's duration_modifier" do
-          expect(duration_modifier).to eq 1.3
+          expect(duration_modifier).to eq(1.3)
         end
       end
 
       context 'when the canonical model does not have a duration_modifier set' do
         it 'returns 1' do
-          expect(duration_modifier).to eq 1
+          expect(duration_modifier).to eq(1)
         end
       end
     end
@@ -501,7 +501,7 @@ RSpec.describe IngredientsAlchemicalProperty, type: :model do
 
       it 'sets values from the canonical model', :aggregate_failures do
         model.validate
-        expect(model.priority).to eq 3
+        expect(model.priority).to eq(3)
       end
     end
 
@@ -528,7 +528,7 @@ RSpec.describe IngredientsAlchemicalProperty, type: :model do
 
       it "doesn't set values", :aggregate_failures do
         model.validate
-        expect(model.priority).not_to eq 3
+        expect(model.priority).not_to eq(3)
       end
     end
   end

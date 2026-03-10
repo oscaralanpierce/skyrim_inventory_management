@@ -42,10 +42,10 @@ RSpec.describe Canonical::Sync::ClothingItems do
 
         it 'creates the associations to enchantments where they exist', :aggregate_failures do
           perform
-          expect(Canonical::ClothingItem.find_by(item_code: '0010DD3C').enchantments.length).to eq 1
-          expect(Canonical::ClothingItem.find_by(item_code: '0010D670').enchantments.length).to eq 2
-          expect(Canonical::ClothingItem.find_by(item_code: '00088956').enchantments.length).to eq 0
-          expect(Canonical::ClothingItem.find_by(item_code: '00088958').enchantments.length).to eq 0
+          expect(Canonical::ClothingItem.find_by(item_code: '0010DD3C').enchantments.length).to eq(1)
+          expect(Canonical::ClothingItem.find_by(item_code: '0010D670').enchantments.length).to eq(2)
+          expect(Canonical::ClothingItem.find_by(item_code: '00088956').enchantments.length).to eq(0)
+          expect(Canonical::ClothingItem.find_by(item_code: '00088958').enchantments.length).to eq(0)
         end
       end
 
@@ -66,7 +66,7 @@ RSpec.describe Canonical::Sync::ClothingItems do
 
         it 'updates models that were already in the database' do
           perform
-          expect(item_in_json.reload.body_slot).to eq 'head'
+          expect(item_in_json.reload.body_slot).to eq('head')
         end
 
         it "removes models in the database that aren't in the JSON data" do
@@ -92,8 +92,8 @@ RSpec.describe Canonical::Sync::ClothingItems do
 
         it 'adds enchantments if they exist', :aggregate_failures do
           perform
-          expect(item_in_json.enchantments.first.name).to eq 'Fortify Magicka'
-          expect(item_in_json.enchantments.length).to eq 1
+          expect(item_in_json.enchantments.first.name).to eq('Fortify Magicka')
+          expect(item_in_json.enchantments.length).to eq(1)
         end
       end
 
@@ -110,7 +110,7 @@ RSpec.describe Canonical::Sync::ClothingItems do
             .to have_received(:error)
                   .with('Prerequisite(s) not met: sync Enchantment before canonical clothing items')
 
-          expect(Canonical::ClothingItem.count).to eq 0
+          expect(Canonical::ClothingItem.count).to eq(0)
         end
       end
 
@@ -125,7 +125,7 @@ RSpec.describe Canonical::Sync::ClothingItems do
 
         it 'logs a validation error', :aggregate_failures do
           expect { perform }
-            .to raise_error ActiveRecord::RecordInvalid
+            .to raise_error(ActiveRecord::RecordInvalid)
 
           expect(Rails.logger)
             .to have_received(:error)
@@ -158,7 +158,7 @@ RSpec.describe Canonical::Sync::ClothingItems do
 
       it 'updates models found in the JSON data' do
         perform
-        expect(item_in_json.reload.body_slot).to eq 'head'
+        expect(item_in_json.reload.body_slot).to eq('head')
       end
 
       it 'adds models not already in the database', :aggregate_failures do

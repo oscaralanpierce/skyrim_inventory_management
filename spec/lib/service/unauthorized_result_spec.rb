@@ -7,7 +7,7 @@ RSpec.describe Service::UnauthorizedResult do
 
   describe '#status' do
     it 'is :unauthorized' do
-      expect(result.status).to eq :unauthorized
+      expect(result.status).to eq(:unauthorized)
     end
   end
 end

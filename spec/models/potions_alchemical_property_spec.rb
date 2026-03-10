@@ -19,7 +19,7 @@ RSpec.describe PotionsAlchemicalProperty, type: :model do
       it 'is invalid with a non-unique combination of potion and alchemical property' do
         non_unique_model.validate
         expect(non_unique_model.errors[:alchemical_property_id])
-          .to include 'must form a unique combination with potion'
+          .to include('must form a unique combination with potion')
       end
     end
 
@@ -36,7 +36,7 @@ RSpec.describe PotionsAlchemicalProperty, type: :model do
         model.validate
 
         expect(model.errors[:strength])
-          .to include 'is not a number'
+          .to include('is not a number')
       end
 
       it 'is invalid with a non-integer strength' do
@@ -44,7 +44,7 @@ RSpec.describe PotionsAlchemicalProperty, type: :model do
         model.validate
 
         expect(model.errors[:strength])
-          .to include 'must be an integer'
+          .to include('must be an integer')
       end
 
       it 'is invalid with a strength of 0 or less' do
@@ -52,7 +52,7 @@ RSpec.describe PotionsAlchemicalProperty, type: :model do
         model.validate
 
         expect(model.errors[:strength])
-          .to include 'must be greater than 0'
+          .to include('must be greater than 0')
       end
     end
 
@@ -69,7 +69,7 @@ RSpec.describe PotionsAlchemicalProperty, type: :model do
         model.validate
 
         expect(model.errors[:duration])
-          .to include 'is not a number'
+          .to include('is not a number')
       end
 
       it 'is invalid with a non-integer duration' do
@@ -77,7 +77,7 @@ RSpec.describe PotionsAlchemicalProperty, type: :model do
         model.validate
 
         expect(model.errors[:duration])
-          .to include 'must be an integer'
+          .to include('must be an integer')
       end
 
       it 'is invalid with a duration of 0 or less' do
@@ -85,7 +85,7 @@ RSpec.describe PotionsAlchemicalProperty, type: :model do
         model.validate
 
         expect(model.errors[:duration])
-          .to include 'must be greater than 0'
+          .to include('must be greater than 0')
       end
     end
 
@@ -159,7 +159,7 @@ RSpec.describe PotionsAlchemicalProperty, type: :model do
         it 'is invalid' do
           model.validate
 
-          expect(model.errors[:potion]).to include 'can have a maximum of 4 effects'
+          expect(model.errors[:potion]).to include('can have a maximum of 4 effects')
         end
       end
     end

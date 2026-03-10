@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-require 'service/ok_result'
 require 'service/not_found_result'
+require 'service/ok_result'
 
 class InventoryListsController < ApplicationController
   class IndexService

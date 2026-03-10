@@ -2,10 +2,10 @@
 
 require 'rails_helper'
 require 'service/created_result'
-require 'service/ok_result'
-require 'service/not_found_result'
-require 'service/method_not_allowed_result'
 require 'service/internal_server_error_result'
+require 'service/method_not_allowed_result'
+require 'service/not_found_result'
+require 'service/ok_result'
 
 RSpec.describe InventoryItemsController::CreateService do
   describe '#perform' do
@@ -36,7 +36,7 @@ RSpec.describe InventoryItemsController::CreateService do
           end
 
           it 'sets the new and aggregate list items as the resource' do
-            expect(perform.resource).to eq [aggregate_list.list_items.last, inventory_list.list_items.last]
+            expect(perform.resource).to eq([aggregate_list.list_items.last, inventory_list.list_items.last])
           end
         end
 
@@ -56,7 +56,7 @@ RSpec.describe InventoryItemsController::CreateService do
 
             it 'updates the item on the aggregate list', :aggregate_failures do
               perform
-              expect(aggregate_list.list_items.first.quantity).to eq 3
+              expect(aggregate_list.list_items.first.quantity).to eq(3)
               expect(aggregate_list.list_items.first.notes).to be_nil
             end
 
@@ -79,15 +79,15 @@ RSpec.describe InventoryItemsController::CreateService do
 
             it 'updates the item on the aggregate list', :aggregate_failures do
               perform
-              expect(aggregate_list.list_items.first.quantity).to eq 3
-              expect(aggregate_list.list_items.first.unit_weight).to eq 0.5
+              expect(aggregate_list.list_items.first.quantity).to eq(3)
+              expect(aggregate_list.list_items.first.unit_weight).to eq(0.5)
               expect(aggregate_list.list_items.first.notes).to be_nil
             end
 
             it "updates the other item's unit_weight", :aggregate_failures do
               perform
-              expect(other_item.reload.quantity).to eq 1
-              expect(other_item.reload.unit_weight).to eq 0.5
+              expect(other_item.reload.quantity).to eq(1)
+              expect(other_item.reload.unit_weight).to eq(0.5)
             end
 
             it 'returns a Service::CreatedResult' do
@@ -121,12 +121,12 @@ RSpec.describe InventoryItemsController::CreateService do
 
           it 'combines with the existing item' do
             perform
-            expect(list_item.reload.quantity).to eq 3
+            expect(list_item.reload.quantity).to eq(3)
           end
 
           it 'updates the item on the aggregate list' do
             perform
-            expect(aggregate_list.list_items.first.quantity).to eq 5
+            expect(aggregate_list.list_items.first.quantity).to eq(5)
           end
 
           it 'returns a Service::OkResult' do
@@ -148,20 +148,20 @@ RSpec.describe InventoryItemsController::CreateService do
 
           it 'combines the items', :aggregate_failures do
             perform
-            expect(list_item.reload.quantity).to eq 3
-            expect(list_item.unit_weight).to eq 0.5
+            expect(list_item.reload.quantity).to eq(3)
+            expect(list_item.unit_weight).to eq(0.5)
           end
 
           it 'updates the item on the aggregate list', :aggregate_failures do
             perform
-            expect(aggregate_list.list_items.first.quantity).to eq 5
-            expect(aggregate_list.list_items.first.unit_weight).to eq 0.5
+            expect(aggregate_list.list_items.first.quantity).to eq(5)
+            expect(aggregate_list.list_items.first.unit_weight).to eq(0.5)
           end
 
           it 'updates only the unit_weight on the other item', :aggregate_failures do
             perform
-            expect(other_item.reload.unit_weight).to eq 0.5
-            expect(other_item.quantity).to eq 2
+            expect(other_item.reload.unit_weight).to eq(0.5)
+            expect(other_item.quantity).to eq(2)
           end
 
           it 'returns a Service::OkResult' do
@@ -169,7 +169,7 @@ RSpec.describe InventoryItemsController::CreateService do
           end
 
           it 'returns all the items that have been updated' do
-            expect(perform.resource).to eq [aggregate_list.list_items.first, other_item.reload, list_item.reload]
+            expect(perform.resource).to eq([aggregate_list.list_items.first, other_item.reload, list_item.reload])
           end
         end
       end
@@ -234,7 +234,7 @@ RSpec.describe InventoryItemsController::CreateService do
       end
 
       it 'sets the errors' do
-        expect(perform.errors).to eq ['Cannot manually manage items on an aggregate inventory list']
+        expect(perform.errors).to eq(['Cannot manually manage items on an aggregate inventory list'])
       end
     end
 
@@ -250,7 +250,7 @@ RSpec.describe InventoryItemsController::CreateService do
       end
 
       it 'sets the errors' do
-        expect(perform.errors).to eq ['Something went horribly wrong']
+        expect(perform.errors).to eq(['Something went horribly wrong'])
       end
     end
   end

@@ -1,11 +1,11 @@
 # frozen_string_literal: true
 
 require 'rails_helper'
+require 'service/internal_server_error_result'
+require 'service/method_not_allowed_result'
+require 'service/not_found_result'
 require 'service/ok_result'
 require 'service/unprocessable_entity_result'
-require 'service/not_found_result'
-require 'service/method_not_allowed_result'
-require 'service/internal_server_error_result'
 
 RSpec.describe InventoryListsController::UpdateService do
   describe '#perform' do
@@ -21,7 +21,7 @@ RSpec.describe InventoryListsController::UpdateService do
 
       it 'updates the inventory list' do
         perform
-        expect(inventory_list.reload.title).to eq 'My New Title'
+        expect(inventory_list.reload.title).to eq('My New Title')
       end
 
       it 'returns a Service::OkResult' do
@@ -29,7 +29,7 @@ RSpec.describe InventoryListsController::UpdateService do
       end
 
       it 'sets the resource to the updated inventory list' do
-        expect(perform.resource).to eq inventory_list
+        expect(perform.resource).to eq(inventory_list)
       end
 
       it 'updates the game' do
@@ -126,7 +126,7 @@ RSpec.describe InventoryListsController::UpdateService do
       end
 
       it 'sets the errors' do
-        expect(perform.errors).to eq ['Something went horribly wrong']
+        expect(perform.errors).to eq(['Something went horribly wrong'])
       end
     end
   end

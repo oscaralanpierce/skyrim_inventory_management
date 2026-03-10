@@ -35,15 +35,15 @@ RSpec.describe Canonical::Sync::Books do
 
         it 'populates the models from the JSON file' do
           perform
-          expect(Canonical::Book.count).to eq 4
+          expect(Canonical::Book.count).to eq(4)
         end
 
         it 'creates the associations to canonical ingredients where they exist', :aggregate_failures do
           perform
-          expect(Canonical::Book.find_by(item_code: '0001AFD9').canonical_ingredients.length).to eq 0
-          expect(Canonical::Book.find_by(item_code: '0001ACE5').canonical_ingredients.length).to eq 0
-          expect(Canonical::Book.find_by(item_code: '000F5CB8').canonical_ingredients.length).to eq 2
-          expect(Canonical::Book.find_by(item_code: 'XX030C9A').canonical_ingredients.length).to eq 0
+          expect(Canonical::Book.find_by(item_code: '0001AFD9').canonical_ingredients.length).to eq(0)
+          expect(Canonical::Book.find_by(item_code: '0001ACE5').canonical_ingredients.length).to eq(0)
+          expect(Canonical::Book.find_by(item_code: '000F5CB8').canonical_ingredients.length).to eq(2)
+          expect(Canonical::Book.find_by(item_code: 'XX030C9A').canonical_ingredients.length).to eq(0)
         end
       end
 
@@ -72,7 +72,7 @@ RSpec.describe Canonical::Sync::Books do
 
         it 'updates models that were already in the database' do
           perform
-          expect(book_in_json.reload.title).to eq 'Cure Disease Potion Recipe'
+          expect(book_in_json.reload.title).to eq('Cure Disease Potion Recipe')
         end
 
         it "removes models in the database that aren't in the JSON data" do
@@ -107,7 +107,7 @@ RSpec.describe Canonical::Sync::Books do
 
         it 'adds canonical ingredients if they exist' do
           perform
-          expect(book_in_json.canonical_ingredients.count).to eq 2
+          expect(book_in_json.canonical_ingredients.count).to eq(2)
         end
       end
 
@@ -124,7 +124,7 @@ RSpec.describe Canonical::Sync::Books do
             .to have_received(:error)
                   .with('Prerequisite(s) not met: sync Canonical::Ingredient before canonical books')
 
-          expect(Canonical::Book.count).to eq 0
+          expect(Canonical::Book.count).to eq(0)
         end
       end
 
@@ -138,7 +138,7 @@ RSpec.describe Canonical::Sync::Books do
 
         it 'logs a validation error', :aggregate_failures do
           expect { perform }
-            .to raise_error ActiveRecord::RecordInvalid
+            .to raise_error(ActiveRecord::RecordInvalid)
 
           expect(Rails.logger)
             .to have_received(:error)
@@ -167,7 +167,7 @@ RSpec.describe Canonical::Sync::Books do
 
       it 'updates models found in the JSON data' do
         perform
-        expect(book_in_json.reload.title).to eq 'Cure Disease Potion Recipe'
+        expect(book_in_json.reload.title).to eq('Cure Disease Potion Recipe')
       end
 
       it 'adds models not already in the database', :aggregate_failures do
@@ -184,7 +184,7 @@ RSpec.describe Canonical::Sync::Books do
 
       it "doesn't destroy associations" do
         perform
-        expect(book_in_json.reload.canonical_ingredients.length).to eq 5
+        expect(book_in_json.reload.canonical_ingredients.length).to eq(5)
       end
     end
 

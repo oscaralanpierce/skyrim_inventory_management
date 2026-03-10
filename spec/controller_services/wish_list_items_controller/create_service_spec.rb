@@ -2,10 +2,10 @@
 
 require 'rails_helper'
 require 'service/created_result'
-require 'service/ok_result'
-require 'service/not_found_result'
-require 'service/method_not_allowed_result'
 require 'service/internal_server_error_result'
+require 'service/method_not_allowed_result'
+require 'service/not_found_result'
+require 'service/ok_result'
 
 RSpec.describe WishListItemsController::CreateService do
   describe '#perform' do
@@ -37,7 +37,7 @@ RSpec.describe WishListItemsController::CreateService do
             end
 
             it 'sets the resource to all the changed wish lists' do
-              expect(perform.resource).to eq [aggregate_list, wish_list]
+              expect(perform.resource).to eq([aggregate_list, wish_list])
             end
           end
 
@@ -59,7 +59,7 @@ RSpec.describe WishListItemsController::CreateService do
             end
 
             it 'sets the resource to all the changed wish lists' do
-              expect(perform.resource).to eq [aggregate_list, wish_list]
+              expect(perform.resource).to eq([aggregate_list, wish_list])
             end
           end
         end
@@ -78,18 +78,18 @@ RSpec.describe WishListItemsController::CreateService do
           context 'when the unit_weight is not set' do
             it 'creates a new item on the list' do
               expect { perform }
-                .to change(wish_list.list_items, :count).from(0).to eq 1
+                .to change(wish_list.list_items, :count).from(0).to eq(1)
             end
 
             it 'sets the unit weight on the new item' do
               perform
-              expect(wish_list.list_items.unscoped.last.unit_weight).to eq 1
+              expect(wish_list.list_items.unscoped.last.unit_weight).to eq(1)
             end
 
             it 'updates the item on the aggregate list', :aggregate_failures do
               perform
-              expect(aggregate_list.list_items.first.unit_weight).to eq 1
-              expect(aggregate_list.list_items.first.quantity).to eq 3
+              expect(aggregate_list.list_items.first.unit_weight).to eq(1)
+              expect(aggregate_list.list_items.first.quantity).to eq(3)
               expect(aggregate_list.list_items.first.notes).to be_nil
             end
 
@@ -112,15 +112,15 @@ RSpec.describe WishListItemsController::CreateService do
 
             it 'updates the item on the aggregate list', :aggregate_failures do
               perform
-              expect(aggregate_list.list_items.first.quantity).to eq 3
-              expect(aggregate_list.list_items.first.unit_weight).to eq 0.5
+              expect(aggregate_list.list_items.first.quantity).to eq(3)
+              expect(aggregate_list.list_items.first.unit_weight).to eq(0.5)
               expect(aggregate_list.list_items.first.notes).to be_nil
             end
 
             it "updates the other item's unit_weight", :aggregate_failures do
               perform
-              expect(other_item.reload.quantity).to eq 1
-              expect(other_item.reload.unit_weight).to eq 0.5
+              expect(other_item.reload.quantity).to eq(1)
+              expect(other_item.reload.unit_weight).to eq(0.5)
             end
 
             it 'returns a Service::CreatedResult' do
@@ -157,12 +157,12 @@ RSpec.describe WishListItemsController::CreateService do
 
           it 'combines with the existing item' do
             perform
-            expect(list_item.reload.quantity).to eq 3
+            expect(list_item.reload.quantity).to eq(3)
           end
 
           it 'updates the item on the aggregate list' do
             perform
-            expect(aggregate_list.list_items.first.quantity).to eq 5
+            expect(aggregate_list.list_items.first.quantity).to eq(5)
           end
 
           it 'returns a Service::OkResult' do
@@ -184,20 +184,20 @@ RSpec.describe WishListItemsController::CreateService do
 
           it 'combines the items', :aggregate_failures do
             perform
-            expect(list_item.reload.quantity).to eq 3
-            expect(list_item.unit_weight).to eq 0.5
+            expect(list_item.reload.quantity).to eq(3)
+            expect(list_item.unit_weight).to eq(0.5)
           end
 
           it 'updates the item on the aggregate list', :aggregate_failures do
             perform
-            expect(aggregate_list.list_items.first.quantity).to eq 5
-            expect(aggregate_list.list_items.first.unit_weight).to eq 0.5
+            expect(aggregate_list.list_items.first.quantity).to eq(5)
+            expect(aggregate_list.list_items.first.unit_weight).to eq(0.5)
           end
 
           it 'updates only the unit_weight on the other item', :aggregate_failures do
             perform
-            expect(other_item.reload.unit_weight).to eq 0.5
-            expect(other_item.quantity).to eq 2
+            expect(other_item.reload.unit_weight).to eq(0.5)
+            expect(other_item.quantity).to eq(2)
           end
 
           it 'returns a Service::OkResult' do
@@ -270,7 +270,7 @@ RSpec.describe WishListItemsController::CreateService do
       end
 
       it 'sets the errors' do
-        expect(perform.errors).to eq ['Cannot manually manage items on an aggregate wish list']
+        expect(perform.errors).to eq(['Cannot manually manage items on an aggregate wish list'])
       end
     end
 
@@ -286,7 +286,7 @@ RSpec.describe WishListItemsController::CreateService do
       end
 
       it 'sets the errors' do
-        expect(perform.errors).to eq ['Something went horribly wrong']
+        expect(perform.errors).to eq(['Something went horribly wrong'])
       end
     end
   end

@@ -44,23 +44,23 @@ RSpec.describe Canonical::Sync::Staves do
 
         it 'populates the models from the JSON file' do
           perform
-          expect(Canonical::Staff.count).to eq 4
+          expect(Canonical::Staff.count).to eq(4)
         end
 
         it 'creates the associations to spells where they exist', :aggregate_failures do
           perform
-          expect(Canonical::Staff.find_by(item_code: '000AB704').spells.length).to eq 2
-          expect(Canonical::Staff.find_by(item_code: '00029B94').spells.length).to eq 1
-          expect(Canonical::Staff.find_by(item_code: 'XX039FAC').spells.length).to eq 0
-          expect(Canonical::Staff.find_by(item_code: '0001CB36').spells.length).to eq 0
+          expect(Canonical::Staff.find_by(item_code: '000AB704').spells.length).to eq(2)
+          expect(Canonical::Staff.find_by(item_code: '00029B94').spells.length).to eq(1)
+          expect(Canonical::Staff.find_by(item_code: 'XX039FAC').spells.length).to eq(0)
+          expect(Canonical::Staff.find_by(item_code: '0001CB36').spells.length).to eq(0)
         end
 
         it 'creates the associations to powers where they exist', :aggregate_failures do
           perform
-          expect(Canonical::Staff.find_by(item_code: '000AB704').powers.length).to eq 0
-          expect(Canonical::Staff.find_by(item_code: '00029B94').powers.length).to eq 0
-          expect(Canonical::Staff.find_by(item_code: 'XX039FAC').powers.length).to eq 1
-          expect(Canonical::Staff.find_by(item_code: '0001CB36').powers.length).to eq 0
+          expect(Canonical::Staff.find_by(item_code: '000AB704').powers.length).to eq(0)
+          expect(Canonical::Staff.find_by(item_code: '00029B94').powers.length).to eq(0)
+          expect(Canonical::Staff.find_by(item_code: 'XX039FAC').powers.length).to eq(1)
+          expect(Canonical::Staff.find_by(item_code: '0001CB36').powers.length).to eq(0)
         end
       end
 
@@ -101,12 +101,12 @@ RSpec.describe Canonical::Sync::Staves do
         it "removes associations that don't exist in the JSON data" do
           item_in_json.canonical_powerables_powers.create!(power: create(:power))
           perform
-          expect(item_in_json.powers.length).to eq 0
+          expect(item_in_json.powers.length).to eq(0)
         end
 
         it 'adds associations if they exist' do
           perform
-          expect(item_in_json.spells.length).to eq 2
+          expect(item_in_json.spells.length).to eq(2)
         end
       end
 
@@ -123,7 +123,7 @@ RSpec.describe Canonical::Sync::Staves do
             .to have_received(:error)
                   .with('Prerequisite(s) not met: sync Power, Spell before canonical staves')
 
-          expect(Canonical::Staff.count).to eq 0
+          expect(Canonical::Staff.count).to eq(0)
         end
       end
 
@@ -139,7 +139,7 @@ RSpec.describe Canonical::Sync::Staves do
 
         it 'logs a validation error', :aggregate_failures do
           expect { perform }
-            .to raise_error ActiveRecord::RecordInvalid
+            .to raise_error(ActiveRecord::RecordInvalid)
 
           expect(Rails.logger)
             .to have_received(:error)
@@ -168,7 +168,7 @@ RSpec.describe Canonical::Sync::Staves do
 
       it 'updates models found in the JSON data' do
         perform
-        expect(item_in_json.reload.unit_weight).to eq 8.0
+        expect(item_in_json.reload.unit_weight).to eq(8.0)
       end
 
       it 'adds models not already in the database', :aggregate_failures do
@@ -185,7 +185,7 @@ RSpec.describe Canonical::Sync::Staves do
 
       it "doesn't destroy associations" do
         perform
-        expect(item_in_json.reload.powers.length).to eq 1
+        expect(item_in_json.reload.powers.length).to eq(1)
       end
     end
 

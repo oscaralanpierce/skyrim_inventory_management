@@ -133,7 +133,7 @@ RSpec.describe InventoryItem, type: :model do
         user.inventory_lists.each {|list| all_items << list.list_items }
         all_items.flatten!.sort!
 
-        expect(belonging_to_user).to eq all_items
+        expect(belonging_to_user).to eq(all_items)
       end
     end
   end
@@ -170,18 +170,18 @@ RSpec.describe InventoryItem, type: :model do
 
       it 'adds the quantity to the existing item' do
         combine_or_create
-        expect(existing_item.reload.quantity).to eq 3
+        expect(existing_item.reload.quantity).to eq(3)
       end
 
       it 'concatenates the notes for the two items' do
         combine_or_create
-        expect(existing_item.reload.notes).to eq "#{notes1} -- #{notes2}"
+        expect(existing_item.reload.notes).to eq("#{notes1} -- #{notes2}")
       end
 
       context "when the new item doesn't have a unit_weight" do
         it 'leaves the unit_weight as-is' do
           combine_or_create
-          expect(existing_item.reload.unit_weight).to eq 0.3
+          expect(existing_item.reload.unit_weight).to eq(0.3)
         end
       end
 
@@ -198,7 +198,7 @@ RSpec.describe InventoryItem, type: :model do
 
         it 'uses the unit_weight from the new item' do
           combine_or_create
-          expect(existing_item.reload.unit_weight).to eq 0.2
+          expect(existing_item.reload.unit_weight).to eq(0.2)
         end
       end
 
@@ -232,7 +232,7 @@ RSpec.describe InventoryItem, type: :model do
       end
 
       it 'sets the unit weight to that of the existing item' do
-        expect(combine_or_create.unit_weight).to eq 1
+        expect(combine_or_create.unit_weight).to eq(1)
       end
     end
   end
@@ -269,18 +269,18 @@ RSpec.describe InventoryItem, type: :model do
       end
 
       it 'returns the existing item with the quantity updated', :aggregate_failures do
-        expect(combine_or_new).to eq existing_item
-        expect(combine_or_new.quantity).to eq 3
+        expect(combine_or_new).to eq(existing_item)
+        expect(combine_or_new.quantity).to eq(3)
       end
 
       it 'concatenates the notes for the two items', :aggregate_failures do
-        expect(combine_or_new).to eq existing_item
-        expect(combine_or_new.notes).to eq 'notes 1 -- notes 2'
+        expect(combine_or_new).to eq(existing_item)
+        expect(combine_or_new.notes).to eq('notes 1 -- notes 2')
       end
 
       context "when the new item doesn't have a unit_weight" do
         it 'leaves the unit_weight as-is' do
-          expect(combine_or_new.unit_weight).to eq 0.3
+          expect(combine_or_new.unit_weight).to eq(0.3)
         end
       end
 
@@ -288,7 +288,7 @@ RSpec.describe InventoryItem, type: :model do
         subject(:combine_or_new) { described_class.combine_or_new(description: 'existing item', quantity: 1, unit_weight: 0.2, list: inventory_list, notes: 'notes 2') }
 
         it 'updates the unit_weight' do
-          expect(combine_or_new.unit_weight).to eq 0.2
+          expect(combine_or_new.unit_weight).to eq(0.2)
         end
       end
     end
@@ -325,7 +325,7 @@ RSpec.describe InventoryItem, type: :model do
         end
 
         it "sets the new item's unit weight to match the existing items" do
-          expect(combine_or_new.unit_weight).to eq 1
+          expect(combine_or_new.unit_weight).to eq(1)
         end
       end
     end
@@ -361,7 +361,7 @@ RSpec.describe InventoryItem, type: :model do
 
       it "doesn't set a 'notes' value on the aggregate list item", :aggregate_failures do
         new_item = combine_or_new
-        expect(new_item.quantity).to eq 4
+        expect(new_item.quantity).to eq(4)
         expect(new_item.notes).to be_nil
       end
     end

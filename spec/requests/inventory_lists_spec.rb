@@ -25,7 +25,7 @@ RSpec.describe 'InventoryLists', type: :request do
 
         it 'returns status 404' do
           get_index
-          expect(response.status).to eq 404
+          expect(response.status).to eq(404)
         end
 
         it 'returns no data' do
@@ -39,7 +39,7 @@ RSpec.describe 'InventoryLists', type: :request do
 
         it 'returns status 404' do
           get_index
-          expect(response.status).to eq 404
+          expect(response.status).to eq(404)
         end
 
         it 'returns no data' do
@@ -53,12 +53,12 @@ RSpec.describe 'InventoryLists', type: :request do
 
         it 'returns status 200' do
           get_index
-          expect(response.status).to eq 200
+          expect(response.status).to eq(200)
         end
 
         it 'returns an empty array' do
           get_index
-          expect(JSON.parse(response.body)).to eq []
+          expect(JSON.parse(response.body)).to eq([])
         end
       end
 
@@ -67,12 +67,12 @@ RSpec.describe 'InventoryLists', type: :request do
 
         it 'returns status 200' do
           get_index
-          expect(response.status).to eq 200
+          expect(response.status).to eq(200)
         end
 
         it 'returns the inventory lists in index order' do
           get_index
-          expect(response.body).to eq game.inventory_lists.index_order.to_json
+          expect(response.body).to eq(game.inventory_lists.index_order.to_json)
         end
       end
     end
@@ -86,7 +86,7 @@ RSpec.describe 'InventoryLists', type: :request do
 
       it 'returns status 401' do
         get_index
-        expect(response.status).to eq 401
+        expect(response.status).to eq(401)
       end
 
       it "doesn't return any data" do
@@ -122,7 +122,7 @@ RSpec.describe 'InventoryLists', type: :request do
 
           it 'returns status 201' do
             create_inventory_list
-            expect(response.status).to eq 201
+            expect(response.status).to eq(201)
           end
         end
 
@@ -150,13 +150,13 @@ RSpec.describe 'InventoryLists', type: :request do
 
           it 'returns status 201' do
             create_inventory_list
-            expect(response.status).to eq 201
+            expect(response.status).to eq(201)
           end
 
           it 'creates the inventory list with a default title' do
             create_inventory_list
             list_attributes = JSON.parse(response.body)
-            expect(list_attributes['title']).to eq 'My List 1'
+            expect(list_attributes['title']).to eq('My List 1')
           end
         end
       end
@@ -166,7 +166,7 @@ RSpec.describe 'InventoryLists', type: :request do
 
         it 'returns status 404' do
           create_inventory_list
-          expect(response.status).to eq 404
+          expect(response.status).to eq(404)
         end
 
         it "doesn't return any data" do
@@ -185,7 +185,7 @@ RSpec.describe 'InventoryLists', type: :request do
 
         it 'returns status 404' do
           create_inventory_list
-          expect(response.status).to eq 404
+          expect(response.status).to eq(404)
         end
 
         it "doesn't return any data" do
@@ -202,7 +202,7 @@ RSpec.describe 'InventoryLists', type: :request do
 
         it 'returns status 422' do
           create_inventory_list
-          expect(response.status).to eq 422
+          expect(response.status).to eq(422)
         end
 
         it 'returns the errors' do
@@ -223,7 +223,7 @@ RSpec.describe 'InventoryLists', type: :request do
 
         it 'returns an error' do
           create_inventory_list
-          expect(response.status).to eq 422
+          expect(response.status).to eq(422)
         end
 
         it 'returns a helpful error body' do
@@ -247,7 +247,7 @@ RSpec.describe 'InventoryLists', type: :request do
 
       it 'returns status 401' do
         create_inventory_list
-        expect(response.status).to eq 401
+        expect(response.status).to eq(401)
       end
 
       it "doesn't include any data" do
@@ -274,7 +274,7 @@ RSpec.describe 'InventoryLists', type: :request do
 
         it 'updates the title' do
           update_inventory_list
-          expect(inventory_list.reload.title).to eq 'Severin Manor'
+          expect(inventory_list.reload.title).to eq('Severin Manor')
         end
 
         it 'returns the updated list' do
@@ -287,7 +287,7 @@ RSpec.describe 'InventoryLists', type: :request do
 
         it 'returns status 200' do
           update_inventory_list
-          expect(response.status).to eq 200
+          expect(response.status).to eq(200)
         end
       end
 
@@ -301,7 +301,7 @@ RSpec.describe 'InventoryLists', type: :request do
 
         it 'returns status 422' do
           update_inventory_list
-          expect(response.status).to eq 422
+          expect(response.status).to eq(422)
         end
 
         it 'returns the errors' do
@@ -315,7 +315,7 @@ RSpec.describe 'InventoryLists', type: :request do
 
         it 'returns status 404' do
           update_inventory_list
-          expect(response.status).to eq 404
+          expect(response.status).to eq(404)
         end
 
         it "doesn't return data" do
@@ -335,7 +335,7 @@ RSpec.describe 'InventoryLists', type: :request do
 
         it 'returns status 404' do
           update_inventory_list
-          expect(response.status).to eq 404
+          expect(response.status).to eq(404)
         end
 
         it "doesn't return data" do
@@ -352,12 +352,12 @@ RSpec.describe 'InventoryLists', type: :request do
 
         it "doesn't update the list" do
           update_inventory_list
-          expect(inventory_list.reload.title).to eq 'All Items'
+          expect(inventory_list.reload.title).to eq('All Items')
         end
 
         it 'returns status 405 (method not allowed)' do
           update_inventory_list
-          expect(response.status).to eq 405
+          expect(response.status).to eq(405)
         end
 
         it 'returns a helpful error body' do
@@ -374,12 +374,12 @@ RSpec.describe 'InventoryLists', type: :request do
 
         it "doesn't update the list" do
           update_inventory_list
-          expect(inventory_list.reload.aggregate).to eq false
+          expect(inventory_list.reload.aggregate).to eq(false)
         end
 
         it 'returns status 422' do
           update_inventory_list
-          expect(response.status).to eq 422
+          expect(response.status).to eq(422)
         end
 
         it 'returns a helpful error body' do
@@ -400,7 +400,7 @@ RSpec.describe 'InventoryLists', type: :request do
 
         it 'returns status 500' do
           update_inventory_list
-          expect(response.status).to eq 500
+          expect(response.status).to eq(500)
         end
 
         it 'returns the error in the body' do
@@ -425,7 +425,7 @@ RSpec.describe 'InventoryLists', type: :request do
 
       it 'returns status 401' do
         update_inventory_list
-        expect(response.status).to eq 401
+        expect(response.status).to eq(401)
       end
 
       it "doesn't return any data" do
@@ -452,7 +452,7 @@ RSpec.describe 'InventoryLists', type: :request do
 
         it 'updates the title' do
           update_inventory_list
-          expect(inventory_list.reload.title).to eq 'Severin Manor'
+          expect(inventory_list.reload.title).to eq('Severin Manor')
         end
 
         it 'returns the updated list' do
@@ -465,7 +465,7 @@ RSpec.describe 'InventoryLists', type: :request do
 
         it 'returns status 200' do
           update_inventory_list
-          expect(response.status).to eq 200
+          expect(response.status).to eq(200)
         end
       end
 
@@ -479,7 +479,7 @@ RSpec.describe 'InventoryLists', type: :request do
 
         it 'returns status 422' do
           update_inventory_list
-          expect(response.status).to eq 422
+          expect(response.status).to eq(422)
         end
 
         it 'returns the errors' do
@@ -493,7 +493,7 @@ RSpec.describe 'InventoryLists', type: :request do
 
         it 'returns status 404' do
           update_inventory_list
-          expect(response.status).to eq 404
+          expect(response.status).to eq(404)
         end
 
         it "doesn't return data" do
@@ -513,7 +513,7 @@ RSpec.describe 'InventoryLists', type: :request do
 
         it 'returns status 404' do
           update_inventory_list
-          expect(response.status).to eq 404
+          expect(response.status).to eq(404)
         end
 
         it "doesn't return data" do
@@ -530,12 +530,12 @@ RSpec.describe 'InventoryLists', type: :request do
 
         it "doesn't update the list" do
           update_inventory_list
-          expect(inventory_list.reload.title).to eq 'All Items'
+          expect(inventory_list.reload.title).to eq('All Items')
         end
 
         it 'returns status 405 (method not allowed)' do
           update_inventory_list
-          expect(response.status).to eq 405
+          expect(response.status).to eq(405)
         end
 
         it 'returns a helpful error body' do
@@ -552,12 +552,12 @@ RSpec.describe 'InventoryLists', type: :request do
 
         it "doesn't update the list" do
           update_inventory_list
-          expect(inventory_list.reload.aggregate).to eq false
+          expect(inventory_list.reload.aggregate).to eq(false)
         end
 
         it 'returns status 422' do
           update_inventory_list
-          expect(response.status).to eq 422
+          expect(response.status).to eq(422)
         end
 
         it 'returns a helpful error body' do
@@ -578,7 +578,7 @@ RSpec.describe 'InventoryLists', type: :request do
 
         it 'returns status 500' do
           update_inventory_list
-          expect(response.status).to eq 500
+          expect(response.status).to eq(500)
         end
 
         it 'returns the error in the body' do
@@ -603,7 +603,7 @@ RSpec.describe 'InventoryLists', type: :request do
 
       it 'returns status 401' do
         update_inventory_list
-        expect(response.status).to eq 401
+        expect(response.status).to eq(401)
       end
 
       it "doesn't return any data" do
@@ -635,7 +635,7 @@ RSpec.describe 'InventoryLists', type: :request do
 
           it 'returns status 204' do
             delete_inventory_list
-            expect(response.status).to eq 204
+            expect(response.status).to eq(204)
           end
 
           it "doesn't return any data" do
@@ -656,7 +656,7 @@ RSpec.describe 'InventoryLists', type: :request do
 
           it 'returns status 200' do
             delete_inventory_list
-            expect(response.status).to eq 200
+            expect(response.status).to eq(200)
           end
 
           it 'returns the aggregate list in the body' do
@@ -671,7 +671,7 @@ RSpec.describe 'InventoryLists', type: :request do
 
         it 'returns 404' do
           delete_inventory_list
-          expect(response.status).to eq 404
+          expect(response.status).to eq(404)
         end
 
         it "doesn't return any data" do
@@ -690,7 +690,7 @@ RSpec.describe 'InventoryLists', type: :request do
 
         it 'returns 404' do
           delete_inventory_list
-          expect(response.status).to eq 404
+          expect(response.status).to eq(404)
         end
 
         it "doesn't return any data" do
@@ -709,7 +709,7 @@ RSpec.describe 'InventoryLists', type: :request do
 
         it 'returns status 405' do
           delete_inventory_list
-          expect(response.status).to eq 405
+          expect(response.status).to eq(405)
         end
 
         it 'returns an "errors" array' do
@@ -733,7 +733,7 @@ RSpec.describe 'InventoryLists', type: :request do
 
       it 'returns status 401' do
         delete_inventory_list
-        expect(response.status).to eq 401
+        expect(response.status).to eq(401)
       end
 
       it "doesn't return any data" do

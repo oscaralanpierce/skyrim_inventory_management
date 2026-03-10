@@ -18,5 +18,5 @@
 # end
 
 ActiveSupport::Inflector.inflections(:en) do |inflect|
-  inflect.irregular 'staff', 'staves'
+  inflect.irregular('staff', 'staves')
 end

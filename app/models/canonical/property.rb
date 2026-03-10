@@ -83,7 +83,7 @@ module Canonical
     private
 
     def ensure_max
-      Rails.logger.error "Cannot create canonical property \"#{name}\" in hold \"#{hold}\": there are already #{TOTAL_PROPERTY_COUNT} canonical properties"
+      Rails.logger.error("Cannot create canonical property \"#{name}\" in hold \"#{hold}\": there are already #{TOTAL_PROPERTY_COUNT} canonical properties")
       errors.add(:base, "cannot create a new canonical property as there are already #{TOTAL_PROPERTY_COUNT}")
     end
 

@@ -2,9 +2,9 @@
 
 require 'rails_helper'
 require 'service/created_result'
+require 'service/internal_server_error_result'
 require 'service/not_found_result'
 require 'service/unprocessable_entity_result'
-require 'service/internal_server_error_result'
 
 RSpec.describe WishListsController::CreateService do
   describe '#perform' do
@@ -82,7 +82,7 @@ RSpec.describe WishListsController::CreateService do
         end
 
         it 'sets the resource to the created list' do
-          expect(perform.resource).to eq [game.wish_lists.find_by(title: 'Proudspire Manor')]
+          expect(perform.resource).to eq([game.wish_lists.find_by(title: 'Proudspire Manor')])
         end
 
         it 'updates the game' do
@@ -107,7 +107,7 @@ RSpec.describe WishListsController::CreateService do
 
         it 'creates a regular wish list for the given game' do
           perform
-          expect(game.wish_lists.last.title).to eq 'Proudspire Manor'
+          expect(game.wish_lists.last.title).to eq('Proudspire Manor')
         end
 
         it 'updates the game' do
@@ -162,7 +162,7 @@ RSpec.describe WishListsController::CreateService do
       end
 
       it 'sets the errors' do
-        expect(perform.errors).to eq ['Something went horribly wrong']
+        expect(perform.errors).to eq(['Something went horribly wrong'])
       end
     end
   end

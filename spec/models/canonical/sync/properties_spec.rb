@@ -68,7 +68,7 @@ RSpec.describe Canonical::Sync::Properties do
 
         it 'updates models that were already in the database' do
           perform
-          expect(property_in_json.reload.alchemy_lab_available).to be true
+          expect(property_in_json.reload.alchemy_lab_available).to be(true)
         end
 
         it "removes models in the database that aren't in the JSON data" do
@@ -121,7 +121,7 @@ RSpec.describe Canonical::Sync::Properties do
 
       it 'updates models found in the JSON data' do
         perform
-        expect(property_in_json.reload.forge_available).to be false
+        expect(property_in_json.reload.forge_available).to be(false)
       end
 
       it 'adds models not already in the database', :aggregate_failures do

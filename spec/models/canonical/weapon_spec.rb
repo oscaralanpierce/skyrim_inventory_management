@@ -16,7 +16,7 @@ RSpec.describe Canonical::Weapon, type: :model do
       it "can't be blank" do
         weapon.name = nil
         validate
-        expect(weapon.errors[:name]).to include "can't be blank"
+        expect(weapon.errors[:name]).to include("can't be blank")
       end
     end
 
@@ -24,13 +24,13 @@ RSpec.describe Canonical::Weapon, type: :model do
       it "can't be blank" do
         weapon.item_code = nil
         validate
-        expect(weapon.errors[:item_code]).to include "can't be blank"
+        expect(weapon.errors[:item_code]).to include("can't be blank")
       end
 
       it 'must be unique' do
         create(:canonical_weapon, item_code: weapon.item_code)
         validate
-        expect(weapon.errors[:item_code]).to include 'must be unique'
+        expect(weapon.errors[:item_code]).to include('must be unique')
       end
     end
 
@@ -38,13 +38,13 @@ RSpec.describe Canonical::Weapon, type: :model do
       it "can't be blank" do
         weapon.category = nil
         validate
-        expect(weapon.errors[:category]).to include "can't be blank"
+        expect(weapon.errors[:category]).to include("can't be blank")
       end
 
       it 'must be an allowed value' do
         weapon.category = 'foo'
         validate
-        expect(weapon.errors[:category]).to include 'must be "one-handed", "two-handed", or "archery"'
+        expect(weapon.errors[:category]).to include('must be "one-handed", "two-handed", or "archery"')
       end
     end
 
@@ -52,20 +52,20 @@ RSpec.describe Canonical::Weapon, type: :model do
       it "can't be blank" do
         weapon.weapon_type = nil
         validate
-        expect(weapon.errors[:weapon_type]).to include "can't be blank"
+        expect(weapon.errors[:weapon_type]).to include("can't be blank")
       end
 
       it 'must be an allowed value' do
         weapon.weapon_type = 'foo'
         validate
-        expect(weapon.errors[:weapon_type]).to include 'must be a valid type of weapon that occurs in Skyrim'
+        expect(weapon.errors[:weapon_type]).to include('must be a valid type of weapon that occurs in Skyrim')
       end
 
       it 'must be valid for the category' do
         weapon.category = 'one-handed'
         weapon.weapon_type = 'crossbow'
         validate
-        expect(weapon.errors[:weapon_type]).to include 'is not included in category "one-handed"'
+        expect(weapon.errors[:weapon_type]).to include('is not included in category "one-handed"')
       end
     end
 
@@ -73,8 +73,8 @@ RSpec.describe Canonical::Weapon, type: :model do
       it 'must consist of only valid smithing perks', :aggregate_failures do
         weapon.smithing_perks = ['Arcane Blacksmith', 'Silver Smithing', 'Titanium Smithing']
         validate
-        expect(weapon.errors[:smithing_perks]).to include '"Silver Smithing" is not a valid smithing perk'
-        expect(weapon.errors[:smithing_perks]).to include '"Titanium Smithing" is not a valid smithing perk'
+        expect(weapon.errors[:smithing_perks]).to include('"Silver Smithing" is not a valid smithing perk')
+        expect(weapon.errors[:smithing_perks]).to include('"Titanium Smithing" is not a valid smithing perk')
       end
     end
 
@@ -82,25 +82,25 @@ RSpec.describe Canonical::Weapon, type: :model do
       it 'must be present' do
         weapon.base_damage = nil
         validate
-        expect(weapon.errors[:base_damage]).to include "can't be blank"
+        expect(weapon.errors[:base_damage]).to include("can't be blank")
       end
 
       it 'must be a number' do
         weapon.base_damage = 'foobar'
         validate
-        expect(weapon.errors[:base_damage]).to include 'is not a number'
+        expect(weapon.errors[:base_damage]).to include('is not a number')
       end
 
       it 'must be an integer' do
         weapon.base_damage = 1.2
         validate
-        expect(weapon.errors[:base_damage]).to include 'must be an integer'
+        expect(weapon.errors[:base_damage]).to include('must be an integer')
       end
 
       it 'must be at least zero' do
         weapon.base_damage = -2
         validate
-        expect(weapon.errors[:base_damage]).to include 'must be greater than or equal to 0'
+        expect(weapon.errors[:base_damage]).to include('must be greater than or equal to 0')
       end
     end
 
@@ -108,13 +108,13 @@ RSpec.describe Canonical::Weapon, type: :model do
       it "can't be blank" do
         weapon.add_on = nil
         validate
-        expect(weapon.errors[:add_on]).to include "can't be blank"
+        expect(weapon.errors[:add_on]).to include("can't be blank")
       end
 
       it 'must be a supported add-on' do
         weapon.add_on = 'fishing'
         validate
-        expect(weapon.errors[:add_on]).to include 'must be a SIM-supported add-on or DLC'
+        expect(weapon.errors[:add_on]).to include('must be a SIM-supported add-on or DLC')
       end
     end
 
@@ -127,13 +127,13 @@ RSpec.describe Canonical::Weapon, type: :model do
       it 'must be an integer' do
         weapon.max_quantity = 1.733
         validate
-        expect(weapon.errors[:max_quantity]).to include 'must be an integer'
+        expect(weapon.errors[:max_quantity]).to include('must be an integer')
       end
 
       it 'must be greater than 0' do
         weapon.max_quantity = 0
         validate
-        expect(weapon.errors[:max_quantity]).to include 'must be greater than 0'
+        expect(weapon.errors[:max_quantity]).to include('must be greater than 0')
       end
     end
 
@@ -141,19 +141,19 @@ RSpec.describe Canonical::Weapon, type: :model do
       it 'must be present' do
         weapon.unit_weight = nil
         validate
-        expect(weapon.errors[:unit_weight]).to include "can't be blank"
+        expect(weapon.errors[:unit_weight]).to include("can't be blank")
       end
 
       it 'must be a number' do
         weapon.unit_weight = 'foobar'
         validate
-        expect(weapon.errors[:unit_weight]).to include 'is not a number'
+        expect(weapon.errors[:unit_weight]).to include('is not a number')
       end
 
       it 'must be at least zero' do
         weapon.unit_weight = -2
         validate
-        expect(weapon.errors[:unit_weight]).to include 'must be greater than or equal to 0'
+        expect(weapon.errors[:unit_weight]).to include('must be greater than or equal to 0')
       end
     end
 
@@ -161,7 +161,7 @@ RSpec.describe Canonical::Weapon, type: :model do
       it 'must be true or false' do
         weapon.collectible = nil
         validate
-        expect(weapon.errors[:collectible]).to include 'must be true or false'
+        expect(weapon.errors[:collectible]).to include('must be true or false')
       end
     end
 
@@ -169,7 +169,7 @@ RSpec.describe Canonical::Weapon, type: :model do
       it 'must be true or false' do
         weapon.purchasable = nil
         validate
-        expect(weapon.errors[:purchasable]).to include 'must be true or false'
+        expect(weapon.errors[:purchasable]).to include('must be true or false')
       end
     end
 
@@ -177,7 +177,7 @@ RSpec.describe Canonical::Weapon, type: :model do
       it 'must be true or false' do
         weapon.unique_item = nil
         validate
-        expect(weapon.errors[:unique_item]).to include 'must be true or false'
+        expect(weapon.errors[:unique_item]).to include('must be true or false')
       end
 
       it 'must be true if max_quantity is 1' do
@@ -186,7 +186,7 @@ RSpec.describe Canonical::Weapon, type: :model do
 
         validate
 
-        expect(weapon.errors[:unique_item]).to include 'must be true if max quantity is 1'
+        expect(weapon.errors[:unique_item]).to include('must be true if max quantity is 1')
       end
 
       it 'must be false if max_quantity is not 1' do
@@ -195,7 +195,7 @@ RSpec.describe Canonical::Weapon, type: :model do
 
         validate
 
-        expect(weapon.errors[:unique_item]).to include 'must correspond to a max quantity of 1'
+        expect(weapon.errors[:unique_item]).to include('must correspond to a max quantity of 1')
       end
     end
 
@@ -203,14 +203,14 @@ RSpec.describe Canonical::Weapon, type: :model do
       it 'must be true or false' do
         weapon.rare_item = nil
         validate
-        expect(weapon.errors[:rare_item]).to include 'must be true or false'
+        expect(weapon.errors[:rare_item]).to include('must be true or false')
       end
 
       it 'must be true if the item is unique' do
         weapon.unique_item = true
         weapon.rare_item = false
         validate
-        expect(weapon.errors[:rare_item]).to include 'must be true if item is unique'
+        expect(weapon.errors[:rare_item]).to include('must be true if item is unique')
       end
     end
 
@@ -218,7 +218,7 @@ RSpec.describe Canonical::Weapon, type: :model do
       it 'must be true or false' do
         weapon.quest_item = nil
         validate
-        expect(weapon.errors[:quest_item]).to include 'must be true or false'
+        expect(weapon.errors[:quest_item]).to include('must be true or false')
       end
     end
 
@@ -226,7 +226,7 @@ RSpec.describe Canonical::Weapon, type: :model do
       it 'must be true or false' do
         weapon.leveled = nil
         validate
-        expect(weapon.errors[:leveled]).to include 'must be true or false'
+        expect(weapon.errors[:leveled]).to include('must be true or false')
       end
     end
 
@@ -234,7 +234,7 @@ RSpec.describe Canonical::Weapon, type: :model do
       it 'must be true or false' do
         weapon.enchantable = nil
         validate
-        expect(weapon.errors[:enchantable]).to include 'must be true or false'
+        expect(weapon.errors[:enchantable]).to include('must be true or false')
       end
     end
   end
@@ -242,7 +242,7 @@ RSpec.describe Canonical::Weapon, type: :model do
   describe 'default behavior' do
     it 'upcases item codes' do
       weapon = create(:canonical_weapon, item_code: 'abc123')
-      expect(weapon.reload.item_code).to eq 'ABC123'
+      expect(weapon.reload.item_code).to eq('ABC123')
     end
   end
 
@@ -256,7 +256,7 @@ RSpec.describe Canonical::Weapon, type: :model do
       end
 
       it 'gives the enchantment strength' do
-        expect(weapon.enchantments.first.strength).to eq 40
+        expect(weapon.enchantments.first.strength).to eq(40)
       end
     end
 
@@ -269,7 +269,7 @@ RSpec.describe Canonical::Weapon, type: :model do
       end
 
       it 'retrieves the power' do
-        expect(weapon.powers.first).to eq power
+        expect(weapon.powers.first).to eq(power)
       end
     end
 
@@ -344,7 +344,7 @@ RSpec.describe Canonical::Weapon, type: :model do
       subject(:unique_identifier) { described_class.unique_identifier }
 
       it 'returns :item_code' do
-        expect(unique_identifier).to eq :item_code
+        expect(unique_identifier).to eq(:item_code)
       end
     end
   end

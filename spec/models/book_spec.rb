@@ -12,14 +12,14 @@ RSpec.describe Book, type: :model do
       book.title = nil
       validate
 
-      expect(book.errors[:title]).to include "can't be blank"
+      expect(book.errors[:title]).to include("can't be blank")
     end
 
     it 'is invalid with a negative unit_weight' do
       book.unit_weight = -4.2
       validate
 
-      expect(book.errors[:unit_weight]).to include 'must be greater than or equal to 0'
+      expect(book.errors[:unit_weight]).to include('must be greater than or equal to 0')
     end
 
     describe 'canonical model validations' do
@@ -76,7 +76,7 @@ RSpec.describe Book, type: :model do
 
           it 'is invalid' do
             validate
-            expect(book.errors[:base]).to include 'is a duplicate of a unique in-game item'
+            expect(book.errors[:base]).to include('is a duplicate of a unique in-game item')
           end
         end
       end
@@ -90,7 +90,7 @@ RSpec.describe Book, type: :model do
       let(:book) { build(:book, :with_matching_canonical) }
 
       it 'returns the canonical book' do
-        expect(canonical_model).to eq book.canonical_book
+        expect(canonical_model).to eq(book.canonical_book)
       end
     end
 
@@ -192,7 +192,7 @@ RSpec.describe Book, type: :model do
       end
 
       it 'returns true' do
-        expect(recipe).to be true
+        expect(recipe).to be(true)
       end
     end
 
@@ -203,7 +203,7 @@ RSpec.describe Book, type: :model do
       end
 
       it 'returns true' do
-        expect(recipe).to be true
+        expect(recipe).to be(true)
       end
     end
 
@@ -213,7 +213,7 @@ RSpec.describe Book, type: :model do
       end
 
       it 'returns false' do
-        expect(recipe).to be false
+        expect(recipe).to be(false)
       end
     end
   end
@@ -239,15 +239,15 @@ RSpec.describe Book, type: :model do
 
       it 'assigns the matching canonical as the canonical book' do
         validate
-        expect(book.canonical_book).to eq Canonical::Book.last
+        expect(book.canonical_book).to eq(Canonical::Book.last)
       end
 
       it 'sets values on the model based on the canonical', :aggregate_failures do
         validate
-        expect(book.title).to eq 'Baz'
-        expect(book.authors).to eq ['Toni Morrison', 'Maya Angelou']
-        expect(book.unit_weight).to eq 13
-        expect(book.skill_name).to eq 'Alteration'
+        expect(book.title).to eq('Baz')
+        expect(book.authors).to eq(['Toni Morrison', 'Maya Angelou'])
+        expect(book.unit_weight).to eq(13)
+        expect(book.skill_name).to eq('Alteration')
       end
     end
 
@@ -274,7 +274,7 @@ RSpec.describe Book, type: :model do
 
       it "doesn't update values", :aggregate_failures do
         validate
-        expect(book.title).to eq 'foo'
+        expect(book.title).to eq('foo')
         expect(book.authors).to be_blank
         expect(book.unit_weight).to be_nil
         expect(book.skill_name).to be_nil
@@ -305,7 +305,7 @@ RSpec.describe Book, type: :model do
 
           validate
 
-          expect(book.title).to eq "Sinderion's Field Journal"
+          expect(book.title).to eq("Sinderion's Field Journal")
         end
       end
 
@@ -331,7 +331,7 @@ RSpec.describe Book, type: :model do
 
           validate
 
-          expect(book.title).not_to eq "Sinderion's Field Journal"
+          expect(book.title).not_to eq("Sinderion's Field Journal")
         end
       end
 

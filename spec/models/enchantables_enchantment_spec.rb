@@ -23,7 +23,7 @@ RSpec.describe EnchantablesEnchantment, type: :model do
         create(:enchantables_enchantment, :for_canonical_armor, enchantable: armor, enchantment:)
         validate
 
-        expect(model.errors[:enchantment_id]).to include 'must form a unique combination with enchantable item'
+        expect(model.errors[:enchantment_id]).to include('must form a unique combination with enchantable item')
       end
     end
 
@@ -68,14 +68,14 @@ RSpec.describe EnchantablesEnchantment, type: :model do
           model.added_automatically = true
           validate
 
-          expect(model.added_automatically).to be true
+          expect(model.added_automatically).to be(true)
         end
 
         it 'is automatically changed to true if nil' do
           model.added_automatically = nil
           validate
 
-          expect(model.added_automatically).to be true
+          expect(model.added_automatically).to be(true)
         end
       end
     end
@@ -91,7 +91,7 @@ RSpec.describe EnchantablesEnchantment, type: :model do
       let(:item) { create(:canonical_armor) }
 
       it 'sets the enchantable type' do
-        expect(enchantable_type).to eq 'Canonical::Armor'
+        expect(enchantable_type).to eq('Canonical::Armor')
       end
     end
 
@@ -99,7 +99,7 @@ RSpec.describe EnchantablesEnchantment, type: :model do
       let(:item) { create(:canonical_weapon) }
 
       it 'sets the enchantable type' do
-        expect(enchantable_type).to eq 'Canonical::Weapon'
+        expect(enchantable_type).to eq('Canonical::Weapon')
       end
     end
 
@@ -107,7 +107,7 @@ RSpec.describe EnchantablesEnchantment, type: :model do
       let(:item) { create(:canonical_jewelry_item) }
 
       it 'sets the enchantable type' do
-        expect(enchantable_type).to eq 'Canonical::JewelryItem'
+        expect(enchantable_type).to eq('Canonical::JewelryItem')
       end
     end
 
@@ -115,7 +115,7 @@ RSpec.describe EnchantablesEnchantment, type: :model do
       let(:item) { create(:canonical_clothing_item) }
 
       it 'sets the enchantable type' do
-        expect(enchantable_type).to eq 'Canonical::ClothingItem'
+        expect(enchantable_type).to eq('Canonical::ClothingItem')
       end
     end
 
@@ -127,7 +127,7 @@ RSpec.describe EnchantablesEnchantment, type: :model do
       end
 
       it 'sets the enchantable type' do
-        expect(enchantable_type).to eq 'Armor'
+        expect(enchantable_type).to eq('Armor')
       end
     end
 
@@ -139,7 +139,7 @@ RSpec.describe EnchantablesEnchantment, type: :model do
       end
 
       it 'sets the enchantable type' do
-        expect(enchantable_type).to eq 'ClothingItem'
+        expect(enchantable_type).to eq('ClothingItem')
       end
     end
 
@@ -151,7 +151,7 @@ RSpec.describe EnchantablesEnchantment, type: :model do
       end
 
       it 'sets the enchantable type' do
-        expect(enchantable_type).to eq 'JewelryItem'
+        expect(enchantable_type).to eq('JewelryItem')
       end
     end
 
@@ -163,7 +163,7 @@ RSpec.describe EnchantablesEnchantment, type: :model do
       end
 
       it 'sets the enchantable type' do
-        expect(enchantable_type).to eq 'Weapon'
+        expect(enchantable_type).to eq('Weapon')
       end
     end
   end
@@ -260,7 +260,7 @@ RSpec.describe EnchantablesEnchantment, type: :model do
 
         it 'adds errors' do
           validate
-          expect(model.errors[:base]).to include "doesn't match any canonical model"
+          expect(model.errors[:base]).to include("doesn't match any canonical model")
         end
       end
     end

@@ -49,7 +49,7 @@ RSpec.describe Canonical::Sync::MiscItems do
 
         it 'updates models that were already in the database' do
           perform
-          expect(item_in_json.reload.name).to eq 'Amethyst Paragon'
+          expect(item_in_json.reload.name).to eq('Amethyst Paragon')
         end
 
         it "removes models in the database that aren't in the JSON data" do
@@ -80,7 +80,7 @@ RSpec.describe Canonical::Sync::MiscItems do
 
       it 'updates models found in the JSON data' do
         perform
-        expect(item_in_json.reload.name).to eq 'Amethyst Paragon'
+        expect(item_in_json.reload.name).to eq('Amethyst Paragon')
       end
 
       it 'adds models not already in the database', :aggregate_failures do

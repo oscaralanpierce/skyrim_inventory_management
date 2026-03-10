@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
 require 'rails_helper'
+require 'service/internal_server_error_result'
+require 'service/not_found_result'
 require 'service/ok_result'
 require 'service/unprocessable_entity_result'
-require 'service/not_found_result'
-require 'service/internal_server_error_result'
 
 RSpec.describe GamesController::UpdateService do
   describe '#perform' do
@@ -17,7 +17,7 @@ RSpec.describe GamesController::UpdateService do
 
       it 'updates the game' do
         perform
-        expect(game.reload.description).to eq 'New description'
+        expect(game.reload.description).to eq('New description')
       end
 
       it 'returns a Service::OkResult' do
@@ -37,7 +37,7 @@ RSpec.describe GamesController::UpdateService do
 
       it "doesn't update the game" do
         perform
-        expect(game.reload.name).not_to eq other_game.name
+        expect(game.reload.name).not_to eq(other_game.name)
       end
 
       it 'returns a Service::UnprocessableEntityResult' do
@@ -71,7 +71,7 @@ RSpec.describe GamesController::UpdateService do
 
       it "doesn't update the game" do
         perform
-        expect(game.reload.name).not_to eq 'Valid name'
+        expect(game.reload.name).not_to eq('Valid name')
       end
 
       it 'returns a Service::NotFoundResult' do

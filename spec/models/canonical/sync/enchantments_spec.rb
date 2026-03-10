@@ -42,7 +42,7 @@ RSpec.describe Canonical::Sync::Enchantments do
 
         it 'updates models that were already in the database' do
           perform
-          expect(enchantment_in_json.reload.strength_unit).to eq 'level'
+          expect(enchantment_in_json.reload.strength_unit).to eq('level')
         end
 
         it "removes models in the database that aren't in the JSON data" do
@@ -76,7 +76,7 @@ RSpec.describe Canonical::Sync::Enchantments do
 
       it 'updates models found in the JSON data' do
         perform
-        expect(enchantment_in_json.reload.strength_unit).to eq 'level'
+        expect(enchantment_in_json.reload.strength_unit).to eq('level')
       end
 
       it 'adds models not already in the database', :aggregate_failures do

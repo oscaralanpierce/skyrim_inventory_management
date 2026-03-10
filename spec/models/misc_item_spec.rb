@@ -12,7 +12,7 @@ RSpec.describe MiscItem, type: :model do
       it 'is invalid without a name' do
         item.name = nil
         validate
-        expect(item.errors[:name]).to include "can't be blank"
+        expect(item.errors[:name]).to include("can't be blank")
       end
     end
 
@@ -26,7 +26,7 @@ RSpec.describe MiscItem, type: :model do
       it 'is invalid if less than 0' do
         item.unit_weight = -1.2
         validate
-        expect(item.errors[:unit_weight]).to include 'must be greater than or equal to 0'
+        expect(item.errors[:unit_weight]).to include('must be greater than or equal to 0')
       end
     end
 
@@ -84,7 +84,7 @@ RSpec.describe MiscItem, type: :model do
 
           it 'is invalid' do
             validate
-            expect(item.errors[:base]).to include 'is a duplicate of a unique in-game item'
+            expect(item.errors[:base]).to include('is a duplicate of a unique in-game item')
           end
         end
       end
@@ -120,7 +120,7 @@ RSpec.describe MiscItem, type: :model do
 
         it 'adds errors' do
           validate
-          expect(item.errors[:base]).to include "doesn't match any item that exists in Skyrim"
+          expect(item.errors[:base]).to include("doesn't match any item that exists in Skyrim")
         end
       end
     end
@@ -133,7 +133,7 @@ RSpec.describe MiscItem, type: :model do
       let(:item) { build(:misc_item, :with_matching_canonical) }
 
       it 'returns the canonical misc item' do
-        expect(canonical_model).to eq item.canonical_misc_item
+        expect(canonical_model).to eq(item.canonical_misc_item)
       end
     end
 
@@ -192,7 +192,7 @@ RSpec.describe MiscItem, type: :model do
       let(:item) { build(:misc_item) }
 
       it 'returns an empty ActiveRecord::Relation', :aggregate_failures do
-        expect(canonical_models).to be_an ActiveRecord::Relation
+        expect(canonical_models).to be_an(ActiveRecord::Relation)
         expect(canonical_models).to be_empty
       end
     end
@@ -233,13 +233,13 @@ RSpec.describe MiscItem, type: :model do
 
       it 'assigns the canonical misc item' do
         validate
-        expect(item.canonical_misc_item).to eq matching_canonical
+        expect(item.canonical_misc_item).to eq(matching_canonical)
       end
 
       it 'sets the attributes', :aggregate_failures do
         validate
-        expect(item.name).to eq "Wylandria's Soul Gem"
-        expect(item.unit_weight).to eq 0
+        expect(item.name).to eq("Wylandria's Soul Gem")
+        expect(item.unit_weight).to eq(0)
       end
     end
 
@@ -286,8 +286,8 @@ RSpec.describe MiscItem, type: :model do
 
           validate
 
-          expect(item.name).to eq 'Pill Bottle'
-          expect(item.unit_weight).to eq 0.3
+          expect(item.name).to eq('Pill Bottle')
+          expect(item.unit_weight).to eq(0.3)
         end
       end
 
@@ -316,7 +316,7 @@ RSpec.describe MiscItem, type: :model do
 
           validate
 
-          expect(item.name).to eq 'pill bottle'
+          expect(item.name).to eq('pill bottle')
           expect(item.unit_weight).to be_nil
         end
       end

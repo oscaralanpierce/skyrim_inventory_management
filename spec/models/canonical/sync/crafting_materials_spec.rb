@@ -72,11 +72,11 @@ RSpec.describe Canonical::Sync::CraftingMaterials do
 
           it 'creates the correct associations', :aggregate_failures do
             perform
-            expect(Canonical::Armor.find_by(item_code: 'XX012E8A').crafting_materials.count).to eq 2
-            expect(Canonical::Weapon.find_by(item_code: 'XX026232').crafting_materials.count).to eq 2
-            expect(Canonical::JewelryItem.find_by(item_code: '000877CA').crafting_materials.count).to eq 2
-            expect(Canonical::Armor.find_by(item_code: 'XX01CD94').crafting_materials.count).to eq 3
-            expect(Canonical::Weapon.find_by(item_code: 'XX00F19E').crafting_materials.count).to eq 2
+            expect(Canonical::Armor.find_by(item_code: 'XX012E8A').crafting_materials.count).to eq(2)
+            expect(Canonical::Weapon.find_by(item_code: 'XX026232').crafting_materials.count).to eq(2)
+            expect(Canonical::JewelryItem.find_by(item_code: '000877CA').crafting_materials.count).to eq(2)
+            expect(Canonical::Armor.find_by(item_code: 'XX01CD94').crafting_materials.count).to eq(3)
+            expect(Canonical::Weapon.find_by(item_code: 'XX00F19E').crafting_materials.count).to eq(2)
           end
         end
 
@@ -92,8 +92,8 @@ RSpec.describe Canonical::Sync::CraftingMaterials do
 
           it 'removes existing records', :aggregate_failures do
             perform
-            expect(craftable.reload.crafting_materials.count).to eq 2
-            expect(craftable.crafting_materials.map(&:name)).to eq ['Shellbug Chitin', 'Iron Ingot']
+            expect(craftable.reload.crafting_materials.count).to eq(2)
+            expect(craftable.crafting_materials.map(&:name)).to eq(['Shellbug Chitin', 'Iron Ingot'])
           end
         end
       end
@@ -111,7 +111,7 @@ RSpec.describe Canonical::Sync::CraftingMaterials do
 
         it 'keeps the existing records' do
           perform
-          expect(craftable.reload.crafting_materials.count).to eq 3
+          expect(craftable.reload.crafting_materials.count).to eq(3)
         end
       end
     end

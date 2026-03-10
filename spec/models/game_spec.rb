@@ -14,7 +14,7 @@ RSpec.describe Game, type: :model do
           create(:game, name: 'My Game', user:)
 
           game.validate
-          expect(game.errors[:name]).to include 'must be unique'
+          expect(game.errors[:name]).to include('must be unique')
         end
 
         it "doesn't have to be unique across all users" do
@@ -28,7 +28,7 @@ RSpec.describe Game, type: :model do
           invalid_game = build(:game, name: "#\t&\n^")
 
           invalid_game.validate
-          expect(invalid_game.errors[:name]).to include "can only contain alphanumeric characters, spaces, commas (,), hyphens (-), and apostrophes (')"
+          expect(invalid_game.errors[:name]).to include("can only contain alphanumeric characters, spaces, commas (,), hyphens (-), and apostrophes (')")
 
           valid_game = build(:game, name: "bA1 ,-'")
           expect(valid_game).to be_valid
@@ -93,7 +93,7 @@ RSpec.describe Game, type: :model do
       subject(:name) { user.games.create!(name: 'Skyrim, Baby').name }
 
       it 'keeps the name the user has set' do
-        expect(name).to eq 'Skyrim, Baby'
+        expect(name).to eq('Skyrim, Baby')
       end
     end
 
@@ -106,7 +106,7 @@ RSpec.describe Game, type: :model do
         end
 
         it 'sets the title based on the highest numbered default title' do
-          expect(name).to eq 'My Game 3'
+          expect(name).to eq('My Game 3')
         end
       end
 
@@ -118,7 +118,7 @@ RSpec.describe Game, type: :model do
         end
 
         it 'uses the next highest number in default-named games' do
-          expect(name).to eq 'My Game 3'
+          expect(name).to eq('My Game 3')
         end
       end
 
@@ -129,7 +129,7 @@ RSpec.describe Game, type: :model do
         end
 
         it 'sets the name based on the highest numbered game called "My Game N"' do
-          expect(name).to eq 'My Game 3'
+          expect(name).to eq('My Game 3')
         end
       end
 
@@ -140,7 +140,7 @@ RSpec.describe Game, type: :model do
         end
 
         it 'sets the name based on the highest numbered game called "My Game N"' do
-          expect(name).to eq 'My Game 3'
+          expect(name).to eq('My Game 3')
         end
       end
 
@@ -150,7 +150,7 @@ RSpec.describe Game, type: :model do
         end
 
         it 'ignores the game name with the negative integer' do
-          expect(name).to eq 'My Game 1'
+          expect(name).to eq('My Game 1')
         end
       end
     end
@@ -158,12 +158,12 @@ RSpec.describe Game, type: :model do
     context 'when the request includes sloppy data' do
       it 'uses intelligent title capitalisation' do
         game = create(:game, name: 'loRd oF tHe rIngS')
-        expect(game.name).to eq 'Lord of the Rings'
+        expect(game.name).to eq('Lord of the Rings')
       end
 
       it 'strips trailing and leading whitespace' do
         game = create(:game, name: "  lord oF tHE rIngS\n\t")
-        expect(game.name).to eq 'Lord of the Rings'
+        expect(game.name).to eq('Lord of the Rings')
       end
     end
   end
@@ -179,7 +179,7 @@ RSpec.describe Game, type: :model do
     end
 
     it "returns that game's aggregate wish list" do
-      expect(aggregate_wish_list).to eq aggregate_list
+      expect(aggregate_wish_list).to eq(aggregate_list)
     end
   end
 
@@ -194,7 +194,7 @@ RSpec.describe Game, type: :model do
     end
 
     it "returns that game's aggregate inventory list" do
-      expect(aggregate_inventory_list).to eq aggregate_list
+      expect(aggregate_inventory_list).to eq(aggregate_list)
     end
   end
 
@@ -213,7 +213,7 @@ RSpec.describe Game, type: :model do
       items.flatten!
       items.sort!
 
-      expect(wish_list_items).to eq items
+      expect(wish_list_items).to eq(items)
     end
   end
 
@@ -232,7 +232,7 @@ RSpec.describe Game, type: :model do
       items.flatten!
       items.sort!
 
-      expect(inventory_items).to eq items
+      expect(inventory_items).to eq(items)
     end
   end
 end

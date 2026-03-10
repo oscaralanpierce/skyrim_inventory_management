@@ -30,7 +30,7 @@ RSpec.describe Canonical::Ingredient, type: :model do
         model.name = nil
         validate
 
-        expect(model.errors[:name]).to include "can't be blank"
+        expect(model.errors[:name]).to include("can't be blank")
       end
     end
 
@@ -39,7 +39,7 @@ RSpec.describe Canonical::Ingredient, type: :model do
         model.item_code = nil
         validate
 
-        expect(model.errors[:item_code]).to include "can't be blank"
+        expect(model.errors[:item_code]).to include("can't be blank")
       end
 
       it 'must be unique' do
@@ -47,7 +47,7 @@ RSpec.describe Canonical::Ingredient, type: :model do
         model.item_code = 'foo'
         validate
 
-        expect(model.errors[:item_code]).to include 'must be unique'
+        expect(model.errors[:item_code]).to include('must be unique')
       end
     end
 
@@ -56,7 +56,7 @@ RSpec.describe Canonical::Ingredient, type: :model do
         model.ingredient_type = 'unique'
         validate
 
-        expect(model.errors[:ingredient_type]).to include 'must be "common", "uncommon", "rare", or "add_on"'
+        expect(model.errors[:ingredient_type]).to include('must be "common", "uncommon", "rare", or "add_on"')
       end
 
       it 'can be blank if purchasable is false' do
@@ -73,7 +73,7 @@ RSpec.describe Canonical::Ingredient, type: :model do
         model.ingredient_type = 'uncommon'
         validate
 
-        expect(model.errors[:ingredient_type]).to include 'can only be set for purchasable ingredients'
+        expect(model.errors[:ingredient_type]).to include('can only be set for purchasable ingredients')
       end
 
       it "can't be blank if purchasable is true" do
@@ -82,7 +82,7 @@ RSpec.describe Canonical::Ingredient, type: :model do
         model.ingredient_type = nil
         validate
 
-        expect(model.errors[:ingredient_type]).to include "can't be blank for purchasable ingredients"
+        expect(model.errors[:ingredient_type]).to include("can't be blank for purchasable ingredients")
       end
     end
 
@@ -91,14 +91,14 @@ RSpec.describe Canonical::Ingredient, type: :model do
         model.unit_weight = nil
         validate
 
-        expect(model.errors[:unit_weight]).to include "can't be blank"
+        expect(model.errors[:unit_weight]).to include("can't be blank")
       end
 
       it "can't be less than zero" do
         model.unit_weight = -1
         validate
 
-        expect(model.errors[:unit_weight]).to include 'must be greater than or equal to 0'
+        expect(model.errors[:unit_weight]).to include('must be greater than or equal to 0')
       end
     end
 
@@ -107,14 +107,14 @@ RSpec.describe Canonical::Ingredient, type: :model do
         model.add_on = nil
         validate
 
-        expect(model.errors[:add_on]).to include "can't be blank"
+        expect(model.errors[:add_on]).to include("can't be blank")
       end
 
       it 'must be a valid add-on or DLC' do
         model.add_on = 'fishing'
         validate
 
-        expect(model.errors[:add_on]).to include 'must be a SIM-supported add-on or DLC'
+        expect(model.errors[:add_on]).to include('must be a SIM-supported add-on or DLC')
       end
     end
 
@@ -129,14 +129,14 @@ RSpec.describe Canonical::Ingredient, type: :model do
         model.max_quantity = 0
         validate
 
-        expect(model.errors[:max_quantity]).to include 'must be an integer of at least 1'
+        expect(model.errors[:max_quantity]).to include('must be an integer of at least 1')
       end
 
       it 'must be an integer' do
         model.max_quantity = 1.2
         validate
 
-        expect(model.errors[:max_quantity]).to include 'must be an integer of at least 1'
+        expect(model.errors[:max_quantity]).to include('must be an integer of at least 1')
       end
     end
 
@@ -145,7 +145,7 @@ RSpec.describe Canonical::Ingredient, type: :model do
         model.collectible = nil
         validate
 
-        expect(model.errors[:collectible]).to include 'must be true or false'
+        expect(model.errors[:collectible]).to include('must be true or false')
       end
     end
 
@@ -154,7 +154,7 @@ RSpec.describe Canonical::Ingredient, type: :model do
         model.purchasable = nil
         validate
 
-        expect(model.errors[:purchasable]).to include 'must be true or false'
+        expect(model.errors[:purchasable]).to include('must be true or false')
       end
     end
 
@@ -181,7 +181,7 @@ RSpec.describe Canonical::Ingredient, type: :model do
         model.purchase_requires_perk = true
         validate
 
-        expect(model.errors[:purchase_requires_perk]).to include "can't be set if purchasable is false"
+        expect(model.errors[:purchase_requires_perk]).to include("can't be set if purchasable is false")
       end
 
       it 'must be set if purchasable is true' do
@@ -189,7 +189,7 @@ RSpec.describe Canonical::Ingredient, type: :model do
         model.purchase_requires_perk = nil
         validate
 
-        expect(model.errors[:purchase_requires_perk]).to include 'must be true or false if purchasable is true'
+        expect(model.errors[:purchase_requires_perk]).to include('must be true or false if purchasable is true')
       end
     end
 
@@ -198,7 +198,7 @@ RSpec.describe Canonical::Ingredient, type: :model do
         model.unique_item = nil
         validate
 
-        expect(model.errors[:unique_item]).to include 'must be true or false'
+        expect(model.errors[:unique_item]).to include('must be true or false')
       end
 
       it 'must be true if max quantity is 1' do
@@ -207,7 +207,7 @@ RSpec.describe Canonical::Ingredient, type: :model do
 
         validate
 
-        expect(model.errors[:unique_item]).to include 'must be true if max quantity is 1'
+        expect(model.errors[:unique_item]).to include('must be true if max quantity is 1')
       end
 
       it 'must be false if max quantity is not 1' do
@@ -216,7 +216,7 @@ RSpec.describe Canonical::Ingredient, type: :model do
 
         validate
 
-        expect(model.errors[:unique_item]).to include 'must correspond to a max quantity of 1'
+        expect(model.errors[:unique_item]).to include('must correspond to a max quantity of 1')
       end
     end
 
@@ -225,7 +225,7 @@ RSpec.describe Canonical::Ingredient, type: :model do
         model.rare_item = nil
         validate
 
-        expect(model.errors[:rare_item]).to include 'must be true or false'
+        expect(model.errors[:rare_item]).to include('must be true or false')
       end
 
       it 'must be true if the ingredient is unique' do
@@ -233,7 +233,7 @@ RSpec.describe Canonical::Ingredient, type: :model do
         model.rare_item = false
         validate
 
-        expect(model.errors[:rare_item]).to include 'must be true if item is unique'
+        expect(model.errors[:rare_item]).to include('must be true if item is unique')
       end
     end
 
@@ -242,7 +242,7 @@ RSpec.describe Canonical::Ingredient, type: :model do
         model.quest_item = nil
         validate
 
-        expect(model.errors[:quest_item]).to include 'must be true or false'
+        expect(model.errors[:quest_item]).to include('must be true or false')
       end
     end
   end
@@ -250,14 +250,14 @@ RSpec.describe Canonical::Ingredient, type: :model do
   describe 'default behavior' do
     it 'upcases item codes' do
       ingredient = create(:canonical_ingredient, item_code: 'abc123')
-      expect(ingredient.reload.item_code).to eq 'ABC123'
+      expect(ingredient.reload.item_code).to eq('ABC123')
     end
   end
 
   describe 'class methods' do
     describe '::unique_identifier' do
       it 'returns :item_code' do
-        expect(described_class.unique_identifier).to eq :item_code
+        expect(described_class.unique_identifier).to eq(:item_code)
       end
     end
   end
@@ -268,13 +268,13 @@ RSpec.describe Canonical::Ingredient, type: :model do
     # Ensure that a key attribute from the join model can be retrieved directly from
     # the alchemical property
     it 'can get the priority from its alchemical properties' do
-      expect(ingredient.reload.alchemical_properties.first.priority).to eq 1
+      expect(ingredient.reload.alchemical_properties.first.priority).to eq(1)
     end
 
     # Ensure that a key attribute from the associated model can also be retrieved
     # directly
     it 'can get the name from its alchemical properties' do
-      expect(ingredient.reload.alchemical_properties.last.name).to eq AlchemicalProperty.last.name
+      expect(ingredient.reload.alchemical_properties.last.name).to eq(AlchemicalProperty.last.name)
     end
   end
 end
