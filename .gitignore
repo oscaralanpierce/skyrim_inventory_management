@@ -45,3 +45,6 @@ skyrim_inventory_management.csr
 /**/*.crt
 /**/*.key
 /**/*.csr
+# Ignore key files for decrypting credentials and more.
+/config/*.key
+
