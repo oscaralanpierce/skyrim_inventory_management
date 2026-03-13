@@ -50,6 +50,8 @@ The setup script installs dependencies (including Bundler), sets up the database
 
 Note that the setup script installs a Git pre-commit hook that runs [Rubocop](#rubocop). **Running the setup script will overwrite any existing precommit hooks you have in the repo.** Since these are not saved in Git, they are not recoverable if you overwrite them (unless you've committed them to Git somewhere outside this repo).
 
+You will need to create a `config/master.key` file with the value of "SIM Rails Master Key" in the password manager. If you don't have the password manager you probably shouldn't be doing this.
+
 To run the server, simply run `bundle exec rails s` and your server will start on `localhost:3000`.
 
 Note that if you are also running the [SIM front end](https://github.com/danascheider/skyrim_inventory_management_frontend), it will expect the backend to run on `localhost:3000` in development. CORS settings on the API require the front end to run on `localhost:5173`.
