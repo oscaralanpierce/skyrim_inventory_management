@@ -34,7 +34,7 @@ group :development, :test do
   gem 'rspec-rails', '~> 8.0'
 
   # Use Timecop to freeze time in tests (for testing timestamps, etc.)
-  gem 'timecop', '~> 0.9.10'
+  gem 'timecop', '~> 0.9.11'
 
   # Use DatabaseCleaner to clear the database between specs
   gem 'database_cleaner-active_record', '~> 2.2'
