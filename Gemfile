@@ -21,7 +21,7 @@ gem 'bootsnap', '~> 1.24', require: false
 gem 'rack-cors', '~> 3.0.0'
 
 # Use Faraday to validate Google auth access tokens
-gem 'faraday', '~> 2.14.2'
+gem 'faraday', '~> 2.14.3'
 
 # Use the CSV gem, which is no longer included in the standard library, to parse CSVs
 gem 'csv', '~> 3.3'
