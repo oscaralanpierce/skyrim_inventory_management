@@ -2,7 +2,7 @@
 
 FactoryBot.define do
   factory :staff do
-    game
+    playthrough
 
     name { 'Staff of Chain Lightning' }
     unit_weight { 8 }

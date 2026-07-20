@@ -4,15 +4,15 @@ require 'service/internal_server_error_result'
 require 'service/no_content_result'
 require 'service/not_found_result'
 
-class GamesController < ApplicationController
+class PlaythroughsController < ApplicationController
   class DestroyService
-    def initialize(user, game_id)
+    def initialize(user, playthrough_id)
       @user = user
-      @game_id = game_id
+      @playthrough_id = playthrough_id
     end
 
     def perform
-      game.destroy!
+      playthrough.destroy!
       Service::NoContentResult.new
     rescue ActiveRecord::RecordNotFound
       Service::NotFoundResult.new
@@ -22,10 +22,10 @@ class GamesController < ApplicationController
 
     private
 
-    attr_reader :user, :game_id
+    attr_reader :user, :playthrough_id
 
-    def game
-      @game ||= user.games.find(game_id)
+    def playthrough
+      @playthrough ||= user.playthroughs.find(playthrough_id)
     end
   end
 end

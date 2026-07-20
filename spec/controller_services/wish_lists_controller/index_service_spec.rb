@@ -6,12 +6,12 @@ require 'service/ok_result'
 
 RSpec.describe WishListsController::IndexService do
   describe '#perform' do
-    subject(:perform) { described_class.new(user, game_id).perform }
+    subject(:perform) { described_class.new(user, playthrough_id).perform }
 
     let(:user) { create(:user) }
 
-    context 'when the game is not found' do
-      let(:game_id) { 455_315 }
+    context 'when the playthrough is not found' do
+      let(:playthrough_id) { 455_315 }
 
       it 'returns a Service::NotFoundResult' do
         expect(perform).to be_a(Service::NotFoundResult)
@@ -23,8 +23,8 @@ RSpec.describe WishListsController::IndexService do
       end
     end
 
-    context 'when the game belongs to another user' do
-      let(:game_id) { create(:game).id }
+    context 'when the playthrough belongs to another user' do
+      let(:playthrough_id) { create(:playthrough).id }
 
       it 'returns a Service::NotFoundResult' do
         expect(perform).to be_a(Service::NotFoundResult)
@@ -36,9 +36,9 @@ RSpec.describe WishListsController::IndexService do
       end
     end
 
-    context 'when there are no wish lists for that game' do
-      let(:game) { create(:game, user:) }
-      let(:game_id) { game.id }
+    context 'when there are no wish lists for that playthrough' do
+      let(:playthrough) { create(:playthrough, user:) }
+      let(:playthrough_id) { playthrough.id }
 
       it 'returns a Service::OkResult' do
         expect(perform).to be_a(Service::OkResult)
@@ -49,25 +49,25 @@ RSpec.describe WishListsController::IndexService do
       end
     end
 
-    context 'when there are wish lists for that game' do
-      let(:game) { create(:game_with_wish_lists, user:) }
-      let(:game_id) { game.id }
+    context 'when there are wish lists for that playthrough' do
+      let(:playthrough) { create(:playthrough_with_wish_lists, user:) }
+      let(:playthrough_id) { playthrough.id }
 
       it 'returns a Service::OkResult' do
         expect(perform).to be_a(Service::OkResult)
       end
 
-      it "sets the resource to the game's wish lists" do
-        expect(perform.resource).to eq(game.wish_lists.index_order)
+      it "sets the resource to the playthrough's wish lists" do
+        expect(perform.resource).to eq(playthrough.wish_lists.index_order)
       end
     end
 
     context 'when something unexpected goes wrong' do
-      let(:game) { create(:game, user:) }
-      let(:game_id) { game.id }
+      let(:playthrough) { create(:playthrough, user:) }
+      let(:playthrough_id) { playthrough.id }
 
       before do
-        allow_any_instance_of(Game).to receive(:wish_lists).and_raise(StandardError, 'Something went horribly wrong')
+        allow_any_instance_of(Playthrough).to receive(:wish_lists).and_raise(StandardError, 'Something went horribly wrong')
       end
 
       it 'returns a Service::InternalServerErrorResult' do

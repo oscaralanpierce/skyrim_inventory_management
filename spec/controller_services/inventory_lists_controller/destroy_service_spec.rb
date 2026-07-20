@@ -11,11 +11,11 @@ RSpec.describe InventoryListsController::DestroyService do
     subject(:perform) { described_class.new(user, inventory_list.id).perform }
 
     let(:user) { create(:user) }
-    let(:game) { create(:game, user:) }
+    let(:playthrough) { create(:playthrough, user:) }
 
     context 'when all goes well' do
-      let!(:aggregate_list) { create(:aggregate_inventory_list, game:) }
-      let!(:inventory_list) { create(:inventory_list_with_list_items, game:) }
+      let!(:aggregate_list) { create(:aggregate_inventory_list, playthrough:) }
+      let!(:inventory_list) { create(:inventory_list_with_list_items, playthrough:) }
 
       before do
         inventory_list.list_items.each do |list_item|
@@ -23,8 +23,8 @@ RSpec.describe InventoryListsController::DestroyService do
         end
       end
 
-      context 'when the game has additional regular lists' do
-        let!(:third_list) { create(:inventory_list_with_list_items, game:, aggregate_list:) }
+      context 'when the playthrough has additional regular lists' do
+        let!(:third_list) { create(:inventory_list_with_list_items, playthrough:, aggregate_list:) }
 
         before do
           third_list.list_items.each do |list_item|
@@ -34,7 +34,7 @@ RSpec.describe InventoryListsController::DestroyService do
 
         it 'destroys the inventory list' do
           expect { perform }
-            .to change(game.inventory_lists, :count).from(3).to(2)
+            .to change(playthrough.inventory_lists, :count).from(3).to(2)
         end
 
         it 'updates the list items on the aggregate list' do
@@ -42,11 +42,11 @@ RSpec.describe InventoryListsController::DestroyService do
             .to change(aggregate_list.list_items, :count).from(4).to(2)
         end
 
-        it 'updates the game' do
+        it 'updates the playthrough' do
           t = Time.zone.now + 3.days
           Timecop.freeze(t) do
             perform
-            expect(game.reload.updated_at).to be_within(0.005.seconds).of(t)
+            expect(playthrough.reload.updated_at).to be_within(0.005.seconds).of(t)
           end
         end
 
@@ -59,17 +59,17 @@ RSpec.describe InventoryListsController::DestroyService do
         end
       end
 
-      context "when this is the game's last regular list" do
+      context "when this is the playthrough's last regular list" do
         it 'deletes the regular list and the aggregate list' do
           expect { perform }
-            .to change(game.inventory_lists, :count).from(2).to(0)
+            .to change(playthrough.inventory_lists, :count).from(2).to(0)
         end
 
-        it 'updates the game' do
+        it 'updates the playthrough' do
           t = Time.zone.now + 3.days
           Timecop.freeze(t) do
             perform
-            expect(game.reload.updated_at).to be_within(0.005.seconds).of(t)
+            expect(playthrough.reload.updated_at).to be_within(0.005.seconds).of(t)
           end
         end
 
@@ -85,7 +85,7 @@ RSpec.describe InventoryListsController::DestroyService do
     end
 
     context 'when the list is an aggregate list' do
-      let!(:inventory_list) { create(:aggregate_inventory_list, game:) }
+      let!(:inventory_list) { create(:aggregate_inventory_list, playthrough:) }
 
       it 'returns a Service::MethodNotAllowedResult' do
         expect(perform).to be_a(Service::MethodNotAllowedResult)
@@ -128,7 +128,7 @@ RSpec.describe InventoryListsController::DestroyService do
     end
 
     context 'when something unexpected goes wrong' do
-      let!(:inventory_list) { create(:inventory_list, game:) }
+      let!(:inventory_list) { create(:inventory_list, playthrough:) }
 
       before do
         allow_any_instance_of(InventoryList).to receive(:aggregate_list).and_raise(StandardError.new('Something went horribly wrong'))

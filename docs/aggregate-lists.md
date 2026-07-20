@@ -76,7 +76,7 @@ The database schema for all models that include the `Aggregatable` concern must 
 | ------------------- | ------- | ----------- | ------- |
 | `aggregate`         | boolean | NOT NULL    | false   |
 | `aggregate_list_id` | integer |             |         |
-| `game_id`           | integer | NOT NULL    |         |
+| `playthrough_id`           | integer | NOT NULL    |         |
 | `title`             | string  | NOT NULL    |         |
 
 The title for all aggregate lists is "All Items". The titles for other lists may be validated or set to a default value by the individual model if desired. Other than the title, these values should not be changed after initial creation.

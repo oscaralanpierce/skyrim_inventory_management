@@ -56,8 +56,8 @@ class WishListItemsController < ApplicationController
       @list_item ||= user.wish_list_items.find(item_id)
     end
 
-    def game
-      @game ||= wish_list.game
+    def playthrough
+      @playthrough ||= wish_list.playthrough
     end
 
     def aggregate_list_item
@@ -73,7 +73,7 @@ class WishListItemsController < ApplicationController
     end
 
     def all_matching_items
-      aggregate_list.game.wish_list_items.where('description ILIKE ?', list_item.description)
+      aggregate_list.playthrough.wish_list_items.where('description ILIKE ?', list_item.description)
     end
   end
 end

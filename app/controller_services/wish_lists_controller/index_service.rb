@@ -6,13 +6,13 @@ require 'service/ok_result'
 
 class WishListsController < ApplicationController
   class IndexService
-    def initialize(user, game_id)
+    def initialize(user, playthrough_id)
       @user = user
-      @game_id = game_id
+      @playthrough_id = playthrough_id
     end
 
     def perform
-      Service::OkResult.new(resource: game.wish_lists.index_order)
+      Service::OkResult.new(resource: playthrough.wish_lists.index_order)
     rescue ActiveRecord::RecordNotFound
       Service::NotFoundResult.new
     rescue StandardError => e
@@ -22,10 +22,10 @@ class WishListsController < ApplicationController
 
     private
 
-    attr_reader :user, :game_id
+    attr_reader :user, :playthrough_id
 
-    def game
-      user.games.find(game_id)
+    def playthrough
+      user.playthroughs.find(playthrough_id)
     end
   end
 end

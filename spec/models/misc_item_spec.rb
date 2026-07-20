@@ -31,8 +31,8 @@ RSpec.describe MiscItem, type: :model do
     end
 
     describe '#canonical_misc_item' do
-      let(:item) { build(:misc_item, canonical_misc_item:, game:) }
-      let(:game) { create(:game) }
+      let(:item) { build(:misc_item, canonical_misc_item:, playthrough:) }
+      let(:playthrough) { create(:playthrough) }
 
       context 'when the canonical misc item is not unique' do
         let(:canonical_misc_item) { create(:canonical_misc_item) }
@@ -42,7 +42,7 @@ RSpec.describe MiscItem, type: :model do
             :misc_item,
             3,
             canonical_misc_item:,
-            game:,
+            playthrough:,
           )
         end
 
@@ -67,7 +67,7 @@ RSpec.describe MiscItem, type: :model do
           end
         end
 
-        context 'when the canonical has another match for a different game' do
+        context 'when the canonical has another match for a different playthrough' do
           before do
             create(:misc_item, canonical_misc_item:)
           end
@@ -77,14 +77,14 @@ RSpec.describe MiscItem, type: :model do
           end
         end
 
-        context 'when the canonical has another match for the same game' do
+        context 'when the canonical has another match for the same playthrough' do
           before do
-            create(:misc_item, canonical_misc_item:, game:)
+            create(:misc_item, canonical_misc_item:, playthrough:)
           end
 
           it 'is invalid' do
             validate
-            expect(item.errors[:base]).to include('is a duplicate of a unique in-game item')
+            expect(item.errors[:base]).to include('is a duplicate of a unique in-playthrough item')
           end
         end
       end
@@ -259,7 +259,7 @@ RSpec.describe MiscItem, type: :model do
       end
     end
 
-    context 'when updating in-game item attributes' do
+    context 'when updating in-playthrough item attributes' do
       let(:item) { create(:misc_item, :with_matching_canonical) }
 
       context 'when the update results in a new canonical match' do

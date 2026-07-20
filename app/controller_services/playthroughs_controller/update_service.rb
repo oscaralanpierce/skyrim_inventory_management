@@ -5,19 +5,19 @@ require 'service/not_found_result'
 require 'service/ok_result'
 require 'service/unprocessable_entity_result'
 
-class GamesController < ApplicationController
+class PlaythroughsController < ApplicationController
   class UpdateService
-    def initialize(user, game_id, params)
+    def initialize(user, playthrough_id, params)
       @user = user
-      @game_id = game_id
+      @playthrough_id = playthrough_id
       @params = params
     end
 
     def perform
-      if game.update(params)
-        Service::OkResult.new(resource: game)
+      if playthrough.update(params)
+        Service::OkResult.new(resource: playthrough)
       else
-        Service::UnprocessableEntityResult.new(errors: game.error_array)
+        Service::UnprocessableEntityResult.new(errors: playthrough.error_array)
       end
     rescue ActiveRecord::RecordNotFound
       Service::NotFoundResult.new
@@ -27,10 +27,10 @@ class GamesController < ApplicationController
 
     private
 
-    attr_reader :user, :game_id, :params
+    attr_reader :user, :playthrough_id, :params
 
-    def game
-      @game ||= user.games.find(game_id)
+    def playthrough
+      @playthrough ||= user.playthroughs.find(playthrough_id)
     end
   end
 end

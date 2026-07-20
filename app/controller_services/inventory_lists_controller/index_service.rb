@@ -5,13 +5,13 @@ require 'service/ok_result'
 
 class InventoryListsController < ApplicationController
   class IndexService
-    def initialize(user, game_id)
+    def initialize(user, playthrough_id)
       @user = user
-      @game_id = game_id
+      @playthrough_id = playthrough_id
     end
 
     def perform
-      Service::OkResult.new(resource: game.inventory_lists)
+      Service::OkResult.new(resource: playthrough.inventory_lists)
     rescue ActiveRecord::RecordNotFound
       Service::NotFoundResult.new
     rescue StandardError => e
@@ -20,10 +20,10 @@ class InventoryListsController < ApplicationController
 
     private
 
-    attr_reader :user, :game_id
+    attr_reader :user, :playthrough_id
 
-    def game
-      @game ||= user.games.find(game_id)
+    def playthrough
+      @playthrough ||= user.playthroughs.find(playthrough_id)
     end
   end
 end

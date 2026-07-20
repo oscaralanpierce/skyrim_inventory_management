@@ -6,38 +6,38 @@ require 'service/not_found_result'
 require 'service/ok_result'
 require 'service/unprocessable_entity_result'
 
-RSpec.describe GamesController::UpdateService do
+RSpec.describe PlaythroughsController::UpdateService do
   describe '#perform' do
-    subject(:perform) { described_class.new(user, game.id, params).perform }
+    subject(:perform) { described_class.new(user, playthrough.id, params).perform }
 
     context 'when all goes well' do
       let!(:user) { create(:user) }
-      let!(:game) { create(:game, user:) }
+      let!(:playthrough) { create(:playthrough, user:) }
       let(:params) { { description: 'New description' } }
 
-      it 'updates the game' do
+      it 'updates the playthrough' do
         perform
-        expect(game.reload.description).to eq('New description')
+        expect(playthrough.reload.description).to eq('New description')
       end
 
       it 'returns a Service::OkResult' do
         expect(perform).to be_a(Service::OkResult)
       end
 
-      it 'sets the game as the resource' do
-        expect(perform.resource).to eq(game)
+      it 'sets the playthrough as the resource' do
+        expect(perform.resource).to eq(playthrough)
       end
     end
 
     context 'when the params are invalid' do
       let!(:user) { create(:user) }
-      let!(:game) { create(:game, user:) }
-      let!(:other_game) { create(:game, user:) }
-      let(:params) { { name: other_game.name } }
+      let!(:playthrough) { create(:playthrough, user:) }
+      let!(:other_playthrough) { create(:playthrough, user:) }
+      let(:params) { { name: other_playthrough.name } }
 
-      it "doesn't update the game" do
+      it "doesn't update the playthrough" do
         perform
-        expect(game.reload.name).not_to eq(other_game.name)
+        expect(playthrough.reload.name).not_to eq(other_playthrough.name)
       end
 
       it 'returns a Service::UnprocessableEntityResult' do
@@ -49,9 +49,9 @@ RSpec.describe GamesController::UpdateService do
       end
     end
 
-    context "when the game doesn't exist" do
+    context "when the playthrough doesn't exist" do
       let(:user) { create(:user) }
-      let(:game) { double(id: 823_589) }
+      let(:playthrough) { double(id: 823_589) }
       let(:params) { { description: 'New description' } }
 
       it 'returns a Service::NotFoundResult' do
@@ -64,14 +64,14 @@ RSpec.describe GamesController::UpdateService do
       end
     end
 
-    context 'when the game belongs to another user' do
+    context 'when the playthrough belongs to another user' do
       let!(:user) { create(:user) }
-      let!(:game) { create(:game) }
+      let!(:playthrough) { create(:playthrough) }
       let(:params) { { name: 'Valid name' } }
 
-      it "doesn't update the game" do
+      it "doesn't update the playthrough" do
         perform
-        expect(game.reload.name).not_to eq('Valid name')
+        expect(playthrough.reload.name).not_to eq('Valid name')
       end
 
       it 'returns a Service::NotFoundResult' do
@@ -81,11 +81,11 @@ RSpec.describe GamesController::UpdateService do
 
     context 'when something unexpected goes wrong' do
       let!(:user) { create(:user) }
-      let(:game) { create(:game, user:) }
+      let(:playthrough) { create(:playthrough, user:) }
       let(:params) { { description: 'New description' } }
 
       before do
-        allow_any_instance_of(Game).to receive(:update).and_raise(StandardError, 'Something went horribly wrong')
+        allow_any_instance_of(Playthrough).to receive(:update).and_raise(StandardError, 'Something went horribly wrong')
       end
 
       it 'returns a Service::InternalServerErrorResult' do

@@ -12,10 +12,10 @@ RSpec.describe InventoryItemsController::DestroyService do
     subject(:perform) { described_class.new(user, list_item.id).perform }
 
     let(:user) { create(:user) }
-    let(:game) { create(:game, user:) }
+    let(:playthrough) { create(:playthrough, user:) }
 
-    let!(:aggregate_list) { create(:aggregate_inventory_list, game:) }
-    let!(:inventory_list) { create(:inventory_list, game:, aggregate_list:) }
+    let!(:aggregate_list) { create(:aggregate_inventory_list, playthrough:) }
+    let!(:inventory_list) { create(:inventory_list, playthrough:, aggregate_list:) }
 
     context 'when all goes well' do
       context 'when there is no matching item on another list' do
@@ -27,7 +27,7 @@ RSpec.describe InventoryItemsController::DestroyService do
 
         it 'destroys the list item and aggregate list item' do
           expect { perform }
-            .to change(game.inventory_items, :count).from(2).to(0)
+            .to change(playthrough.inventory_items, :count).from(2).to(0)
         end
 
         it 'returns a Service::NoContentResult' do
@@ -42,7 +42,7 @@ RSpec.describe InventoryItemsController::DestroyService do
 
       context 'when there is a matching item on another list' do
         let!(:list_item) { create(:inventory_item, list: inventory_list) }
-        let(:other_list) { create(:inventory_list, game:) }
+        let(:other_list) { create(:inventory_list, playthrough:) }
         let!(:other_item) { create(:inventory_item, description: list_item.description, list: other_list) }
 
         before do
@@ -52,7 +52,7 @@ RSpec.describe InventoryItemsController::DestroyService do
 
         it 'destroys the list item and aggregate list item' do
           expect { perform }
-            .to change(game.inventory_items, :count).from(3).to(2)
+            .to change(playthrough.inventory_items, :count).from(3).to(2)
         end
 
         it 'returns a Service::OkResult' do

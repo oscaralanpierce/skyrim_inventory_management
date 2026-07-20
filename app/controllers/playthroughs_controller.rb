@@ -2,7 +2,7 @@
 
 require 'controller/response'
 
-class GamesController < ApplicationController
+class PlaythroughsController < ApplicationController
   def index
     result = IndexService.new(current_user).perform
 
@@ -30,6 +30,6 @@ class GamesController < ApplicationController
   private
 
   def game_params
-    params.require(:game).permit(:name, :description)
+    params.require(:playthrough).permit(:name, :description)
   end
 end

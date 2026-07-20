@@ -65,7 +65,7 @@ class InventoryItemsController < ApplicationController
     end
 
     def all_matching_list_items
-      aggregate_list.game.inventory_items.where('description ILIKE ?', params[:description])
+      aggregate_list.playthrough.inventory_items.where('description ILIKE ?', params[:description])
     end
   end
 end

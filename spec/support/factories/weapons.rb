@@ -2,7 +2,7 @@
 
 FactoryBot.define do
   factory :weapon do
-    game
+    playthrough
 
     name { 'Dwarven War Axe' }
 

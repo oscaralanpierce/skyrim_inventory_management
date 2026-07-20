@@ -16,9 +16,9 @@ RSpec.describe 'InventoryItems', type: :request do
       post "/inventory_lists/#{inventory_list.id}/inventory_items", params:, headers:
     end
 
-    let!(:game) { create(:game, user:) }
-    let!(:inventory_list) { create(:inventory_list, game:) }
-    let!(:aggregate_list) { game.aggregate_inventory_list }
+    let!(:playthrough) { create(:playthrough, user:) }
+    let!(:inventory_list) { create(:inventory_list, playthrough:) }
+    let!(:aggregate_list) { playthrough.aggregate_inventory_list }
 
     context 'when authenticated' do
       before do
@@ -54,7 +54,7 @@ RSpec.describe 'InventoryItems', type: :request do
 
           context 'when there is an existing matching item on another list' do
             let!(:other_item) { create(:inventory_item, list: other_list, description: 'Corundum ingot', quantity: 2) }
-            let(:other_list) { create(:inventory_list, game:) }
+            let(:other_list) { create(:inventory_list, playthrough:) }
 
             before do
               aggregate_list.add_item_from_child_list(other_item)
@@ -120,7 +120,7 @@ RSpec.describe 'InventoryItems', type: :request do
         end
 
         context 'when there is an existing matching item on the same list' do
-          let(:other_list) { create(:inventory_list, game:, aggregate_list:) }
+          let(:other_list) { create(:inventory_list, playthrough:, aggregate_list:) }
           let!(:other_item) { create(:inventory_item, list: other_list, description: 'Corundum ingot', quantity: 2) }
           let!(:list_item) { create(:inventory_item, list: inventory_list, description: 'Corundum ingot', quantity: 3) }
 
@@ -252,7 +252,7 @@ RSpec.describe 'InventoryItems', type: :request do
       end
 
       context 'when the list is an aggregate list' do
-        let(:inventory_list) { create(:aggregate_inventory_list, game:) }
+        let(:inventory_list) { create(:aggregate_inventory_list, playthrough:) }
         let(:params) { { inventory_item: { description: 'Corundum ingot', quantity: 4 } }.to_json }
 
         it "doesn't create an item" do
@@ -320,9 +320,9 @@ RSpec.describe 'InventoryItems', type: :request do
     subject(:update_item) { patch "/inventory_items/#{list_item.id}", headers:, params: }
 
     let!(:user) { create(:authenticated_user) }
-    let(:game) { create(:game, user:) }
-    let!(:aggregate_list) { create(:aggregate_inventory_list, game:) }
-    let!(:inventory_list) { create(:inventory_list, game:, aggregate_list:) }
+    let(:playthrough) { create(:playthrough, user:) }
+    let!(:aggregate_list) { create(:aggregate_inventory_list, playthrough:) }
+    let!(:inventory_list) { create(:inventory_list, playthrough:, aggregate_list:) }
 
     context 'when authenticated' do
       before do
@@ -362,7 +362,7 @@ RSpec.describe 'InventoryItems', type: :request do
 
         context 'when there is a matching item on another list' do
           let!(:list_item) { create(:inventory_item, list: inventory_list) }
-          let!(:other_list) { create(:inventory_list, game:, aggregate_list:) }
+          let!(:other_list) { create(:inventory_list, playthrough:, aggregate_list:) }
           let!(:other_item) { create(:inventory_item, list: other_list, description: list_item.description, quantity: 4) }
           let(:aggregate_list_item) { aggregate_list.list_items.first }
 
@@ -400,11 +400,11 @@ RSpec.describe 'InventoryItems', type: :request do
               end
             end
 
-            it 'updates the game' do
+            it 'updates the playthrough' do
               t = Time.zone.now + 3.days
               Timecop.freeze(t) do
                 update_item
-                expect(game.reload.updated_at).to be_within(0.005.seconds).of(t)
+                expect(playthrough.reload.updated_at).to be_within(0.005.seconds).of(t)
               end
             end
 
@@ -464,11 +464,11 @@ RSpec.describe 'InventoryItems', type: :request do
               end
             end
 
-            it 'updates the game' do
+            it 'updates the playthrough' do
               t = Time.zone.now + 3.days
               Timecop.freeze(t) do
                 update_item
-                expect(game.reload.updated_at).to be_within(0.005.seconds).of(t)
+                expect(playthrough.reload.updated_at).to be_within(0.005.seconds).of(t)
               end
             end
 
@@ -537,7 +537,7 @@ RSpec.describe 'InventoryItems', type: :request do
 
       context 'when the attributes are invalid' do
         let!(:list_item) { create(:inventory_item, list: inventory_list, quantity: 2) }
-        let(:other_list) { create(:inventory_list, game:) }
+        let(:other_list) { create(:inventory_list, playthrough:) }
         let!(:other_item) { create(:inventory_item, list: other_list, description: list_item.description, quantity: 1) }
         let(:aggregate_list_item) { aggregate_list.list_items.first }
         let(:params) { { inventory_item: { quantity: -4, unit_weight: 2 } }.to_json }
@@ -621,9 +621,9 @@ RSpec.describe 'InventoryItems', type: :request do
     subject(:update_item) { put "/inventory_items/#{list_item.id}", headers:, params: }
 
     let!(:user) { create(:authenticated_user) }
-    let(:game) { create(:game, user:) }
-    let!(:aggregate_list) { create(:aggregate_inventory_list, game:) }
-    let!(:inventory_list) { create(:inventory_list, game:, aggregate_list:) }
+    let(:playthrough) { create(:playthrough, user:) }
+    let!(:aggregate_list) { create(:aggregate_inventory_list, playthrough:) }
+    let!(:inventory_list) { create(:inventory_list, playthrough:, aggregate_list:) }
 
     context 'when authenticated' do
       before do
@@ -663,7 +663,7 @@ RSpec.describe 'InventoryItems', type: :request do
 
         context 'when there is a matching item on another list' do
           let!(:list_item) { create(:inventory_item, list: inventory_list) }
-          let!(:other_list) { create(:inventory_list, game:, aggregate_list:) }
+          let!(:other_list) { create(:inventory_list, playthrough:, aggregate_list:) }
           let!(:other_item) { create(:inventory_item, list: other_list, description: list_item.description, quantity: 4) }
           let(:aggregate_list_item) { aggregate_list.list_items.first }
 
@@ -701,11 +701,11 @@ RSpec.describe 'InventoryItems', type: :request do
               end
             end
 
-            it 'updates the game' do
+            it 'updates the playthrough' do
               t = Time.zone.now + 3.days
               Timecop.freeze(t) do
                 update_item
-                expect(game.reload.updated_at).to be_within(0.005.seconds).of(t)
+                expect(playthrough.reload.updated_at).to be_within(0.005.seconds).of(t)
               end
             end
 
@@ -765,11 +765,11 @@ RSpec.describe 'InventoryItems', type: :request do
               end
             end
 
-            it 'updates the game' do
+            it 'updates the playthrough' do
               t = Time.zone.now + 3.days
               Timecop.freeze(t) do
                 update_item
-                expect(game.reload.updated_at).to be_within(0.005.seconds).of(t)
+                expect(playthrough.reload.updated_at).to be_within(0.005.seconds).of(t)
               end
             end
 
@@ -838,7 +838,7 @@ RSpec.describe 'InventoryItems', type: :request do
 
       context 'when the attributes are invalid' do
         let!(:list_item) { create(:inventory_item, list: inventory_list, quantity: 2) }
-        let(:other_list) { create(:inventory_list, game:) }
+        let(:other_list) { create(:inventory_list, playthrough:) }
         let!(:other_item) { create(:inventory_item, list: other_list, description: list_item.description, quantity: 1) }
         let(:aggregate_list_item) { aggregate_list.list_items.first }
         let(:params) { { inventory_item: { quantity: -4, unit_weight: 2 } }.to_json }
@@ -922,9 +922,9 @@ RSpec.describe 'InventoryItems', type: :request do
     subject(:destroy_item) { delete "/inventory_items/#{list_item.id}", headers: }
 
     let!(:user) { create(:authenticated_user) }
-    let(:game) { create(:game, user:) }
-    let!(:aggregate_list) { create(:aggregate_inventory_list, game:) }
-    let!(:inventory_list) { create(:inventory_list, game:, aggregate_list:) }
+    let(:playthrough) { create(:playthrough, user:) }
+    let!(:aggregate_list) { create(:aggregate_inventory_list, playthrough:) }
+    let!(:inventory_list) { create(:inventory_list, playthrough:, aggregate_list:) }
 
     context 'when authenticated' do
       before do
@@ -941,7 +941,7 @@ RSpec.describe 'InventoryItems', type: :request do
 
           it 'deletes the item on the regular list and the aggregate list' do
             expect { destroy_item }
-              .to change(game.inventory_items, :count).from(2).to(0)
+              .to change(playthrough.inventory_items, :count).from(2).to(0)
           end
 
           it 'updates the regular list' do
@@ -960,11 +960,11 @@ RSpec.describe 'InventoryItems', type: :request do
             end
           end
 
-          it 'updates the game' do
+          it 'updates the playthrough' do
             t = Time.zone.now + 3.days
             Timecop.freeze(t) do
               destroy_item
-              expect(game.reload.updated_at).to be_within(0.005.seconds).of(t)
+              expect(playthrough.reload.updated_at).to be_within(0.005.seconds).of(t)
             end
           end
 
@@ -976,7 +976,7 @@ RSpec.describe 'InventoryItems', type: :request do
 
         context 'when there is a matching list item on another list' do
           let!(:list_item) { create(:inventory_item, list: inventory_list) }
-          let(:other_list) { create(:inventory_list, game:) }
+          let(:other_list) { create(:inventory_list, playthrough:) }
           let!(:other_item) { create(:inventory_item, description: list_item.description, list: other_list) }
 
           before do
@@ -1005,11 +1005,11 @@ RSpec.describe 'InventoryItems', type: :request do
             end
           end
 
-          it 'updates the game' do
+          it 'updates the playthrough' do
             t = Time.zone.now + 3.days
             Timecop.freeze(t) do
               destroy_item
-              expect(game.reload.updated_at).to be_within(0.005.seconds).of(t)
+              expect(playthrough.reload.updated_at).to be_within(0.005.seconds).of(t)
             end
           end
 

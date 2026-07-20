@@ -31,8 +31,8 @@ RSpec.describe Staff, type: :model do
     end
 
     describe '#canonical_staff' do
-      let(:staff) { build(:staff, canonical_staff:, game:) }
-      let(:game) { create(:game) }
+      let(:staff) { build(:staff, canonical_staff:, playthrough:) }
+      let(:playthrough) { create(:playthrough) }
 
       context 'when the canonical staff is not unique' do
         let(:canonical_staff) { create(:canonical_staff) }
@@ -42,7 +42,7 @@ RSpec.describe Staff, type: :model do
             :staff,
             3,
             canonical_staff:,
-            game:,
+            playthrough:,
           )
         end
 
@@ -67,7 +67,7 @@ RSpec.describe Staff, type: :model do
           end
         end
 
-        context 'when the canonical staff has other matches in another game' do
+        context 'when the canonical staff has other matches in another playthrough' do
           before do
             create(:staff, canonical_staff:)
           end
@@ -77,14 +77,14 @@ RSpec.describe Staff, type: :model do
           end
         end
 
-        context 'when the canonical staff has other matches in the same game' do
+        context 'when the canonical staff has other matches in the same playthrough' do
           before do
-            create(:staff, canonical_staff:, game:)
+            create(:staff, canonical_staff:, playthrough:)
           end
 
           it 'is invalid' do
             validate
-            expect(staff.errors[:base]).to include('is a duplicate of a unique in-game item')
+            expect(staff.errors[:base]).to include('is a duplicate of a unique in-playthrough item')
           end
         end
       end
@@ -100,8 +100,8 @@ RSpec.describe Staff, type: :model do
       end
 
       context 'when there is no canonical_staff associated' do
-        let(:game) { create(:game) }
-        let(:staff) { build(:staff, game:, name: 'my staff') }
+        let(:playthrough) { create(:playthrough) }
+        let(:staff) { build(:staff, playthrough:, name: 'my staff') }
 
         context 'when there are multiple matching canonical staves' do
           before do
@@ -127,12 +127,12 @@ RSpec.describe Staff, type: :model do
               rare_item: true,
             )
 
-            create(:staff, name: 'My Staff', game:, canonical_staff:)
+            create(:staff, name: 'My Staff', playthrough:, canonical_staff:)
           end
 
           it 'is invalid' do
             staff.validate
-            expect(staff.errors[:base]).to include('is a duplicate of a unique in-game item')
+            expect(staff.errors[:base]).to include('is a duplicate of a unique in-playthrough item')
           end
         end
 
@@ -225,8 +225,8 @@ RSpec.describe Staff, type: :model do
     end
 
     context 'when there is a single matching canonical staff' do
-      let(:game) { create(:game) }
-      let(:staff) { build(:staff, name: 'my staff', unit_weight: nil, game:) }
+      let(:playthrough) { create(:playthrough) }
+      let(:staff) { build(:staff, name: 'my staff', unit_weight: nil, playthrough:) }
 
       let!(:canonical_staff) do
         create(
@@ -238,7 +238,7 @@ RSpec.describe Staff, type: :model do
       end
 
       before do
-        create(:staff, name: 'My Staff', canonical_staff:, game:)
+        create(:staff, name: 'My Staff', canonical_staff:, playthrough:)
       end
 
       it 'associates the canonical staff' do
@@ -268,10 +268,10 @@ RSpec.describe Staff, type: :model do
       end
     end
 
-    context 'when updating the in-game item' do
+    context 'when updating the in-playthrough item' do
       let(:staff) { create(:staff, :with_matching_canonical) }
 
-      context 'when updating the in-game item changes the matching canonical' do
+      context 'when updating the in-playthrough item changes the matching canonical' do
         let!(:new_canonical) { create(:canonical_staff, name: 'Awesome Staff of Hipness') }
 
         it 'changes the canonical model' do
@@ -283,7 +283,7 @@ RSpec.describe Staff, type: :model do
         end
       end
 
-      context 'when updating the in-game item results in an ambiguous match' do
+      context 'when updating the in-playthrough item results in an ambiguous match' do
         before do
           create_list(
             :canonical_staff,
@@ -301,7 +301,7 @@ RSpec.describe Staff, type: :model do
         end
       end
 
-      context 'when updating the in-game item results in no matches' do
+      context 'when updating the in-playthrough item results in no matches' do
         it 'removes the associated canonical model' do
           staff.name = 'awesome staff of hipness'
 

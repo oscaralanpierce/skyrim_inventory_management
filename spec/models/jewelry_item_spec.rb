@@ -31,8 +31,8 @@ RSpec.describe JewelryItem, type: :model do
     end
 
     describe '#canonical_jewelry_item' do
-      let(:item) { build(:jewelry_item, canonical_jewelry_item:, game:) }
-      let(:game) { create(:game) }
+      let(:item) { build(:jewelry_item, canonical_jewelry_item:, playthrough:) }
+      let(:playthrough) { create(:playthrough) }
 
       context 'when the canonical jewelry item is not unique' do
         let(:canonical_jewelry_item) { create(:canonical_jewelry_item) }
@@ -42,7 +42,7 @@ RSpec.describe JewelryItem, type: :model do
             :jewelry_item,
             3,
             canonical_jewelry_item:,
-            game:,
+            playthrough:,
           )
         end
 
@@ -67,7 +67,7 @@ RSpec.describe JewelryItem, type: :model do
           end
         end
 
-        context 'when there is another matching jewelry item for another game' do
+        context 'when there is another matching jewelry item for another playthrough' do
           before do
             create(:jewelry_item, canonical_jewelry_item:)
           end
@@ -77,14 +77,14 @@ RSpec.describe JewelryItem, type: :model do
           end
         end
 
-        context 'when there is another matching jewelry item for the same game' do
+        context 'when there is another matching jewelry item for the same playthrough' do
           before do
-            create(:jewelry_item, canonical_jewelry_item:, game:)
+            create(:jewelry_item, canonical_jewelry_item:, playthrough:)
           end
 
           it 'is invalid' do
             validate
-            expect(item.errors[:base]).to include('is a duplicate of a unique in-game item')
+            expect(item.errors[:base]).to include('is a duplicate of a unique in-playthrough item')
           end
         end
       end
@@ -423,7 +423,7 @@ RSpec.describe JewelryItem, type: :model do
       end
     end
 
-    context 'when updating in-game item attributes' do
+    context 'when updating in-playthrough item attributes' do
       let(:item) { create(:jewelry_item, :with_enchanted_canonical) }
 
       before do

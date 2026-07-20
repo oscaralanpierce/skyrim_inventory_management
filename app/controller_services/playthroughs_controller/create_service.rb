@@ -4,7 +4,7 @@ require 'service/created_result'
 require 'service/internal_server_error_result'
 require 'service/unprocessable_entity_result'
 
-class GamesController < ApplicationController
+class PlaythroughsController < ApplicationController
   class CreateService
     def initialize(user, params)
       @user = user
@@ -12,11 +12,11 @@ class GamesController < ApplicationController
     end
 
     def perform
-      game = user.games.new(params)
-      if game.save
-        Service::CreatedResult.new(resource: game)
+      playthrough = user.playthroughs.new(params)
+      if playthrough.save
+        Service::CreatedResult.new(resource: playthrough)
       else
-        Service::UnprocessableEntityResult.new(errors: game.error_array)
+        Service::UnprocessableEntityResult.new(errors: playthrough.error_array)
       end
     rescue StandardError => e
       Service::InternalServerErrorResult.new(errors: [e.message])

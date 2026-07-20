@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class Potion < ApplicationRecord
-  belongs_to :game
+  belongs_to :playthrough
   belongs_to :canonical_potion,
              optional: true,
              class_name: 'Canonical::Potion',
@@ -69,7 +69,7 @@ class Potion < ApplicationRecord
   def validate_unique_canonical
     return unless canonical_potion&.unique_item
 
-    potions = canonical_potion.potions.where(game_id:)
+    potions = canonical_potion.potions.where(playthrough_id:)
 
     return if potions.count < 1
     return if potions.count == 1 && potions.first == self

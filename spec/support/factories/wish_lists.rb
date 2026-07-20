@@ -2,7 +2,7 @@
 
 FactoryBot.define do
   factory :wish_list do
-    game
+    playthrough
 
     sequence(:title) {|n| "Wish List #{n}" }
 

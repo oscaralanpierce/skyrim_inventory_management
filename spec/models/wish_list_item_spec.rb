@@ -3,9 +3,9 @@
 require 'rails_helper'
 
 RSpec.describe WishListItem, type: :model do
-  let!(:game) { create(:game) }
-  let(:aggregate_list) { create(:aggregate_wish_list, game:) }
-  let(:wish_list) { create(:wish_list, game:, aggregate_list:) }
+  let!(:playthrough) { create(:playthrough) }
+  let(:aggregate_list) { create(:aggregate_wish_list, playthrough:) }
+  let(:wish_list) { create(:wish_list, playthrough:, aggregate_list:) }
 
   describe 'validation' do
     let(:item) { build(:wish_list_item) }
@@ -61,15 +61,15 @@ RSpec.describe WishListItem, type: :model do
   describe 'delegation' do
     let(:list_item) { create(:wish_list_item, list: wish_list) }
 
-    describe '#game' do
-      it 'returns the game its WishList belongs to' do
-        expect(list_item.game).to eq(game)
+    describe '#playthrough' do
+      it 'returns the playthrough its WishList belongs to' do
+        expect(list_item.playthrough).to eq(playthrough)
       end
     end
 
     describe '#user' do
-      it 'returns the user its game belongs to' do
-        expect(list_item.user).to eq(game.user)
+      it 'returns the user its playthrough belongs to' do
+        expect(list_item.user).to eq(playthrough.user)
       end
     end
   end
@@ -80,7 +80,7 @@ RSpec.describe WishListItem, type: :model do
       let!(:list_item2) { create(:wish_list_item, list:) }
       let!(:list_item3) { create(:wish_list_item, list:) }
 
-      let(:list) { create(:wish_list, game:) }
+      let(:list) { create(:wish_list, playthrough:) }
 
       before do
         list_item2.update!(quantity: 3)
@@ -91,27 +91,27 @@ RSpec.describe WishListItem, type: :model do
       end
     end
 
-    describe '::belonging_to_game' do
-      let!(:list1) { create(:wish_list_with_list_items, game:, aggregate_list:) }
-      let!(:list2) { create(:wish_list_with_list_items, game:, aggregate_list:) }
-      let!(:list3) { create(:wish_list_with_list_items, game:, aggregate_list:) }
+    describe '::belonging_to_playthrough' do
+      let!(:list1) { create(:wish_list_with_list_items, playthrough:, aggregate_list:) }
+      let!(:list2) { create(:wish_list_with_list_items, playthrough:, aggregate_list:) }
+      let!(:list3) { create(:wish_list_with_list_items, playthrough:, aggregate_list:) }
 
       before do
-        # There should be some that don't belong to the game to make sure they
+        # There should be some that don't belong to the playthrough to make sure they
         # don't also get included
         create(:wish_list_with_list_items)
       end
 
-      it 'returns all list items from all the lists for the given game' do
+      it 'returns all list items from all the lists for the given playthrough' do
         # We don't actually care what order these are in since we currently only use this
-        # scope to determine whether a given item belongs to a particular game
+        # scope to determine whether a given item belongs to a particular playthrough
         items = [
           list1.list_items.to_a,
           list2.list_items.to_a,
           list3.list_items.to_a,
         ].flatten!
 
-        expect(described_class.belonging_to_game(game).to_a.sort).to eq(items.sort)
+        expect(described_class.belonging_to_playthrough(playthrough).to_a.sort).to eq(items.sort)
       end
     end
 
@@ -119,12 +119,12 @@ RSpec.describe WishListItem, type: :model do
       # We're going to sort these because we don't actually care what order they're in
       subject(:belonging_to_user) { described_class.belonging_to_user(user).to_a.sort }
 
-      let(:user) { game.user }
+      let(:user) { playthrough.user }
 
       before do
-        create(:wish_list_with_list_items, game:, aggregate_list:)
-        create(:game_with_wish_lists_and_items, user:)
-        create(:game_with_wish_lists_and_items, user:)
+        create(:wish_list_with_list_items, playthrough:, aggregate_list:)
+        create(:playthrough_with_wish_lists_and_items, user:)
+        create(:playthrough_with_wish_lists_and_items, user:)
         create(:wish_list_with_list_items) # one from a different user
       end
 
@@ -233,7 +233,7 @@ RSpec.describe WishListItem, type: :model do
         )
       end
 
-      let(:other_list) { create(:wish_list, game:, aggregate_list:) }
+      let(:other_list) { create(:wish_list, playthrough:, aggregate_list:) }
 
       before do
         aggregate_list.add_item_from_child_list(other_item)
@@ -329,7 +329,7 @@ RSpec.describe WishListItem, type: :model do
       end
 
       context 'when unit weight is nil and there are matching items on other lists' do
-        let!(:other_list) { create(:wish_list, game:, aggregate_list:) }
+        let!(:other_list) { create(:wish_list, playthrough:, aggregate_list:) }
         let!(:other_item) { create(:wish_list_item, description: 'new item', list: other_list, unit_weight: 1) }
 
         before do

@@ -63,8 +63,8 @@ class WishListItemsController < ApplicationController
       @aggregate_list ||= wish_list.aggregate_list
     end
 
-    def game
-      @game ||= aggregate_list.game
+    def playthrough
+      @playthrough ||= aggregate_list.playthrough
     end
 
     def aggregate_list_item
@@ -72,7 +72,7 @@ class WishListItemsController < ApplicationController
     end
 
     def all_matching_list_items
-      @all_matching_list_items ||= game.wish_list_items.where(
+      @all_matching_list_items ||= playthrough.wish_list_items.where(
         'description ILIKE ?',
         params[:description],
       )
@@ -85,7 +85,7 @@ class WishListItemsController < ApplicationController
                    [aggregate_list.id, wish_list.id]
                  end
 
-      game.wish_lists.where(id: list_ids)
+      playthrough.wish_lists.where(id: list_ids)
     end
   end
 end

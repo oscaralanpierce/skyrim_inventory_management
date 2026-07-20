@@ -58,8 +58,8 @@ RSpec.describe Ingredient, type: :model do
     end
 
     describe 'canonical ingredient validations' do
-      let(:ingredient) { build(:ingredient, canonical_ingredient:, game:) }
-      let(:game) { create(:game) }
+      let(:ingredient) { build(:ingredient, canonical_ingredient:, playthrough:) }
+      let(:playthrough) { create(:playthrough) }
 
       context 'when the canonical ingredient is not unique' do
         let(:canonical_ingredient) { create(:canonical_ingredient) }
@@ -69,7 +69,7 @@ RSpec.describe Ingredient, type: :model do
             :ingredient,
             3,
             canonical_ingredient:,
-            game:,
+            playthrough:,
           )
         end
 
@@ -94,7 +94,7 @@ RSpec.describe Ingredient, type: :model do
           end
         end
 
-        context 'when the canonical ingredient has another match for another game' do
+        context 'when the canonical ingredient has another match for another playthrough' do
           before do
             create(:ingredient, canonical_ingredient:)
           end
@@ -104,18 +104,18 @@ RSpec.describe Ingredient, type: :model do
           end
         end
 
-        context 'when the canonical ingredient has another match for the same game' do
+        context 'when the canonical ingredient has another match for the same playthrough' do
           before do
             create(
               :ingredient,
               canonical_ingredient:,
-              game:,
+              playthrough:,
             )
           end
 
           it 'is invalid' do
             validate
-            expect(ingredient.errors[:base]).to include('is a duplicate of a unique in-game item')
+            expect(ingredient.errors[:base]).to include('is a duplicate of a unique in-playthrough item')
           end
         end
       end
@@ -295,7 +295,7 @@ RSpec.describe Ingredient, type: :model do
       end
     end
 
-    context 'when updating in-game item attributes' do
+    context 'when updating in-playthrough item attributes' do
       let(:ingredient) { create(:ingredient_with_matching_canonical) }
 
       context 'when the update changes the canonical match' do

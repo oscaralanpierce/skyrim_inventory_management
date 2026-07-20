@@ -2,7 +2,7 @@
 
 FactoryBot.define do
   factory :armor do
-    game
+    playthrough
 
     name { 'Steel Plate Armor' }
 

@@ -9,20 +9,20 @@ class InventoryListsController < ApplicationController
   class CreateService
     AGGREGATE_LIST_ERROR = 'Cannot manually create an aggregate inventory list'
 
-    def initialize(user, game_id, params)
+    def initialize(user, playthrough_id, params)
       @user = user
-      @game_id = game_id
+      @playthrough_id = playthrough_id
       @params = params
     end
 
     def perform
       return Service::UnprocessableEntityResult.new(errors: [AGGREGATE_LIST_ERROR]) if params[:aggregate]
 
-      inventory_list = game.inventory_lists.new(params)
-      preexisting_aggregate_list = game.aggregate_inventory_list
+      inventory_list = playthrough.inventory_lists.new(params)
+      preexisting_aggregate_list = playthrough.aggregate_inventory_list
 
       if inventory_list.save
-        resource = preexisting_aggregate_list ? inventory_list : [game.aggregate_inventory_list, inventory_list]
+        resource = preexisting_aggregate_list ? inventory_list : [playthrough.aggregate_inventory_list, inventory_list]
         Service::CreatedResult.new(resource:)
       else
         Service::UnprocessableEntityResult.new(errors: inventory_list.error_array)
@@ -35,10 +35,10 @@ class InventoryListsController < ApplicationController
 
     private
 
-    attr_reader :user, :game_id, :params
+    attr_reader :user, :playthrough_id, :params
 
-    def game
-      @game ||= user.games.find(game_id)
+    def playthrough
+      @playthrough ||= user.playthroughs.find(playthrough_id)
     end
   end
 end

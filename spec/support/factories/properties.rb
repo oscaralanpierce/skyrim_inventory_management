@@ -2,7 +2,7 @@
 
 FactoryBot.define do
   factory :property do
-    game
+    playthrough
 
     name { 'Lakeview Manor' }
   end

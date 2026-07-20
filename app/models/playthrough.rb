@@ -2,7 +2,7 @@
 
 require 'titlecase'
 
-class Game < ApplicationRecord
+class Playthrough < ApplicationRecord
   belongs_to :user
 
   has_many :armors, dependent: :destroy
@@ -29,8 +29,8 @@ class Game < ApplicationRecord
   # before `dependent: :destroy` need to be defined before the
   # association is defined.
   before_destroy :destroy_aggregatable_child_models
-  has_many :wish_lists, -> { index_order }, dependent: :destroy, inverse_of: :game
-  has_many :inventory_lists, -> { index_order }, dependent: :destroy, inverse_of: :game
+  has_many :wish_lists, -> { index_order }, dependent: :destroy, inverse_of: :playthrough
+  has_many :inventory_lists, -> { index_order }, dependent: :destroy, inverse_of: :playthrough
 
   validates :name,
             uniqueness: { scope: :user_id, message: 'must be unique', case_sensitive: false },
@@ -50,21 +50,21 @@ class Game < ApplicationRecord
   end
 
   def wish_list_items
-    WishListItem.belonging_to_game(self)
+    WishListItem.belonging_to_playthrough(self)
   end
 
   def inventory_items
-    InventoryItem.belonging_to_game(self)
+    InventoryItem.belonging_to_playthrough(self)
   end
 
   private
 
   def format_name
     if name.blank?
-      max_existing_number = user.games.where("name LIKE 'My Game %'").pluck(:name).map {|t| t.gsub('My Game ', '').to_i }
+      max_existing_number = user.playthroughs.where("name LIKE 'My Playthrough %'").pluck(:name).map {|t| t.gsub('My Playthrough ', '').to_i }
                               .max || 0
       next_number = max_existing_number >= 0 ? max_existing_number + 1 : 1
-      self.name = "My Game #{next_number}"
+      self.name = "My Playthrough #{next_number}"
     else
       self.name = Titlecase.titleize(name.strip)
     end

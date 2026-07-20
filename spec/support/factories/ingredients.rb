@@ -2,7 +2,7 @@
 
 FactoryBot.define do
   factory :ingredient do
-    game
+    playthrough
 
     name { 'Blue Mountain Flower' }
 

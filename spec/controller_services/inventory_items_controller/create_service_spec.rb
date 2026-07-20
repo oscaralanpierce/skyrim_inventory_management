@@ -12,9 +12,9 @@ RSpec.describe InventoryItemsController::CreateService do
     subject(:perform) { described_class.new(user, inventory_list.id, params).perform }
 
     let(:user) { create(:user) }
-    let(:game) { create(:game, user:) }
-    let!(:aggregate_list) { create(:aggregate_inventory_list, game:) }
-    let!(:inventory_list) { create(:inventory_list, game:, aggregate_list:) }
+    let(:playthrough) { create(:playthrough, user:) }
+    let!(:aggregate_list) { create(:aggregate_inventory_list, playthrough:) }
+    let!(:inventory_list) { create(:inventory_list, playthrough:, aggregate_list:) }
 
     context 'when all goes well' do
       let(:params) { { description: 'Necklace', quantity: 2, notes: 'Hello world' } }
@@ -41,7 +41,7 @@ RSpec.describe InventoryItemsController::CreateService do
         end
 
         context 'when there is an existing matching item on another list' do
-          let(:other_list) { create(:inventory_list, game: aggregate_list.game, aggregate_list:) }
+          let(:other_list) { create(:inventory_list, playthrough: aggregate_list.playthrough, aggregate_list:) }
           let!(:other_item) { create(:inventory_item, list: other_list, description: 'Necklace', quantity: 1) }
 
           before do
@@ -102,7 +102,7 @@ RSpec.describe InventoryItemsController::CreateService do
       end
 
       context 'when there is an existing matching item on the same list' do
-        let(:other_list) { create(:inventory_list, game:) }
+        let(:other_list) { create(:inventory_list, playthrough:) }
         let!(:other_item) { create(:inventory_item, list: other_list, description: 'Necklace', quantity: 2) }
         let!(:list_item) { create(:inventory_item, list: inventory_list, description: 'Necklace', quantity: 1) }
 

@@ -18,14 +18,14 @@ Like other resources in SIM, wish lists are scoped to the authenticated user. Th
 
 ## Endpoints
 
-* [`GET /games/:game_id/wish_lists`](#get-gamesgame_idwish_lists)
-* [`POST /games/:game_id/wish_lists`](#post-gamesgame_idwish_lists)
+* [`GET /games/:playthrough_id/wish_lists`](#get-gamesplaythrough_idwish_lists)
+* [`POST /games/:playthrough_id/wish_lists`](#post-gamesplaythrough_idwish_lists)
 * [`PATCH|PUT /wish_lists/:id`](#patchput-wish_listsid)
 * [`DELETE /wish_lists/:id`](#delete-wish_listsid)
 
-## GET /games/:game_id/wish_lists
+## GET /games/:playthrough_id/wish_lists
 
-Returns all wish lists for the game indicated by the `:game_id` param, provided the game exists and is owned by the authenticated user. The aggregate wish list will be returned first, followed by the game's other wish lists in reverse chronological order by `updated_at` (i.e., the lists that were edited most recently will be on top).
+Returns all wish lists for the game indicated by the `:playthrough_id` param, provided the game exists and is owned by the authenticated user. The aggregate wish list will be returned first, followed by the game's other wish lists in reverse chronological order by `updated_at` (i.e., the lists that were edited most recently will be on top).
 
 ### Example Request
 
@@ -52,7 +52,7 @@ For a game with multiple lists:
 [
   {
     "id": 43,
-    "game_id": 8234,
+    "playthrough_id": 8234,
     "aggregate": true,
     "aggregate_list_id": null,
     "title": "All Items",
@@ -83,7 +83,7 @@ For a game with multiple lists:
   },
   {
     "id": 46,
-    "game_id": 8234,
+    "playthrough_id": 8234,
     "aggregate": false,
     "aggregate_list_id": 43,
     "title": "Lakeview Manor",
@@ -114,7 +114,7 @@ For a game with multiple lists:
   },
   {
     "id": 52,
-    "game_id": 8234,
+    "playthrough_id": 8234,
     "aggregate": false,
     "aggregate_list_id": 43,
     "title": "Severin Manor",
@@ -156,7 +156,7 @@ A 500 error response, which is always a result of an unforeseen problem, include
 }
 ```
 
-## POST /games/:game_id/wish_lists
+## POST /games/:playthrough_id/wish_lists
 
 Creates a new wish list for the specified game if it exists and belongs to the authenticated user. If the game does not already have an aggregate list, an aggregate list will also be created automatically. The response is an array that includes all wish lists that were created. The wish lists are returned with the aggregate list first, if one was created while handling this request, and the regular list the user requested.
 
@@ -260,7 +260,7 @@ Authorization: Bearer xxxxxxxxxx
 
 #### Example Bodies
 
-If the game with the given `game_id` is not found or does not belong to the authenticated user, a 404 response will be returned. This response will have no body.
+If the game with the given `playthrough_id` is not found or does not belong to the authenticated user, a 404 response will be returned. This response will have no body.
 
 If duplicate title is given:
 ```json
@@ -289,7 +289,7 @@ If the specified wish list exists, belongs to the authenticated user, and is not
 
 ### Example Requests
 
-Requests should include a `"wish_list"` object with a `"title"` key. The `"title"` may be `null`; in this case, a default title will be assigned as described [above](#post-gamesgame_idwish_lists). If the `"wish_list"` object is empty or nonexistent, or if no request body is given, the list will not be updated but will be returned as-is. `"title"` is the only attribute that may be set on wish lists via the SIM API.
+Requests should include a `"wish_list"` object with a `"title"` key. The `"title"` may be `null`; in this case, a default title will be assigned as described [above](#post-gamesplaythrough_idwish_lists). If the `"wish_list"` object is empty or nonexistent, or if no request body is given, the list will not be updated but will be returned as-is. `"title"` is the only attribute that may be set on wish lists via the SIM API.
 
 #### PATCH Requests
 

@@ -102,7 +102,7 @@ The body for both responses is a JSON array containing all _changed_ wish lists 
 [
   {
     "id": 43,
-    "game_id": 8234,
+    "playthrough_id": 8234,
     "aggregate": true,
     "aggregate_list_id": null,
     "title": "All Items",
@@ -131,7 +131,7 @@ The body for both responses is a JSON array containing all _changed_ wish lists 
   },
   {
     "id": 46,
-    "game_id": 8234,
+    "playthrough_id": 8234,
     "aggregate": false,
     "aggregate_list_id": 43,
     "title": "Lakeview Manor",
@@ -364,7 +364,7 @@ The response body includes the wish list from which the item was deleted as well
 [
   {
     "id": 43,
-    "game_id": 8234,
+    "playthrough_id": 8234,
     "aggregate": true,
     "aggregate_list_id": null,
     "title": "All Items",
@@ -393,7 +393,7 @@ The response body includes the wish list from which the item was deleted as well
   },
   {
     "id": 46,
-    "game_id": 8234,
+    "playthrough_id": 8234,
     "aggregate": false,
     "aggregate_list_id": 43,
     "title": "Lakeview Manor",

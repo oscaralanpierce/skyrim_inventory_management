@@ -18,14 +18,14 @@ Like other resources in SIM, inventory lists are scoped to the authenticated use
 
 ## Endpoints
 
-* [`GET /games/:game_id/inventory_lists`](#get-gamesgame_idinventory_lists)
-* [`POST /games/:game_id/inventory_lists`](#post-gamesgame_idinventory_lists)
+* [`GET /games/:playthrough_id/inventory_lists`](#get-gamesplaythrough_idinventory_lists)
+* [`POST /games/:playthrough_id/inventory_lists`](#post-gamesplaythrough_idinventory_lists)
 * [`PATCH|PUT /inventory_lists/:id`](#patchput-inventory_listsid)
 * [`DELETE /inventory_lists/:id`](#delete-inventory_listsid)
 
-## GET /games/:game_id/inventory_lists
+## GET /games/:playthrough_id/inventory_lists
 
-Returns all inventory lists for the game indicated by the `:game_id` param, provided the game exists and is owned by the authenticated user. The aggregate inventory list will be returned first, followed by the game's other inventory lists in reverse chronological order by `updated_at` (i.e., the lists that were edited most recently will be first).
+Returns all inventory lists for the game indicated by the `:playthrough_id` param, provided the game exists and is owned by the authenticated user. The aggregate inventory list will be returned first, followed by the game's other inventory lists in reverse chronological order by `updated_at` (i.e., the lists that were edited most recently will be first).
 
 ### Example Request
 
@@ -51,7 +51,7 @@ For a game with multiple lists:
 [
   {
     "id": 43,
-    "game_id": 8234,
+    "playthrough_id": 8234,
     "aggregate": true,
     "title": "All Items",
     "created_at": "Thu, 17 Jun 2021 11:59:16.891338000 UTC +00:00",
@@ -79,7 +79,7 @@ For a game with multiple lists:
   },
   {
     "id": 46,
-    "game_id": 8234,
+    "playthrough_id": 8234,
     "aggregate": false,
     "aggregate_list_id": 43,
     "title": "Lakeview Manor",
@@ -108,7 +108,7 @@ For a game with multiple lists:
   },
   {
     "id": 52,
-    "game_id": 8234,
+    "playthrough_id": 8234,
     "aggregate": false,
     "aggregate_list_id": 43,
     "title": "Severin Manor",
@@ -149,7 +149,7 @@ A 500 error response, which is always a result of an unforeseen problem, include
 }
 ```
 
-## POST /games/:game_id/inventory_lists
+## POST /games/:playthrough_id/inventory_lists
 
 Creates a new inventory list for the specified game if it exists and belongs to the authenticated user. If the game does not already have an aggregate list, an aggregate list will also be created automatically. The response is an array that includes the newly created inventory list(s).
 
@@ -248,7 +248,7 @@ When the aggregate list has also been created:
 
 #### Example Bodies
 
-If the game with the given `game_id` is not found or does not belong to the authenticated user, a 404 response will be returned. This response will have no body.
+If the game with the given `playthrough_id` is not found or does not belong to the authenticated user, a 404 response will be returned. This response will have no body.
 
 If duplicate title is given:
 ```json

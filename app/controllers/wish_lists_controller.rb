@@ -4,13 +4,13 @@ require 'controller/response'
 
 class WishListsController < ApplicationController
   def index
-    result = IndexService.new(current_user, params[:game_id]).perform
+    result = IndexService.new(current_user, params[:playthrough_id]).perform
 
     ::Controller::Response.new(self, result).execute
   end
 
   def create
-    result = CreateService.new(current_user, params[:game_id], wish_list_params).perform
+    result = CreateService.new(current_user, params[:playthrough_id], wish_list_params).perform
 
     ::Controller::Response.new(self, result).execute
   end

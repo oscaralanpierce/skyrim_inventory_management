@@ -33,8 +33,8 @@ RSpec.describe Weapon, type: :model do
     end
 
     describe 'canonical weapon validations' do
-      let(:weapon) { build(:weapon, canonical_weapon:, game:) }
-      let(:game) { create(:game) }
+      let(:weapon) { build(:weapon, canonical_weapon:, playthrough:) }
+      let(:playthrough) { create(:playthrough) }
 
       context 'when the canonical weapon is not unique' do
         let(:canonical_weapon) { create(:canonical_weapon) }
@@ -44,7 +44,7 @@ RSpec.describe Weapon, type: :model do
             :weapon,
             3,
             canonical_weapon:,
-            game:,
+            playthrough:,
           )
         end
 
@@ -69,7 +69,7 @@ RSpec.describe Weapon, type: :model do
           end
         end
 
-        context 'when the canonical weapon has other matches in other games' do
+        context 'when the canonical weapon has other matches in other playthroughs' do
           before do
             create(:weapon, canonical_weapon:)
           end
@@ -79,14 +79,14 @@ RSpec.describe Weapon, type: :model do
           end
         end
 
-        context 'when the canonical weapon has other matches in the same game' do
+        context 'when the canonical weapon has other matches in the same playthrough' do
           before do
-            create(:weapon, canonical_weapon:, game:)
+            create(:weapon, canonical_weapon:, playthrough:)
           end
 
           it 'is invalid' do
             validate
-            expect(weapon.errors[:base]).to include('is a duplicate of a unique in-game item')
+            expect(weapon.errors[:base]).to include('is a duplicate of a unique in-playthrough item')
           end
         end
       end
@@ -238,7 +238,7 @@ RSpec.describe Weapon, type: :model do
     subject(:validate) { weapon.validate }
 
     context 'when there is a single matching canonical model' do
-      context 'when the in-game item model has no enchantments' do
+      context 'when the in-playthrough item model has no enchantments' do
         let(:weapon) { build(:weapon, name: 'foobar', unit_weight: 12) }
 
         let!(:matching_canonical) do
@@ -280,7 +280,7 @@ RSpec.describe Weapon, type: :model do
         end
       end
 
-      context 'when the in-game item has enchantments' do
+      context 'when the in-playthrough item has enchantments' do
         let(:weapon) { create(:weapon, name: 'foobar') }
 
         let!(:canonicals) do
@@ -297,7 +297,7 @@ RSpec.describe Weapon, type: :model do
           # canonical perfectly, both will be matched even though the second one is
           # not enchantable. This is possible because non-enchantable canonicals
           # can, in many cases, have existing enchantments, and those are allowed -
-          # indeed, required - to be present on matching in-game items.
+          # indeed, required - to be present on matching in-playthrough items.
           create(
             :enchantables_enchantment,
             enchantable: canonicals.second,
@@ -355,7 +355,7 @@ RSpec.describe Weapon, type: :model do
       end
 
       context 'when there are enchantments' do
-        context 'when the in-game item model has no enchantments' do
+        context 'when the in-playthrough item model has no enchantments' do
           let(:weapon) { build(:weapon, name: 'foobar') }
 
           before do
@@ -388,7 +388,7 @@ RSpec.describe Weapon, type: :model do
           end
         end
 
-        context 'when the in-game item model is already enchanted' do
+        context 'when the in-playthrough item model is already enchanted' do
           let(:weapon) { create(:weapon, name: 'foobar') }
 
           let!(:canonicals) do
@@ -449,7 +449,7 @@ RSpec.describe Weapon, type: :model do
       end
     end
 
-    context 'when updating in-game item attributes' do
+    context 'when updating in-playthrough item attributes' do
       let(:weapon) { create(:weapon, :with_enchanted_canonical) }
 
       before do

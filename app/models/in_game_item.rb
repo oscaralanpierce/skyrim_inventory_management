@@ -3,7 +3,7 @@
 class InGameItem < ApplicationRecord
   self.abstract_class = true
 
-  belongs_to :game
+  belongs_to :playthrough
 
   validates :unit_weight,
             numericality: {
@@ -17,8 +17,8 @@ class InGameItem < ApplicationRecord
   before_validation :set_canonical_model
   before_validation :set_values_from_canonical
 
-  MUST_DEFINE = 'Models inheriting from InGameItem must define a'
-  DUPLICATE_MATCH = 'is a duplicate of a unique in-game item'
+  MUST_DEFINE = 'Models inheriting from InplaythroughItem must define a'
+  DUPLICATE_MATCH = 'is a duplicate of a unique in-playthrough item'
   DOES_NOT_MATCH = "doesn't match any item that exists in Skyrim"
 
   def canonical_model
@@ -97,7 +97,7 @@ class InGameItem < ApplicationRecord
   def validate_unique_canonical
     return unless canonical_model&.unique_item == true
 
-    items = canonical_model.public_send(inverse_relationship_name).where(game_id:)
+    items = canonical_model.public_send(inverse_relationship_name).where(playthrough_id:)
 
     return if items.count < 1
     return if items.count == 1 && items.first == self
