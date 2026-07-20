@@ -17,7 +17,7 @@ class WishListsController < ApplicationController
     def perform
       return Service::MethodNotAllowedResult.new(errors: [AGGREGATE_LIST_ERROR]) if wish_list.aggregate == true
 
-      ids = game.wish_lists.count == 2 ? [aggregate_list.id, wish_list.id] : [wish_list.id]
+      ids = playthrough.wish_lists.count == 2 ? [aggregate_list.id, wish_list.id] : [wish_list.id]
 
       destroy_and_update_aggregate_list_items!
 
@@ -40,11 +40,11 @@ class WishListsController < ApplicationController
     end
 
     def aggregate_list
-      game.aggregate_wish_list
+      playthrough.aggregate_wish_list
     end
 
-    def game
-      @game ||= wish_list.game
+    def playthrough
+      @playthrough ||= wish_list.playthrough
     end
 
     def destroy_and_update_aggregate_list_items!

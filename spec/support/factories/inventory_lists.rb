@@ -2,7 +2,7 @@
 
 FactoryBot.define do
   factory :inventory_list do
-    game
+    playthrough
 
     sequence(:title) {|n| "Inventory List #{n}" }
 

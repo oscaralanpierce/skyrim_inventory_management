@@ -76,7 +76,7 @@ The database schema for all models that include the `Aggregatable` concern must 
 | ------------------- | ------- | ----------- | ------- |
 | `aggregate`         | boolean | NOT NULL    | false   |
 | `aggregate_list_id` | integer |             |         |
-| `game_id`           | integer | NOT NULL    |         |
+| `playthrough_id`    | integer | NOT NULL    |         |
 | `title`             | string  | NOT NULL    |         |
 
 The title for all aggregate lists is "All Items". The titles for other lists may be validated or set to a default value by the individual model if desired. Other than the title, these values should not be changed after initial creation.
@@ -108,7 +108,7 @@ Best practice for aggregate lists is to never create or destroy an aggregate lis
 When a user creates their first regular list, an aggregate list will be automatically created for them and set as that list's aggregate list. Subsequent lists of the same class belonging to the same user should be created with that as the aggregate list:
 
 ```ruby
-game.aggregate_wish_list.child_lists.create!(title: 'My Title')
+playthrough.aggregate_wish_list.child_lists.create!(title: 'My Title')
 ```
 
 When a user destroys a regular list, and it is their last regular list of that class, the aggregate list will also be destroyed.
@@ -138,7 +138,7 @@ If there is an item with the same description on the aggregate list already, the
 One of two things will happen with the `unit_weight` value:
 
 1. If the new `unit_weight` is `nil`, nothing will happen. This implies that, once a unit weight is set, it can be changed but not unset and any new matching items added will have the same unit weight as existing items.
-2. If the new `unit_weight` is not `nil`, `unit_weight` will be updated on all list items that belong to the same game and have the same description, not just the aggregate list item.
+2. If the new `unit_weight` is not `nil`, `unit_weight` will be updated on all list items that belong to the same playthrough and have the same description, not just the aggregate list item.
 
 Setting an invalid `quantity` or `unit_weight` will result in an `Aggregatable::AggregateListError`.
 
@@ -190,7 +190,7 @@ In the past, the aggregate list item also tracked notes from items on its child 
 
 ##### Updating the Unit Weight
 
-If the unit weight value has been updated and the new value is either (a) `nil` or (b) numeric and at least zero, the unit weight will be updated not only on the requested list item and corresponding aggregate list item, but on all items that match the description and belong to the same game. This is to make sure that list items don't get out of sync with the aggregate list while still enabling `unit_weight` to be edited. If `unit_weight[:to]` is set to `nil`, the unit weight will be unset on all corresponding list items.
+If the unit weight value has been updated and the new value is either (a) `nil` or (b) numeric and at least zero, the unit weight will be updated not only on the requested list item and corresponding aggregate list item, but on all items that match the description and belong to the same playthrough. This is to make sure that list items don't get out of sync with the aggregate list while still enabling `unit_weight` to be edited. If `unit_weight[:to]` is set to `nil`, the unit weight will be unset on all corresponding list items.
 
 ## List Model Requirements
 
@@ -294,7 +294,7 @@ The `Listable` concern provides list item functionality to lists' child models.
 ### Scopes
 
 * `::index_order` (returns list items in descending `:updated_at` order)
-* `::belonging_to_game(game)` (returns all list items of the given class belonging to the given game)
+* `::belonging_to_playthrough(playthrough)` (returns all list items of the given class belonging to the given playthrough)
 * `::belonging_to_user(user)` (returns all list items of the given class belonging to the given user)
 
 ### Validations

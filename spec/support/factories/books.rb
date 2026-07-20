@@ -2,7 +2,7 @@
 
 FactoryBot.define do
   factory :book do
-    game
+    playthrough
 
     title { 'My Book' }
 

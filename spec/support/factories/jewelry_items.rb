@@ -2,7 +2,7 @@
 
 FactoryBot.define do
   factory :jewelry_item do
-    game
+    playthrough
     name { 'Gold Diamond Ring' }
 
     trait :with_matching_canonical do

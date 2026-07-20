@@ -8,7 +8,7 @@ All requests to inventory item endpoints must be [authenticated](/docs/api/resou
 
 ## Automatically Managed Aggregate Lists
 
-Skyrim Inventory Management makes use of automatically managed aggregate lists to help users track an aggregate of what items they need for different properties in each game. The aggregate list is created automatically when the client creates a the first regular inventory list for a game, and is destroyed automatically when the client deletes the game's last regular inventory list. When items are added, updated, or destroyed from any of a game's regular lists, aggregate list items are updated as described in this section.
+Skyrim Inventory Management makes use of automatically managed aggregate lists to help users track an aggregate of what items they need for different properties in each playthrough. The aggregate list is created automatically when the client creates a the first regular inventory list for a playthrough, and is destroyed automatically when the client deletes the playthrough's last regular inventory list. When items are added, updated, or destroyed from any of a playthrough's regular lists, aggregate list items are updated as described in this section.
 
 (Ensuring automatic management of aggregate lists does require some work on the part of SIM developers. If you are working on lists in SIM and would like information on how to keep them synced, head over to the [`Aggregatable` docs](/docs/aggregate-lists.md).)
 
@@ -23,16 +23,16 @@ If the client requests a new item be created on a regular inventory list, one of
   * The `unit_weight` will be changed to the new item's `unit_weight` unless that value is `null`
   * The `notes` value on the aggregate list item will remain `null`
 
-If the new item sets a `unit_weight` that is not `null` and is different to the `unit_weight` of any existing matching items belonging to the same game, those items will also be updated to have the same unit weight as the new item.
+If the new item sets a `unit_weight` that is not `null` and is different to the `unit_weight` of any existing matching items belonging to the same playthrough, those items will also be updated to have the same unit weight as the new item.
 
 ### Updating a List Item
 
-When a client updates a item on a regular list for a given game, one (or two) of the following things will happen:
+When a client updates a item on a regular list for a given playthrough, one (or two) of the following things will happen:
 
 * If the `quantity` is increased, the `quantity` of the item on the aggregate list will be increased by the same amount
 * If the `quantity` is decreased, the `quantity` of the item on the aggregate list will be decreased by the same amount
 * If the `quantity` has not changed, the `quantity` of the item on the aggregate list will also be unchanged
-* If the `unit_weight` is changed, the value will be updated on the aggregate list item as well as any other items with the same (case-insensitive) description belonging to the same game. This is true whether the `unit_weight` is `null` or another value
+* If the `unit_weight` is changed, the value will be updated on the aggregate list item as well as any other items with the same (case-insensitive) description belonging to the same playthrough. This is true whether the `unit_weight` is `null` or another value
 
 Again, aggregate list items do not track `notes` of child lists, so these values will not be updated.
 
@@ -40,7 +40,7 @@ Again, aggregate list items do not track `notes` of child lists, so these values
 
 When a client destroys an item on a regular inventory list, one of the following things will happen:
 
-* If the quantity of the item on the aggregate inventory list for the same game is higher than the quantity of the item deleted (i.e., if there is another matching item on a different list), the aggregate list item's quantity will be decreased by the amount of the quantity of the deleted item.
+* If the quantity of the item on the aggregate inventory list for the same playthrough is higher than the quantity of the item deleted (i.e., if there is another matching item on a different list), the aggregate list item's quantity will be decreased by the amount of the quantity of the deleted item.
 * If the quantity on the aggregate inventory list is equal to the quantity of the item deleted (i.e., if there is not another matching item on a different list), the item on the aggregate inventory list will be deleted as well.
 
 ## Endpoints
@@ -60,9 +60,9 @@ Creates an inventory item on the given list if the inventory list with the given
 3. Is not an aggregate list AND
 4. Does not have an existing inventory item with the same description
 
-If the first three conditions are met but the list does have an existing inventory item with a matching description, `quantity` and `notes` are updated on the existing item to aggregate the values. If the value of `unit_weight` differs from the value on the existing item and is not `null`, the existing item and any other items with the same description belonging to the same game will have their `unit_weight` updated.
+If the first three conditions are met but the list does have an existing inventory item with a matching description, `quantity` and `notes` are updated on the existing item to aggregate the values. If the value of `unit_weight` differs from the value on the existing item and is not `null`, the existing item and any other items with the same description belonging to the same playthrough will have their `unit_weight` updated.
 
-In both cases, the aggregate list for the same game is also updated to reflect the new `quantity` and `unit_weight`.
+In both cases, the aggregate list for the same playthrough is also updated to reflect the new `quantity` and `unit_weight`.
 
 Allowed fields are:
 
@@ -71,7 +71,7 @@ Allowed fields are:
 * `unit_weight` (decimal, optional): The unit weight of the item as given in the game, precise to one decimal place
 * `notes` (string, optional): Any notes about the item or what it is for
 
-A successful response will return a JSON array of any items created or updated while handling the request. These may come in any order and will include the item requested, the aggregate list item, and, if `unit_weight` is given in the request, any other items with the same description belonging to the same game that have had their `unit_weight` changed.
+A successful response will return a JSON array of any items created or updated while handling the request. These may come in any order and will include the item requested, the aggregate list item, and, if `unit_weight` is given in the request, any other items with the same description belonging to the same playthrough that have had their `unit_weight` changed.
 
 ### Example Request
 
@@ -97,7 +97,7 @@ Content-Type: application/json
 
 If there is no item with a matching description on the requested inventory list, a new item will be created and the server will return a 201 response. If there is an item with a matching description, its notes and quantity will be combined with the notes and quantity in the client request and a 200 response will be returned.
 
-The body for both responses is a JSON array containing all items that were created or updated while handling the request, including the requested item, the corresponding aggregate list item, and, if setting `unit_weight`, any other items with the same description belonging to the same game.
+The body for both responses is a JSON array containing all items that were created or updated while handling the request, including the requested item, the corresponding aggregate list item, and, if setting `unit_weight`, any other items with the same description belonging to the same playthrough.
 ```json
 [
   {
@@ -182,7 +182,7 @@ Requests may specify up to three fields to update:
 
 Requests attempting to update `description` will result in a validation error.
 
-When updating `unit_weight`, the `unit_weight` value will be updated for all inventory items belonging to the same game and matching the description. This is to prevent the aggregate list from getting out of sync with the values on its child list items.
+When updating `unit_weight`, the `unit_weight` value will be updated for all inventory items belonging to the same playthrough and matching the description. This is to prevent the aggregate list from getting out of sync with the values on its child list items.
 
 This route supports both `PATCH` and `PUT` requests. The only difference between these requests is the HTTP method; requests are handled by the same code regardless of the method.
 
@@ -228,7 +228,7 @@ Content-Type: application/json
 
 #### Example Body
 
-The body is a JSON array containing all items that were updated while handling the request, including the requested item, the corresponding aggregate list item, and, if setting `unit_weight`, any other items with the same description belonging to the same game. (This is because, when `unit_weight` is set on any item, all matching items belonging to the same game are updated with the same value.)
+The body is a JSON array containing all items that were updated while handling the request, including the requested item, the corresponding aggregate list item, and, if setting `unit_weight`, any other items with the same description belonging to the same playthrough. (This is because, when `unit_weight` is set on any item, all matching items belonging to the same playthrough are updated with the same value.)
 ```json
 [
   {

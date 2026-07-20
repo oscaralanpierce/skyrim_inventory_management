@@ -14,10 +14,15 @@ module Listable
 
     before_save :clean_up_notes
 
-    delegate :game, :user, to: :list
+    delegate :playthrough, :user, to: :list
 
     scope :index_order, -> { order(updated_at: :desc) }
-    scope :belonging_to_game, ->(game) { joins(:list).where(list_table_name.to_sym => { game_id: game.id }).order("#{list_table_name}.updated_at DESC") }
+    scope :belonging_to_playthrough,
+          lambda {|playthrough|
+            joins(:list)
+              .where(list_table_name.to_sym => { playthrough_id: playthrough.id })
+              .order("#{list_table_name}.updated_at DESC")
+          }
 
     def self.belonging_to_user(user)
       list_ids = list_class.belonging_to_user(user).ids

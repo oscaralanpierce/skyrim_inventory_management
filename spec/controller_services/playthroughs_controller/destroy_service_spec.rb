@@ -5,17 +5,17 @@ require 'service/internal_server_error_result'
 require 'service/no_content_result'
 require 'service/not_found_result'
 
-RSpec.describe GamesController::DestroyService do
+RSpec.describe PlaythroughsController::DestroyService do
   describe '#perform' do
-    subject(:perform) { described_class.new(user, game.id).perform }
+    subject(:perform) { described_class.new(user, playthrough.id).perform }
 
     context 'when all goes well' do
       let!(:user) { create(:user) }
-      let!(:game) { create(:game, user:) }
+      let!(:playthrough) { create(:playthrough, user:) }
 
-      it 'destroys the game' do
+      it 'destroys the playthrough' do
         expect { perform }
-          .to change(user.games, :count).from(1).to(0)
+          .to change(user.playthroughs, :count).from(1).to(0)
       end
 
       it 'returns a Service::NoContentResult' do
@@ -28,9 +28,9 @@ RSpec.describe GamesController::DestroyService do
       end
     end
 
-    context 'when the game does not exist' do
+    context 'when the playthrough does not exist' do
       let!(:user) { create(:user) }
-      let(:game) { double(id: 43_598) }
+      let(:playthrough) { double(id: 43_598) }
 
       it 'returns a Service::NotFoundResult' do
         expect(perform).to be_a(Service::NotFoundResult)
@@ -42,13 +42,13 @@ RSpec.describe GamesController::DestroyService do
       end
     end
 
-    context 'when the game belongs to another user' do
+    context 'when the playthrough belongs to another user' do
       let!(:user) { create(:user) }
-      let!(:game) { create(:game) }
+      let!(:playthrough) { create(:playthrough) }
 
-      it "doesn't destroy the game" do
+      it "doesn't destroy the playthrough" do
         expect { perform }
-          .not_to change(Game, :count)
+          .not_to change(Playthrough, :count)
       end
 
       it 'returns a Service::NotFoundResult' do
@@ -58,10 +58,10 @@ RSpec.describe GamesController::DestroyService do
 
     context 'when something unexpected goes wrong' do
       let!(:user) { create(:user) }
-      let!(:game) { create(:game, user:) }
+      let!(:playthrough) { create(:playthrough, user:) }
 
       before do
-        allow_any_instance_of(Game).to receive(:destroy!).and_raise(StandardError, 'Something went horribly wrong')
+        allow_any_instance_of(Playthrough).to receive(:destroy!).and_raise(StandardError, 'Something went horribly wrong')
       end
 
       it 'returns a Service::InternalServerErrorResult' do

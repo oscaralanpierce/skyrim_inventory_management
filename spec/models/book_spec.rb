@@ -23,8 +23,8 @@ RSpec.describe Book, type: :model do
     end
 
     describe 'canonical model validations' do
-      let(:book) { build(:book, canonical_book:, game:) }
-      let(:game) { create(:game) }
+      let(:book) { build(:book, canonical_book:, playthrough:) }
+      let(:playthrough) { create(:playthrough) }
 
       context 'when the canonical model is not unique' do
         let(:canonical_book) { create(:canonical_book) }
@@ -34,7 +34,7 @@ RSpec.describe Book, type: :model do
             :book,
             3,
             canonical_book:,
-            game:,
+            playthrough:,
           )
         end
 
@@ -59,7 +59,7 @@ RSpec.describe Book, type: :model do
           end
         end
 
-        context 'when the canonical model has a book for another game' do
+        context 'when the canonical model has a book for another playthrough' do
           before do
             create(:book, canonical_book:)
           end
@@ -69,9 +69,9 @@ RSpec.describe Book, type: :model do
           end
         end
 
-        context 'when the canonical model has a book for the same game' do
+        context 'when the canonical model has a book for the same playthrough' do
           before do
-            create(:book, canonical_book:, game:)
+            create(:book, canonical_book:, playthrough:)
           end
 
           it 'is invalid' do

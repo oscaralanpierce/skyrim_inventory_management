@@ -2,7 +2,7 @@
 
 FactoryBot.define do
   factory :misc_item do
-    game
+    playthrough
 
     name { "Wylandria's Soul Gem" }
 

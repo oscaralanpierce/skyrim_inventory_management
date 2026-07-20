@@ -19,7 +19,7 @@
 #    | title             | string  | null: false                 |
 #    | aggregate         | boolean | null: false, default: false |
 #    | aggregate_list_id | bigint  |                             |
-#    | game_id           | bigint  | null: false                 |
+#    | playthrough_id    | bigint  | null: false                 |
 #
 # There are a few other assumptions made:
 # - There is a `#list_item_class_name` method defined. For the `WishList` model,
@@ -34,7 +34,7 @@ module Aggregatable
   class AggregateListError < StandardError; end
 
   included do
-    belongs_to :game, touch: true
+    belongs_to :playthrough, touch: true
     has_many :list_items,
              -> { index_order },
              class_name: list_item_class_name,
@@ -45,7 +45,7 @@ module Aggregatable
 
     has_many :child_lists, class_name: to_s, foreign_key: :aggregate_list_id, inverse_of: :aggregate_list
 
-    validate :one_aggregate_list_per_game, if: :aggregate_list?
+    validate :one_aggregate_list_per_playthrough, if: :aggregate_list?
     validate :not_named_all_items, unless: :aggregate_list?
     validate :ensure_aggregate_list_is_aggregate, unless: :aggregate_list?
 
@@ -60,7 +60,7 @@ module Aggregatable
     scope :aggregate_first, -> { order(aggregate: :desc) }
     scope :includes_items, -> { includes(:list_items) }
 
-    delegate :user, to: :game
+    delegate :user, to: :playthrough
   end
 
   def as_json(options = {})
@@ -153,11 +153,11 @@ module Aggregatable
   end
 
   def set_aggregate_list
-    self.aggregate_list ||= self.class.find_or_create_by!(game:, aggregate: true)
+    self.aggregate_list ||= self.class.find_or_create_by!(playthrough:, aggregate: true)
   end
 
   def create_aggregate_list
-    self.class.find_or_create_by!(game:, aggregate: true)
+    self.class.find_or_create_by!(playthrough:, aggregate: true)
   end
 
   def set_title_to_all_items
@@ -183,10 +183,10 @@ module Aggregatable
     errors.add(:title, 'cannot be "All Items"') if title&.downcase == 'all items'
   end
 
-  def one_aggregate_list_per_game
-    scope = self.class.where(game:, aggregate: true)
+  def one_aggregate_list_per_playthrough
+    scope = self.class.where(playthrough:, aggregate: true)
 
-    errors.add(:aggregate, 'can only be one list per game') if scope.count > 1 || (scope.count.positive? && scope.exclude?(self))
+    errors.add(:aggregate, 'can only be one list per playthrough') if scope.count > 1 || (scope.count.positive? && scope.exclude?(self))
   end
 
   def remove_aggregate_list_id

@@ -11,12 +11,12 @@ RSpec.describe WishListsController::UpdateService do
   describe '#perform' do
     subject(:perform) { described_class.new(user, wish_list.id, params).perform }
 
-    let!(:aggregate_list) { create(:aggregate_wish_list, game:) }
+    let!(:aggregate_list) { create(:aggregate_wish_list, playthrough:) }
     let(:user) { create(:user) }
 
     context 'when all goes well' do
-      let(:wish_list) { create(:wish_list, game:, aggregate_list:) }
-      let(:game) { create(:game, user:) }
+      let(:wish_list) { create(:wish_list, playthrough:, aggregate_list:) }
+      let(:playthrough) { create(:playthrough, user:) }
       let(:params) { { title: 'My New Title' } }
 
       it 'updates the wish list' do
@@ -32,18 +32,18 @@ RSpec.describe WishListsController::UpdateService do
         expect(perform.resource).to eq(wish_list)
       end
 
-      it 'updates the game' do
+      it 'updates the playthrough' do
         t = Time.zone.now + 3.days
         Timecop.freeze(t) do
           perform
-          expect(game.reload.updated_at).to be_within(0.005.seconds).of(t)
+          expect(playthrough.reload.updated_at).to be_within(0.005.seconds).of(t)
         end
       end
     end
 
     context 'when the params are invalid' do
-      let(:wish_list) { create(:wish_list, game:) }
-      let(:game) { create(:game, user:) }
+      let(:wish_list) { create(:wish_list, playthrough:) }
+      let(:playthrough) { create(:playthrough, user:) }
       let(:params) { { title: '|nvalid Tit|e' } }
 
       it 'returns a Service::UnprocessableEntityResult' do
@@ -57,7 +57,7 @@ RSpec.describe WishListsController::UpdateService do
 
     context "when the wish list doesn't exist" do
       let(:wish_list) { double(id: 23_859) }
-      let(:game) { create(:game) }
+      let(:playthrough) { create(:playthrough) }
       let(:params) { { title: 'Valid New Title' } }
 
       it 'returns a Service::NotFoundResult' do
@@ -72,7 +72,7 @@ RSpec.describe WishListsController::UpdateService do
 
     context 'when the wish list belongs to another user' do
       let!(:wish_list) { create(:wish_list) }
-      let(:game) { create(:game) }
+      let(:playthrough) { create(:playthrough) }
       let(:params) { { title: 'Valid New Title' } }
 
       it "doesn't update the wish list" do
@@ -92,7 +92,7 @@ RSpec.describe WishListsController::UpdateService do
 
     context 'when the wish list is an aggregate wish list' do
       let(:wish_list) { aggregate_list }
-      let(:game) { create(:game, user:) }
+      let(:playthrough) { create(:playthrough, user:) }
       let(:params) { { title: 'New Title' } }
 
       it 'returns a Service::MethodNotAllowedResult' do
@@ -105,8 +105,8 @@ RSpec.describe WishListsController::UpdateService do
     end
 
     context 'when the request tries to set aggregate to true' do
-      let(:wish_list) { create(:wish_list, game:) }
-      let(:game) { create(:game, user:) }
+      let(:wish_list) { create(:wish_list, playthrough:) }
+      let(:playthrough) { create(:playthrough, user:) }
       let(:params) { { aggregate: true } }
 
       it 'returns a Service::UnprocessableEntityResult' do
@@ -119,8 +119,8 @@ RSpec.describe WishListsController::UpdateService do
     end
 
     context 'when something unexpected goes wrong' do
-      let!(:wish_list) { create(:wish_list, game:) }
-      let(:game) { create(:game, user:) }
+      let!(:wish_list) { create(:wish_list, playthrough:) }
+      let(:playthrough) { create(:playthrough, user:) }
       let(:params) { { title: 'New Title' } }
 
       before do

@@ -7,12 +7,12 @@ require 'service/ok_result'
 
 RSpec.describe InventoryListsController::IndexService do
   describe '#perform' do
-    subject(:perform) { described_class.new(user, game.id).perform }
+    subject(:perform) { described_class.new(user, playthrough.id).perform }
 
     let(:user) { create(:user) }
 
-    context 'when there are no inventory lists for that game' do
-      let(:game) { create(:game, user:) }
+    context 'when there are no inventory lists for that playthrough' do
+      let(:playthrough) { create(:playthrough, user:) }
 
       it 'returns a Service::OkResult' do
         expect(perform).to be_a(Service::OkResult)
@@ -23,20 +23,20 @@ RSpec.describe InventoryListsController::IndexService do
       end
     end
 
-    context 'when there are inventory lists for that game' do
-      let(:game) { create(:game_with_inventory_lists, user:) }
+    context 'when there are inventory lists for that playthrough' do
+      let(:playthrough) { create(:playthrough_with_inventory_lists, user:) }
 
       it 'returns a Service::OkResult' do
         expect(perform).to be_a(Service::OkResult)
       end
 
       it 'returns the inventory lists' do
-        expect(perform.resource).to eq(game.inventory_lists)
+        expect(perform.resource).to eq(playthrough.inventory_lists)
       end
     end
 
-    context 'when the game is not found' do
-      let(:game) { double(id: 2389) }
+    context 'when the playthrough is not found' do
+      let(:playthrough) { double(id: 2389) }
 
       it 'returns a Service::NotFoundResult' do
         expect(perform).to be_a(Service::NotFoundResult)
@@ -47,8 +47,8 @@ RSpec.describe InventoryListsController::IndexService do
       end
     end
 
-    context 'when the game belongs to another user' do
-      let(:game) { create(:game) }
+    context 'when the playthrough belongs to another user' do
+      let(:playthrough) { create(:playthrough) }
 
       it 'returns a Service::NotFoundResult' do
         expect(perform).to be_a(Service::NotFoundResult)
@@ -61,10 +61,10 @@ RSpec.describe InventoryListsController::IndexService do
     end
 
     context 'when something unexpected goes wrong' do
-      let(:game) { create(:game, user:) }
+      let(:playthrough) { create(:playthrough, user:) }
 
       before do
-        allow(user.games).to receive(:find).and_raise(StandardError.new('Something went horribly wrong'))
+        allow(user.playthroughs).to receive(:find).and_raise(StandardError.new('Something went horribly wrong'))
       end
 
       it 'returns a Service::InternalServerErrorResult' do

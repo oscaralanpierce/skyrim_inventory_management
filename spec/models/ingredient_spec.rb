@@ -58,8 +58,8 @@ RSpec.describe Ingredient, type: :model do
     end
 
     describe 'canonical ingredient validations' do
-      let(:ingredient) { build(:ingredient, canonical_ingredient:, game:) }
-      let(:game) { create(:game) }
+      let(:ingredient) { build(:ingredient, canonical_ingredient:, playthrough:) }
+      let(:playthrough) { create(:playthrough) }
 
       context 'when the canonical ingredient is not unique' do
         let(:canonical_ingredient) { create(:canonical_ingredient) }
@@ -69,7 +69,7 @@ RSpec.describe Ingredient, type: :model do
             :ingredient,
             3,
             canonical_ingredient:,
-            game:,
+            playthrough:,
           )
         end
 
@@ -94,7 +94,7 @@ RSpec.describe Ingredient, type: :model do
           end
         end
 
-        context 'when the canonical ingredient has another match for another game' do
+        context 'when the canonical ingredient has another match for another playthrough' do
           before do
             create(:ingredient, canonical_ingredient:)
           end
@@ -104,12 +104,12 @@ RSpec.describe Ingredient, type: :model do
           end
         end
 
-        context 'when the canonical ingredient has another match for the same game' do
+        context 'when the canonical ingredient has another match for the same playthrough' do
           before do
             create(
               :ingredient,
               canonical_ingredient:,
-              game:,
+              playthrough:,
             )
           end
 

@@ -33,8 +33,8 @@ RSpec.describe Weapon, type: :model do
     end
 
     describe 'canonical weapon validations' do
-      let(:weapon) { build(:weapon, canonical_weapon:, game:) }
-      let(:game) { create(:game) }
+      let(:weapon) { build(:weapon, canonical_weapon:, playthrough:) }
+      let(:playthrough) { create(:playthrough) }
 
       context 'when the canonical weapon is not unique' do
         let(:canonical_weapon) { create(:canonical_weapon) }
@@ -44,7 +44,7 @@ RSpec.describe Weapon, type: :model do
             :weapon,
             3,
             canonical_weapon:,
-            game:,
+            playthrough:,
           )
         end
 
@@ -69,7 +69,7 @@ RSpec.describe Weapon, type: :model do
           end
         end
 
-        context 'when the canonical weapon has other matches in other games' do
+        context 'when the canonical weapon has other matches in other playthroughs' do
           before do
             create(:weapon, canonical_weapon:)
           end
@@ -79,9 +79,9 @@ RSpec.describe Weapon, type: :model do
           end
         end
 
-        context 'when the canonical weapon has other matches in the same game' do
+        context 'when the canonical weapon has other matches in the same playthrough' do
           before do
-            create(:weapon, canonical_weapon:, game:)
+            create(:weapon, canonical_weapon:, playthrough:)
           end
 
           it 'is invalid' do

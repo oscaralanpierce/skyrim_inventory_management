@@ -35,8 +35,8 @@ RSpec.describe Potion, type: :model do
     end
 
     describe '#canonical_potion' do
-      let(:potion) { build(:potion, canonical_potion:, game:) }
-      let(:game) { create(:game) }
+      let(:potion) { build(:potion, canonical_potion:, playthrough:) }
+      let(:playthrough) { create(:playthrough) }
 
       context 'when the canonical potion is not unique' do
         let(:canonical_potion) { create(:canonical_potion) }
@@ -46,7 +46,7 @@ RSpec.describe Potion, type: :model do
             :potion,
             3,
             canonical_potion:,
-            game:,
+            playthrough:,
           )
         end
 
@@ -71,7 +71,7 @@ RSpec.describe Potion, type: :model do
           end
         end
 
-        context 'when there is another match for a different game' do
+        context 'when there is another match for a different playthrough' do
           before do
             create(:potion, canonical_potion:)
           end
@@ -81,9 +81,9 @@ RSpec.describe Potion, type: :model do
           end
         end
 
-        context 'when there is another match for the same game' do
+        context 'when there is another match for the same playthrough' do
           before do
-            create(:potion, canonical_potion:, game:)
+            create(:potion, canonical_potion:, playthrough:)
           end
 
           it 'is invalid' do

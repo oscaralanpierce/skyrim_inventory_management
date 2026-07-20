@@ -3,12 +3,12 @@
 require 'titlecase'
 
 class WishList < ApplicationRecord
-  # Titles have to be unique per game as described in the API docs. They also can only
+  # Titles have to be unique per playthrough as described in the API docs. They also can only
   # contain alphanumeric characters and spaces with no special characters or whitespace
   # other than spaces. Leading or trailing whitespace is stripped anyway so the validation
   # ignores any leading or trailing whitespace characters.
   validates :title,
-            uniqueness: { scope: :game_id, message: 'must be unique per game', case_sensitive: false },
+            uniqueness: { scope: :playthrough_id, message: 'must be unique per playthrough', case_sensitive: false },
             format: {
               with: /\A\s*[a-z0-9 \-',]*\s*\z/i,
               message: "can only contain alphanumeric characters, spaces, commas (,), hyphens (-), and apostrophes (')",
@@ -25,7 +25,7 @@ class WishList < ApplicationRecord
   include Aggregatable
 
   scope :index_order, -> { includes_items.aggregate_first.order(updated_at: :desc) }
-  scope :belonging_to_user, ->(user) { joins(:game).where(games: { user_id: user.id }).order('wish_lists.updated_at DESC') }
+  scope :belonging_to_user, ->(user) { joins(:playthrough).where(playthroughs: { user_id: user.id }).order('wish_lists.updated_at DESC') }
 
   private
 
@@ -33,7 +33,7 @@ class WishList < ApplicationRecord
     return if aggregate
 
     if title.blank?
-      max_existing_number = game
+      max_existing_number = playthrough
                               .wish_lists
                               .where("title LIKE 'My List %'")
                               .pluck(:title)

@@ -3,7 +3,7 @@
 class InGameItem < ApplicationRecord
   self.abstract_class = true
 
-  belongs_to :game
+  belongs_to :playthrough
 
   validates :unit_weight,
             numericality: {
@@ -97,7 +97,7 @@ class InGameItem < ApplicationRecord
   def validate_unique_canonical
     return unless canonical_model&.unique_item == true
 
-    items = canonical_model.public_send(inverse_relationship_name).where(game_id:)
+    items = canonical_model.public_send(inverse_relationship_name).where(playthrough_id:)
 
     return if items.count < 1
     return if items.count == 1 && items.first == self

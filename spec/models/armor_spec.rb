@@ -51,22 +51,22 @@ RSpec.describe Armor, type: :model do
           )
         end
 
-        context 'when there are duplicate associations in the same game' do
-          let(:game) { create(:game) }
+        context 'when there are duplicate associations in the same playthrough' do
+          let(:playthrough) { create(:playthrough) }
 
           before do
-            create(:armor, canonical_armor:, game:)
+            create(:armor, canonical_armor:, playthrough:)
           end
 
           it 'is invalid' do
             armor.canonical_armor = canonical_armor
-            armor.game = game
+            armor.playthrough = playthrough
             validate
             expect(armor.errors[:base]).to include('is a duplicate of a unique in-game item')
           end
         end
 
-        context 'when there are duplicate associations for different games' do
+        context 'when there are duplicate associations for different playthroughs' do
           before do
             create(:armor, canonical_armor:)
           end

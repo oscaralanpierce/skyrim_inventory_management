@@ -19,8 +19,8 @@ RSpec.describe ClothingItem, type: :model do
     end
 
     describe '#canonical_clothing_item' do
-      let(:item) { build(:clothing_item, canonical_clothing_item:, game:) }
-      let(:game) { create(:game) }
+      let(:item) { build(:clothing_item, canonical_clothing_item:, playthrough:) }
+      let(:playthrough) { create(:playthrough) }
 
       context 'when the canonical clothing item is not unique' do
         let(:canonical_clothing_item) { create(:canonical_clothing_item) }
@@ -30,7 +30,7 @@ RSpec.describe ClothingItem, type: :model do
             :clothing_item,
             3,
             canonical_clothing_item:,
-            game:,
+            playthrough:,
           )
         end
 
@@ -55,7 +55,7 @@ RSpec.describe ClothingItem, type: :model do
           end
         end
 
-        context 'when there is another matching clothing item for another game' do
+        context 'when there is another matching clothing item for another playthrough' do
           before do
             create(:clothing_item, canonical_clothing_item:)
           end
@@ -65,9 +65,9 @@ RSpec.describe ClothingItem, type: :model do
           end
         end
 
-        context 'when there is another matching clothing item for the same game' do
+        context 'when there is another matching clothing item for the same playthrough' do
           before do
-            create(:clothing_item, canonical_clothing_item:, game:)
+            create(:clothing_item, canonical_clothing_item:, playthrough:)
           end
 
           it 'is invalid' do

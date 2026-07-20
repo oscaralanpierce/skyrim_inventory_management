@@ -2,7 +2,7 @@
 
 FactoryBot.define do
   factory :clothing_item do
-    game
+    playthrough
 
     name { 'Fine Clothes' }
 

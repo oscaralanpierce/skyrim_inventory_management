@@ -23,7 +23,7 @@ RSpec.describe Property, type: :model do
   describe 'validations' do
     subject(:validate) { property.validate }
 
-    let(:game) { create(:game) }
+    let(:playthrough) { create(:playthrough) }
 
     before do
       allow(Rails.logger).to receive(:error)
@@ -32,9 +32,9 @@ RSpec.describe Property, type: :model do
               .and_call_original
     end
 
-    it 'is invalid without a game' do
+    it 'is invalid without a playthrough' do
       validate
-      expect(property.errors[:game]).to include('must exist')
+      expect(property.errors[:playthrough]).to include('must exist')
     end
 
     it 'is invalid without a canonical property' do
@@ -64,9 +64,9 @@ RSpec.describe Property, type: :model do
       expect(property.errors[:hold]).to include('must be one of the nine Skyrim holds, or Solstheim')
     end
 
-    it 'only allows up to 10 per game', :aggregate_failures do
+    it 'only allows up to 10 per playthrough', :aggregate_failures do
       Canonical::Property.all.find_each do |canonical_property|
-        game.properties.create!(
+        playthrough.properties.create!(
           canonical_property:,
           name: canonical_property.name,
           hold: canonical_property.hold,
@@ -74,14 +74,14 @@ RSpec.describe Property, type: :model do
         )
       end
 
-      property.game = game
+      property.playthrough = playthrough
       property.name = 'Vlindrel Hall'
       property.hold = 'The Reach'
       validate
-      expect(property.errors[:game]).to include('already has max number of ownable properties')
+      expect(property.errors[:playthrough]).to include('already has max number of ownable properties')
       expect(Rails.logger)
         .to have_received(:error)
-              .with('Cannot create property "Vlindrel Hall" in hold "The Reach": this game already has 10 properties')
+              .with('Cannot create property "Vlindrel Hall" in hold "The Reach": this playthrough already has 10 properties')
     end
 
     it 'calls the HomesteadValidator' do
@@ -94,11 +94,11 @@ RSpec.describe Property, type: :model do
     end
 
     describe 'uniqueness' do
-      let(:property) { build(:property, name: "arch-mage's quarters", game:) }
+      let(:property) { build(:property, name: "arch-mage's quarters", playthrough:) }
       let(:canonical_property) { Canonical::Property.find_by(name: "Arch-Mage's Quarters") }
 
       before do
-        game.properties.create!(
+        playthrough.properties.create!(
           canonical_property:,
           name: canonical_property.name,
           hold: canonical_property.hold,
@@ -106,19 +106,19 @@ RSpec.describe Property, type: :model do
         )
       end
 
-      it 'has a unique combination of game and canonical property' do
+      it 'has a unique combination of playthrough and canonical property' do
         validate
-        expect(property.errors[:canonical_property]).to include('must be unique per game')
+        expect(property.errors[:canonical_property]).to include('must be unique per playthrough')
       end
 
-      it 'has a unique name per game' do
+      it 'has a unique name per playthrough' do
         validate
-        expect(property.errors[:name]).to include('must be unique per game')
+        expect(property.errors[:name]).to include('must be unique per playthrough')
       end
 
-      it 'has a unique hold per game' do
+      it 'has a unique hold per playthrough' do
         validate
-        expect(property.errors[:hold]).to include('must be unique per game')
+        expect(property.errors[:hold]).to include('must be unique per playthrough')
       end
     end
 

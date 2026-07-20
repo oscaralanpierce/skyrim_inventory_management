@@ -10,13 +10,13 @@ RSpec.describe WishListItemsController::DestroyService do
   describe '#perform' do
     subject(:perform) { described_class.new(user, list_item.id).perform }
 
-    let(:game) { create(:game) }
-    let!(:aggregate_list) { create(:aggregate_wish_list, game:) }
-    let!(:wish_list) { create(:wish_list, game:, aggregate_list:) }
+    let(:playthrough) { create(:playthrough) }
+    let!(:aggregate_list) { create(:aggregate_wish_list, playthrough:) }
+    let!(:wish_list) { create(:wish_list, playthrough:, aggregate_list:) }
 
     context 'when all goes well' do
       let(:list_item) { create(:wish_list_item, list: wish_list, notes: 'some notes') }
-      let(:user) { game.user }
+      let(:user) { playthrough.user }
 
       before do
         aggregate_list.add_item_from_child_list(list_item)
@@ -56,8 +56,8 @@ RSpec.describe WishListItemsController::DestroyService do
       end
 
       context 'when the quantity on the aggregate list exceeds the quantity on the regular list' do
-        let(:user) { game.user }
-        let(:second_list) { create(:wish_list, game:, aggregate_list:) }
+        let(:user) { playthrough.user }
+        let(:second_list) { create(:wish_list, playthrough:, aggregate_list:) }
         let(:second_list_item) do
           create(
             :wish_list_item,
@@ -106,7 +106,7 @@ RSpec.describe WishListItemsController::DestroyService do
     end
 
     context "when the specified list item doesn't exist" do
-      let(:user) { game.user }
+      let(:user) { playthrough.user }
       let(:list_item) { double(id: 389) }
 
       it 'returns a Service::NotFoundResult' do
@@ -120,7 +120,7 @@ RSpec.describe WishListItemsController::DestroyService do
     end
 
     context 'when the specified list item belongs to another user' do
-      let(:user) { game.user }
+      let(:user) { playthrough.user }
       let!(:list_item) { create(:wish_list_item) }
 
       it "doesn't destroy the list item" do

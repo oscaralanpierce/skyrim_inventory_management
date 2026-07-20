@@ -8,35 +8,35 @@ require 'service/unprocessable_entity_result'
 
 RSpec.describe InventoryListsController::CreateService do
   describe '#perform' do
-    subject(:perform) { described_class.new(user, game.id, params).perform }
+    subject(:perform) { described_class.new(user, playthrough.id, params).perform }
 
     let(:user) { create(:user) }
 
     context 'when the params are valid' do
-      let!(:game) { create(:game, user:) }
+      let!(:playthrough) { create(:playthrough, user:) }
       let(:params) { { title: 'Hjerim' } }
 
-      context 'when the game has no aggregate inventory list' do
+      context 'when the playthrough has no aggregate inventory list' do
         it 'creates two lists' do
           expect { perform }
-            .to change(game.inventory_lists, :count).from(0).to(2)
+            .to change(playthrough.inventory_lists, :count).from(0).to(2)
         end
 
-        it 'creates an aggregate inventory list for the given game' do
+        it 'creates an aggregate inventory list for the given playthrough' do
           perform
-          expect(game.aggregate_inventory_list).to be_present
+          expect(playthrough.aggregate_inventory_list).to be_present
         end
 
-        it 'creates a regular inventory list for the given game' do
+        it 'creates a regular inventory list for the given playthrough' do
           perform
-          expect(game.inventory_lists.last.title).to eq('Hjerim')
+          expect(playthrough.inventory_lists.last.title).to eq('Hjerim')
         end
 
-        it 'updates the game' do
+        it 'updates the playthrough' do
           t = Time.zone.now + 3.days
           Timecop.freeze(t) do
             perform
-            expect(game.reload.updated_at).to be_within(0.005.seconds).of(t)
+            expect(playthrough.reload.updated_at).to be_within(0.005.seconds).of(t)
           end
         end
 
@@ -45,18 +45,18 @@ RSpec.describe InventoryListsController::CreateService do
         end
 
         it 'sets the resource to include both lists' do
-          expect(perform.resource).to eq([game.aggregate_inventory_list, game.inventory_lists.last])
+          expect(perform.resource).to eq([playthrough.aggregate_inventory_list, playthrough.inventory_lists.last])
         end
       end
 
-      context 'when the game has an aggregate inventory list' do
+      context 'when the playthrough has an aggregate inventory list' do
         before do
-          create(:aggregate_inventory_list, game:)
+          create(:aggregate_inventory_list, playthrough:)
         end
 
-        it 'creates an inventory list for the given game' do
+        it 'creates an inventory list for the given playthrough' do
           expect { perform }
-            .to change(game.inventory_lists, :count).from(1).to(2)
+            .to change(playthrough.inventory_lists, :count).from(1).to(2)
         end
 
         it 'returns a Service::CreatedResult' do
@@ -64,19 +64,19 @@ RSpec.describe InventoryListsController::CreateService do
         end
 
         it 'sets the resource to the created list' do
-          expect(perform.resource).to eq(game.inventory_lists.last)
+          expect(perform.resource).to eq(playthrough.inventory_lists.last)
         end
       end
     end
 
     context 'when the params are invalid' do
-      let(:game) { create(:game, user:) }
-      let(:game_id) { game.id }
+      let(:playthrough) { create(:playthrough, user:) }
+      let(:playthrough_id) { playthrough.id }
       let(:params) { { title: '|nvalid Tit|e' } }
 
       it "doesn't create an inventory list" do
         expect { perform }
-          .not_to change(game.inventory_lists, :count)
+          .not_to change(playthrough.inventory_lists, :count)
       end
 
       it 'returns a Service::UnprocessableEntityResult' do
@@ -88,8 +88,8 @@ RSpec.describe InventoryListsController::CreateService do
       end
     end
 
-    context 'when the game is not found' do
-      let(:game) { double(id: 898_243) }
+    context 'when the playthrough is not found' do
+      let(:playthrough) { double(id: 898_243) }
       let(:params) { { title: 'My Inventory List' } }
 
       it 'returns a Service::NotFoundResult' do
@@ -101,8 +101,8 @@ RSpec.describe InventoryListsController::CreateService do
       end
     end
 
-    context 'when the game belongs to another user' do
-      let!(:game) { create(:game) }
+    context 'when the playthrough belongs to another user' do
+      let!(:playthrough) { create(:playthrough) }
       let(:params) { { title: 'My Inventory List' } }
 
       it "doesn't create an inventory list" do
@@ -121,7 +121,7 @@ RSpec.describe InventoryListsController::CreateService do
     end
 
     context 'when the request tries to create an aggregate list' do
-      let(:game) { create(:game, user:) }
+      let(:playthrough) { create(:playthrough, user:) }
       let(:params) do
         {
           title: 'All Items',
@@ -139,7 +139,7 @@ RSpec.describe InventoryListsController::CreateService do
     end
 
     context 'when something unexpected goes wrong' do
-      let(:game) { create(:game, user:) }
+      let(:playthrough) { create(:playthrough, user:) }
       let(:params) { { title: 'Foobar' } }
 
       before do

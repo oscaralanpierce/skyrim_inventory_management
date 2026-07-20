@@ -2,7 +2,7 @@
 
 FactoryBot.define do
   factory :potion do
-    game
+    playthrough
 
     name { 'Potion of Fortify Destruction' }
 

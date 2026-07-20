@@ -12,24 +12,24 @@ FactoryBot.define do
       uid { 'somestring' }
       email { 'someuser@gmail.com' }
 
-      factory :authenticated_user_with_games do
+      factory :authenticated_user_with_playthroughs do
         transient do
-          game_count { 2 }
+          playthrough_count { 2 }
         end
 
         after(:create) do |user, evaluator|
-          create_list(:game, evaluator.game_count, user:)
+          create_list(:playthrough, evaluator.playthrough_count, user:)
         end
       end
     end
 
-    factory :user_with_games do
+    factory :user_with_playthroughs do
       transient do
-        game_count { 2 }
+        playthrough_count { 2 }
       end
 
       after(:create) do |user, evaluator|
-        create_list(:game, evaluator.game_count, user:)
+        create_list(:playthrough, evaluator.playthrough_count, user:)
       end
     end
   end

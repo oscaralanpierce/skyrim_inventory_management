@@ -12,9 +12,9 @@ RSpec.describe WishListItemsController::CreateService do
     subject(:perform) { described_class.new(user, wish_list.id, params).perform }
 
     let(:user) { create(:user) }
-    let(:game) { create(:game, user:) }
-    let!(:aggregate_list) { create(:aggregate_wish_list, game:) }
-    let!(:wish_list) { create(:wish_list, game:, aggregate_list:) }
+    let(:playthrough) { create(:playthrough, user:) }
+    let!(:aggregate_list) { create(:aggregate_wish_list, playthrough:) }
+    let!(:wish_list) { create(:wish_list, playthrough:, aggregate_list:) }
 
     context 'when all goes well' do
       let(:params) { { description: 'Necklace', quantity: 2, notes: 'Hello world' } }
@@ -65,12 +65,12 @@ RSpec.describe WishListItemsController::CreateService do
         end
 
         context 'when there is an existing matching item on another list' do
-          let(:other_list) { create(:wish_list, game: aggregate_list.game, aggregate_list:) }
+          let(:other_list) { create(:wish_list, playthrough: aggregate_list.playthrough, aggregate_list:) }
           let!(:other_item) { create(:wish_list_item, list: other_list, description: 'Necklace', unit_weight: 1, quantity: 1) }
 
           before do
             # This should not be included in the resource body
-            create(:wish_list, game:)
+            create(:wish_list, playthrough:)
 
             aggregate_list.add_item_from_child_list(other_item)
           end
@@ -135,13 +135,13 @@ RSpec.describe WishListItemsController::CreateService do
       end
 
       context 'when there is an existing matching item on the same list' do
-        let(:other_list) { create(:wish_list, game:) }
+        let(:other_list) { create(:wish_list, playthrough:) }
         let!(:other_item) { create(:wish_list_item, list: other_list, description: 'Necklace', quantity: 2) }
         let!(:list_item) { create(:wish_list_item, list: wish_list, description: 'Necklace', quantity: 1) }
 
         before do
           # This should not be included in the resource body
-          create(:wish_list, game:)
+          create(:wish_list, playthrough:)
 
           aggregate_list.add_item_from_child_list(other_item)
           aggregate_list.add_item_from_child_list(list_item)

@@ -4,11 +4,11 @@ require 'rails_helper'
 require 'service/internal_server_error_result'
 require 'service/ok_result'
 
-RSpec.describe GamesController::IndexService do
+RSpec.describe PlaythroughsController::IndexService do
   describe '#perform' do
     subject(:perform) { described_class.new(user).perform }
 
-    context 'when the user has no games' do
+    context 'when the user has no playthroughs' do
       let(:user) { create(:user) }
 
       it 'returns a Service::OkResult' do
@@ -20,27 +20,27 @@ RSpec.describe GamesController::IndexService do
       end
     end
 
-    context 'when the user has games' do
-      let(:user) { create(:user_with_games) }
+    context 'when the user has playthroughs' do
+      let(:user) { create(:user_with_playthroughs) }
 
       before do
-        create(:game) # another user's game, shouldn't be included
+        create(:playthrough) # another user's playthrough, shouldn't be included
       end
 
       it 'returns a Service::OkResult' do
         expect(perform).to be_a(Service::OkResult)
       end
 
-      it 'sets the resource to the games' do
-        expect(perform.resource).to eq(user.games.index_order)
+      it 'sets the resource to the playthroughs' do
+        expect(perform.resource).to eq(user.playthroughs.index_order)
       end
     end
 
     context 'when something unexpected goes wrong' do
-      let(:user) { create(:user_with_games) }
+      let(:user) { create(:user_with_playthroughs) }
 
       before do
-        allow_any_instance_of(User).to receive(:games).and_raise(StandardError, 'Something went horribly wrong')
+        allow_any_instance_of(User).to receive(:playthroughs).and_raise(StandardError, 'Something went horribly wrong')
       end
 
       it 'returns a Service::InternalServerErrorResult' do

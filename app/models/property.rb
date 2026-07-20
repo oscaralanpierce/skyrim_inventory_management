@@ -3,7 +3,7 @@
 require 'skyrim'
 
 class Property < ApplicationRecord
-  belongs_to :game
+  belongs_to :playthrough
   belongs_to :canonical_property, class_name: 'Canonical::Property'
 
   has_many :wish_lists, dependent: nil
@@ -11,8 +11,8 @@ class Property < ApplicationRecord
 
   validates :canonical_property,
             uniqueness: {
-              scope: :game_id,
-              message: 'must be unique per game',
+              scope: :playthrough_id,
+              message: 'must be unique per playthrough',
             }
 
   validates :name,
@@ -22,8 +22,8 @@ class Property < ApplicationRecord
               message: "must be an ownable property in Skyrim, or the Arch-Mage's Quarters",
             },
             uniqueness: {
-              scope: :game_id,
-              message: 'must be unique per game',
+              scope: :playthrough_id,
+              message: 'must be unique per playthrough',
             }
 
   validates :hold,
@@ -33,8 +33,8 @@ class Property < ApplicationRecord
               message: 'must be one of the nine Skyrim holds, or Solstheim',
             },
             uniqueness: {
-              scope: :game_id,
-              message: 'must be unique per game',
+              scope: :playthrough_id,
+              message: 'must be unique per playthrough',
             }
 
   validates :city,
@@ -44,8 +44,8 @@ class Property < ApplicationRecord
               allow_blank: true,
             },
             uniqueness: {
-              scope: :game_id,
-              message: 'must be unique per game if present',
+              scope: :playthrough_id,
+              message: 'must be unique per playthrough if present',
               allow_nil: true,
             }
 
@@ -96,12 +96,12 @@ class Property < ApplicationRecord
   end
 
   def ensure_max
-    Rails.logger.error("Cannot create property \"#{name}\" in hold \"#{hold}\": this game already has #{Canonical::Property::TOTAL_PROPERTY_COUNT} properties")
-    errors.add(:game, 'already has max number of ownable properties')
+    Rails.logger.error("Cannot create property \"#{name}\" in hold \"#{hold}\": this playthrough already has #{Canonical::Property::TOTAL_PROPERTY_COUNT} properties")
+    errors.add(:playthrough, 'already has max number of ownable properties')
   end
 
   def count_is_max
-    game.present? && game.properties.count == Canonical::Property::TOTAL_PROPERTY_COUNT
+    playthrough.present? && playthrough.properties.count == Canonical::Property::TOTAL_PROPERTY_COUNT
   end
 
   def ensure_alchemy_lab_available

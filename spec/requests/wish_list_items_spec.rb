@@ -16,9 +16,9 @@ RSpec.describe 'WishListItems', type: :request do
     end
 
     let!(:user) { create(:authenticated_user) }
-    let(:game) { create(:game, user:) }
-    let!(:aggregate_list) { create(:aggregate_wish_list, game:) }
-    let!(:wish_list) { create(:wish_list, aggregate_list:, game:) }
+    let(:playthrough) { create(:playthrough, user:) }
+    let!(:aggregate_list) { create(:aggregate_wish_list, playthrough:) }
+    let!(:wish_list) { create(:wish_list, aggregate_list:, playthrough:) }
 
     context 'when authenticated' do
       before do
@@ -46,9 +46,9 @@ RSpec.describe 'WishListItems', type: :request do
                 expect(response.status).to eq(201)
               end
 
-              it 'returns all changed wish lists for the same game' do
+              it 'returns all changed wish lists for the same playthrough' do
                 create_item
-                expect(response.body).to eq(game.wish_lists.to_json)
+                expect(response.body).to eq(playthrough.wish_lists.to_json)
               end
             end
 
@@ -70,21 +70,21 @@ RSpec.describe 'WishListItems', type: :request do
                 expect(response.status).to eq(201)
               end
 
-              it 'returns all changed wish lists for the same game' do
+              it 'returns all changed wish lists for the same playthrough' do
                 create_item
-                expect(response.body).to eq(game.wish_lists.to_json)
+                expect(response.body).to eq(playthrough.wish_lists.to_json)
               end
             end
           end
 
           context 'when there is an existing matching item on another list' do
-            let(:other_list) { create(:wish_list, game:) }
+            let(:other_list) { create(:wish_list, playthrough:) }
             let!(:other_item) { create(:wish_list_item, list: other_list, description: 'Corundum ingot', quantity: 2) }
 
             before do
               # This list has nothing to do with things and should not be included in the
               # response bodies.
-              create(:wish_list, game:)
+              create(:wish_list, playthrough:)
 
               aggregate_list.add_item_from_child_list(other_item)
             end
@@ -107,9 +107,9 @@ RSpec.describe 'WishListItems', type: :request do
                 expect(response.status).to eq(201)
               end
 
-              it 'returns all changed wish lists from the same game' do
+              it 'returns all changed wish lists from the same playthrough' do
                 create_item
-                expect(response.body).to eq(game.wish_lists.where(id: [aggregate_list.id, wish_list.id]).to_json)
+                expect(response.body).to eq(playthrough.wish_lists.where(id: [aggregate_list.id, wish_list.id]).to_json)
               end
             end
 
@@ -138,10 +138,10 @@ RSpec.describe 'WishListItems', type: :request do
                 expect(response.status).to eq(201)
               end
 
-              it 'returns all changed wish lists for the same game' do
+              it 'returns all changed wish lists for the same playthrough' do
                 create_item
                 expect(response.body).to eq(
-                  game
+                  playthrough
                     .wish_lists
                     .where(id: [aggregate_list.id, wish_list.id, other_list.id])
                     .to_json,
@@ -152,14 +152,14 @@ RSpec.describe 'WishListItems', type: :request do
         end
 
         context 'when there is an existing matching item on the same list' do
-          let(:other_list) { create(:wish_list, game: aggregate_list.game, aggregate_list:) }
+          let(:other_list) { create(:wish_list, playthrough: aggregate_list.playthrough, aggregate_list:) }
           let!(:other_item) { create(:wish_list_item, list: other_list, description: 'Corundum ingot', quantity: 2) }
           let!(:list_item) { create(:wish_list_item, list: wish_list, description: 'Corundum ingot', quantity: 3) }
 
           before do
             # This list has nothing to do with things and should not be included in the
             # response bodies.
-            create(:wish_list, game:)
+            create(:wish_list, playthrough:)
 
             aggregate_list.add_item_from_child_list(other_item)
             aggregate_list.add_item_from_child_list(list_item)
@@ -186,9 +186,9 @@ RSpec.describe 'WishListItems', type: :request do
               expect(response.status).to eq(200)
             end
 
-            it 'returns all changed wish lists for the same game' do
+            it 'returns all changed wish lists for the same playthrough' do
               create_item
-              expect(response.body).to eq(game.wish_lists.where(id: [aggregate_list.id, wish_list.id]).to_json)
+              expect(response.body).to eq(playthrough.wish_lists.where(id: [aggregate_list.id, wish_list.id]).to_json)
             end
           end
 
@@ -223,10 +223,10 @@ RSpec.describe 'WishListItems', type: :request do
               expect(response.status).to eq(200)
             end
 
-            it 'returns all changed wish lists for the same game' do
+            it 'returns all changed wish lists for the same playthrough' do
               create_item
               expect(response.body).to eq(
-                game
+                playthrough
                   .wish_lists
                   .where(id: [aggregate_list.id, wish_list.id, other_list.id])
                   .to_json,
@@ -360,9 +360,9 @@ RSpec.describe 'WishListItems', type: :request do
     subject(:update_item) { patch "/wish_list_items/#{list_item.id}", headers:, params: }
 
     let!(:user) { create(:authenticated_user) }
-    let(:game) { create(:game, user:) }
-    let!(:aggregate_list) { create(:aggregate_wish_list, game:) }
-    let!(:wish_list) { create(:wish_list, game:, aggregate_list:) }
+    let(:playthrough) { create(:playthrough, user:) }
+    let!(:aggregate_list) { create(:aggregate_wish_list, playthrough:) }
+    let!(:wish_list) { create(:wish_list, playthrough:, aggregate_list:) }
 
     context 'when authenticated' do
       before do
@@ -405,11 +405,11 @@ RSpec.describe 'WishListItems', type: :request do
             end
           end
 
-          it 'updates the game' do
+          it 'updates the playthrough' do
             t = Time.zone.now + 3.days
             Timecop.freeze(t) do
               update_item
-              expect(game.reload.updated_at).to be_within(0.005.seconds).of(t)
+              expect(playthrough.reload.updated_at).to be_within(0.005.seconds).of(t)
             end
           end
 
@@ -426,7 +426,7 @@ RSpec.describe 'WishListItems', type: :request do
 
         context 'when there is a matching item on another list' do
           let!(:list_item) { create(:wish_list_item, list: wish_list, unit_weight: 1) }
-          let!(:other_list) { create(:wish_list, game:, aggregate_list:) }
+          let!(:other_list) { create(:wish_list, playthrough:, aggregate_list:) }
           let!(:other_item) { create(:wish_list_item, list: other_list, description: list_item.description, quantity: 4, unit_weight: 1) }
           let(:aggregate_list_item) { aggregate_list.list_items.first }
 
@@ -464,11 +464,11 @@ RSpec.describe 'WishListItems', type: :request do
               end
             end
 
-            it 'updates the game' do
+            it 'updates the playthrough' do
               t = Time.zone.now + 3.days
               Timecop.freeze(t) do
                 update_item
-                expect(game.reload.updated_at).to be_within(0.005.seconds).of(t)
+                expect(playthrough.reload.updated_at).to be_within(0.005.seconds).of(t)
               end
             end
 
@@ -528,11 +528,11 @@ RSpec.describe 'WishListItems', type: :request do
               end
             end
 
-            it 'updates the game' do
+            it 'updates the playthrough' do
               t = Time.zone.now + 3.days
               Timecop.freeze(t) do
                 update_item
-                expect(game.reload.updated_at).to be_within(0.005.seconds).of(t)
+                expect(playthrough.reload.updated_at).to be_within(0.005.seconds).of(t)
               end
             end
 
@@ -592,11 +592,11 @@ RSpec.describe 'WishListItems', type: :request do
               end
             end
 
-            it 'updates the game' do
+            it 'updates the playthrough' do
               t = Time.zone.now + 3.days
               Timecop.freeze(t) do
                 update_item
-                expect(game.reload.updated_at).to be_within(0.005.seconds).of(t)
+                expect(playthrough.reload.updated_at).to be_within(0.005.seconds).of(t)
               end
             end
 
@@ -665,7 +665,7 @@ RSpec.describe 'WishListItems', type: :request do
 
       context 'when the attributes are invalid' do
         let!(:list_item) { create(:wish_list_item, list: wish_list, quantity: 2) }
-        let(:other_list) { create(:wish_list, game:) }
+        let(:other_list) { create(:wish_list, playthrough:) }
         let!(:other_item) { create(:wish_list_item, list: other_list, description: list_item.description, quantity: 1) }
         let(:aggregate_list_item) { aggregate_list.list_items.first }
         let(:params) { { wish_list_item: { quantity: -4, unit_weight: 2 } }.to_json }
@@ -749,9 +749,9 @@ RSpec.describe 'WishListItems', type: :request do
     subject(:update_item) { put "/wish_list_items/#{list_item.id}", headers:, params: }
 
     let!(:user) { create(:authenticated_user) }
-    let(:game) { create(:game, user:) }
-    let!(:aggregate_list) { create(:aggregate_wish_list, game:) }
-    let!(:wish_list) { create(:wish_list, game:, aggregate_list:) }
+    let(:playthrough) { create(:playthrough, user:) }
+    let!(:aggregate_list) { create(:aggregate_wish_list, playthrough:) }
+    let!(:wish_list) { create(:wish_list, playthrough:, aggregate_list:) }
 
     context 'when authenticated' do
       before do
@@ -794,11 +794,11 @@ RSpec.describe 'WishListItems', type: :request do
             end
           end
 
-          it 'updates the game' do
+          it 'updates the playthrough' do
             t = Time.zone.now + 3.days
             Timecop.freeze(t) do
               update_item
-              expect(game.reload.updated_at).to be_within(0.005.seconds).of(t)
+              expect(playthrough.reload.updated_at).to be_within(0.005.seconds).of(t)
             end
           end
 
@@ -815,7 +815,7 @@ RSpec.describe 'WishListItems', type: :request do
 
         context 'when there is a matching item on another list' do
           let!(:list_item) { create(:wish_list_item, list: wish_list, unit_weight: 1) }
-          let!(:other_list) { create(:wish_list, game:, aggregate_list:) }
+          let!(:other_list) { create(:wish_list, playthrough:, aggregate_list:) }
           let!(:other_item) { create(:wish_list_item, list: other_list, description: list_item.description, quantity: 4, unit_weight: 1) }
           let(:aggregate_list_item) { aggregate_list.list_items.first }
 
@@ -853,11 +853,11 @@ RSpec.describe 'WishListItems', type: :request do
               end
             end
 
-            it 'updates the game' do
+            it 'updates the playthrough' do
               t = Time.zone.now + 3.days
               Timecop.freeze(t) do
                 update_item
-                expect(game.reload.updated_at).to be_within(0.005.seconds).of(t)
+                expect(playthrough.reload.updated_at).to be_within(0.005.seconds).of(t)
               end
             end
 
@@ -917,11 +917,11 @@ RSpec.describe 'WishListItems', type: :request do
               end
             end
 
-            it 'updates the game' do
+            it 'updates the playthrough' do
               t = Time.zone.now + 3.days
               Timecop.freeze(t) do
                 update_item
-                expect(game.reload.updated_at).to be_within(0.005.seconds).of(t)
+                expect(playthrough.reload.updated_at).to be_within(0.005.seconds).of(t)
               end
             end
 
@@ -981,11 +981,11 @@ RSpec.describe 'WishListItems', type: :request do
               end
             end
 
-            it 'updates the game' do
+            it 'updates the playthrough' do
               t = Time.zone.now + 3.days
               Timecop.freeze(t) do
                 update_item
-                expect(game.reload.updated_at).to be_within(0.005.seconds).of(t)
+                expect(playthrough.reload.updated_at).to be_within(0.005.seconds).of(t)
               end
             end
 
@@ -1054,7 +1054,7 @@ RSpec.describe 'WishListItems', type: :request do
 
       context 'when the attributes are invalid' do
         let!(:list_item) { create(:wish_list_item, list: wish_list, quantity: 2) }
-        let(:other_list) { create(:wish_list, game:) }
+        let(:other_list) { create(:wish_list, playthrough:) }
         let!(:other_item) { create(:wish_list_item, list: other_list, description: list_item.description, quantity: 1) }
         let(:aggregate_list_item) { aggregate_list.list_items.first }
         let(:params) { { wish_list_item: { quantity: -4, unit_weight: 2 } }.to_json }
@@ -1139,9 +1139,9 @@ RSpec.describe 'WishListItems', type: :request do
 
     context 'when authenticated' do
       let!(:user) { create(:authenticated_user) }
-      let!(:aggregate_list) { create(:aggregate_wish_list, game:) }
-      let!(:wish_list) { create(:wish_list, game:, aggregate_list:) }
-      let(:game) { create(:game, user:) }
+      let!(:aggregate_list) { create(:aggregate_wish_list, playthrough:) }
+      let!(:wish_list) { create(:wish_list, playthrough:, aggregate_list:) }
+      let(:playthrough) { create(:playthrough, user:) }
 
       before do
         stub_successful_login
@@ -1182,11 +1182,11 @@ RSpec.describe 'WishListItems', type: :request do
             end
           end
 
-          it 'updates the game' do
+          it 'updates the playthrough' do
             t = Time.zone.now + 3.days
             Timecop.freeze(t) do
               destroy_item
-              expect(game.reload.updated_at).to be_within(0.005.seconds).of(t)
+              expect(playthrough.reload.updated_at).to be_within(0.005.seconds).of(t)
             end
           end
 
@@ -1202,7 +1202,7 @@ RSpec.describe 'WishListItems', type: :request do
         end
 
         context 'when the quantity on the aggregate list exceeds that on the regular list' do
-          let(:second_list) { create(:wish_list, game:) }
+          let(:second_list) { create(:wish_list, playthrough:) }
 
           let(:second_item) do
             create(
@@ -1245,11 +1245,11 @@ RSpec.describe 'WishListItems', type: :request do
             end
           end
 
-          it 'updates the game' do
+          it 'updates the playthrough' do
             t = Time.zone.now + 3.days
             Timecop.freeze(t) do
               destroy_item
-              expect(game.reload.updated_at).to be_within(0.005.seconds).of(t)
+              expect(playthrough.reload.updated_at).to be_within(0.005.seconds).of(t)
             end
           end
 

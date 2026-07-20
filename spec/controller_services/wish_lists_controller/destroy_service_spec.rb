@@ -12,39 +12,39 @@ RSpec.describe WishListsController::DestroyService do
     let(:user) { create(:user) }
 
     context 'when all goes well' do
-      let!(:wish_list) { create(:wish_list_with_list_items, game:) }
-      let(:game) { create(:game, user:) }
+      let!(:wish_list) { create(:wish_list_with_list_items, playthrough:) }
+      let(:playthrough) { create(:playthrough, user:) }
 
-      context 'when the game has additional regular lists' do
-        let!(:third_list) { create(:wish_list_with_list_items, game:) }
+      context 'when the playthrough has additional regular lists' do
+        let!(:third_list) { create(:wish_list_with_list_items, playthrough:) }
 
         let(:expected_resource) do
           {
             deleted: [wish_list.id],
-            aggregate: game.aggregate_wish_list,
+            aggregate: playthrough.aggregate_wish_list,
           }
         end
 
         before do
           wish_list.list_items.each do |list_item|
-            game.aggregate_wish_list.add_item_from_child_list(list_item)
+            playthrough.aggregate_wish_list.add_item_from_child_list(list_item)
           end
 
           third_list.list_items.each do |list_item|
-            game.aggregate_wish_list.add_item_from_child_list(list_item)
+            playthrough.aggregate_wish_list.add_item_from_child_list(list_item)
           end
         end
 
         it 'destroys the wish list' do
           expect { perform }
-            .to change(game.wish_lists, :count).from(3).to(2)
+            .to change(playthrough.wish_lists, :count).from(3).to(2)
         end
 
-        it 'updates the game' do
+        it 'updates the playthrough' do
           t = Time.zone.now + 3.days
           Timecop.freeze(t) do
             perform
-            expect(game.reload.updated_at).to be_within(0.005.seconds).of(t)
+            expect(playthrough.reload.updated_at).to be_within(0.005.seconds).of(t)
           end
         end
 
@@ -81,7 +81,7 @@ RSpec.describe WishListsController::DestroyService do
         end
       end
 
-      context "when this is the game's last regular list" do
+      context "when this is the playthrough's last regular list" do
         let(:expected_resource) do
           {
             deleted: [wish_list.aggregate_list_id, wish_list.id],
@@ -90,20 +90,20 @@ RSpec.describe WishListsController::DestroyService do
 
         before do
           wish_list.list_items.each do |item|
-            game.aggregate_wish_list.add_item_from_child_list(item)
+            playthrough.aggregate_wish_list.add_item_from_child_list(item)
           end
         end
 
         it 'destroys the aggregate list too' do
           expect { perform }
-            .to change(game.wish_lists, :count).from(2).to(0)
+            .to change(playthrough.wish_lists, :count).from(2).to(0)
         end
 
-        it 'updates the game' do
+        it 'updates the playthrough' do
           t = Time.zone.now + 3.days
           Timecop.freeze(t) do
             perform
-            expect(game.reload.updated_at).to be_within(0.005.seconds).of(t)
+            expect(playthrough.reload.updated_at).to be_within(0.005.seconds).of(t)
           end
         end
 
@@ -118,8 +118,8 @@ RSpec.describe WishListsController::DestroyService do
     end
 
     context 'when the list is an aggregate list' do
-      let!(:wish_list) { create(:aggregate_wish_list, game:) }
-      let(:game) { create(:game, user:) }
+      let!(:wish_list) { create(:aggregate_wish_list, playthrough:) }
+      let(:playthrough) { create(:playthrough, user:) }
 
       it 'returns a Service::MethodNotAllowedResult' do
         expect(perform).to be_a(Service::MethodNotAllowedResult)
@@ -162,8 +162,8 @@ RSpec.describe WishListsController::DestroyService do
     end
 
     context 'when something unexpected goes wrong' do
-      let!(:wish_list) { create(:wish_list, game:) }
-      let(:game) { create(:game, user:) }
+      let!(:wish_list) { create(:wish_list, playthrough:) }
+      let(:playthrough) { create(:playthrough, user:) }
 
       before do
         allow_any_instance_of(WishList)

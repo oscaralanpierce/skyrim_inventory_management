@@ -5,7 +5,7 @@ require 'service/created_result'
 require 'service/internal_server_error_result'
 require 'service/unprocessable_entity_result'
 
-RSpec.describe GamesController::CreateService do
+RSpec.describe PlaythroughsController::CreateService do
   subject(:perform) { described_class.new(user, params).perform }
 
   let!(:user) { create(:user) }
@@ -13,26 +13,26 @@ RSpec.describe GamesController::CreateService do
   context 'when the params are valid' do
     let(:params) { { name: 'Skyrim, Baby' } }
 
-    it 'creates a new game' do
+    it 'creates a new playthrough' do
       expect { perform }
-        .to change(user.games, :count).from(0).to(1)
+        .to change(user.playthroughs, :count).from(0).to(1)
     end
 
     it 'returns a Service::CreatedResult' do
       expect(perform).to be_a(Service::CreatedResult)
     end
 
-    it 'sets the game as the resource' do
-      expect(perform.resource).to eq(user.games.last)
+    it 'sets the playthrough as the resource' do
+      expect(perform.resource).to eq(user.playthroughs.last)
     end
   end
 
   context 'when the params are invalid' do
     let(:params) { { name: '$@#*$&' } }
 
-    it "doesn't create a new game" do
+    it "doesn't create a new playthrough" do
       expect { perform }
-        .not_to change(Game, :count)
+        .not_to change(Playthrough, :count)
     end
 
     it 'returns a Service::UnprocessableEntityResult' do
@@ -45,10 +45,10 @@ RSpec.describe GamesController::CreateService do
   end
 
   context 'when something unexpected goes wrong' do
-    let(:params) { { name: 'My Game' } }
+    let(:params) { { name: 'My Playthrough' } }
 
     before do
-      allow_any_instance_of(Game).to receive(:save).and_raise(StandardError, 'Something has gone horribly wrong')
+      allow_any_instance_of(Playthrough).to receive(:save).and_raise(StandardError, 'Something has gone horribly wrong')
     end
 
     it 'returns a Service::InternalServerErrorResult' do

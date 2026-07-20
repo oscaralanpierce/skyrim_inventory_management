@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class User < ApplicationRecord
-  has_many :games, dependent: :destroy
+  has_many :playthroughs, dependent: :destroy
 
   validates :uid, presence: true, uniqueness: true
   validates :email, presence: true

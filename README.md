@@ -36,7 +36,7 @@ display_name: string or null
 
 ### RESTful Resources
 
-See the [API docs](/docs/api/README.md) for information about resources like games, wish lists, and more. For information about models not exposed as RESTful resources, see docs on [canonical models](/docs/canonical_models/README.md).
+See the [API docs](/docs/api/README.md) for information about resources like playthroughs, wish lists, and more. For information about models not exposed as RESTful resources, see docs on [canonical models](/docs/canonical_models/README.md).
 
 ## Developer Info
 

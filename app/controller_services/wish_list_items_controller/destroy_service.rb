@@ -34,8 +34,8 @@ class WishListItemsController < ApplicationController
 
     attr_reader :user, :item_id
 
-    def game
-      @game ||= wish_list.game
+    def playthrough
+      @playthrough ||= wish_list.playthrough
     end
 
     def aggregate_list

@@ -5,13 +5,13 @@ require 'rails_helper'
 RSpec.describe WishList, type: :model do
   describe 'scopes' do
     describe '::index_order' do
-      subject(:index_order) { game.wish_lists.index_order.to_a }
+      subject(:index_order) { playthrough.wish_lists.index_order.to_a }
 
-      let!(:game) { create(:game) }
-      let!(:aggregate_list) { create(:aggregate_wish_list, game:) }
-      let!(:wish_list1) { create(:wish_list, game:) }
-      let!(:wish_list2) { create(:wish_list, game:) }
-      let!(:wish_list3) { create(:wish_list, game:) }
+      let!(:playthrough) { create(:playthrough) }
+      let!(:aggregate_list) { create(:aggregate_wish_list, playthrough:) }
+      let!(:wish_list1) { create(:wish_list, playthrough:) }
+      let!(:wish_list2) { create(:wish_list, playthrough:) }
+      let!(:wish_list3) { create(:wish_list, playthrough:) }
 
       before do
         wish_list2.update!(title: 'Windstad Manor')
@@ -24,24 +24,24 @@ RSpec.describe WishList, type: :model do
 
     # Aggregatable
     describe '::includes_items' do
-      subject(:includes_items) { game.wish_lists.includes_items }
+      subject(:includes_items) { playthrough.wish_lists.includes_items }
 
-      let!(:game) { create(:game) }
-      let!(:aggregate_list) { create(:aggregate_wish_list, game:) }
-      let!(:lists) { create_list(:wish_list_with_list_items, 2, game:) }
+      let!(:playthrough) { create(:playthrough) }
+      let!(:aggregate_list) { create(:aggregate_wish_list, playthrough:) }
+      let!(:lists) { create_list(:wish_list_with_list_items, 2, playthrough:) }
 
       it 'includes the wish list items' do
-        expect(includes_items).to eq(game.wish_lists.includes(:list_items))
+        expect(includes_items).to eq(playthrough.wish_lists.includes(:list_items))
       end
     end
 
     # Aggregatable
     describe '::aggregates_first' do
-      subject(:aggregate_first) { game.wish_lists.aggregate_first.to_a }
+      subject(:aggregate_first) { playthrough.wish_lists.aggregate_first.to_a }
 
-      let!(:game) { create(:game) }
-      let!(:aggregate_list) { create(:aggregate_wish_list, game:) }
-      let!(:wish_list) { create(:wish_list, game:) }
+      let!(:playthrough) { create(:playthrough) }
+      let!(:aggregate_list) { create(:aggregate_wish_list, playthrough:) }
+      let!(:wish_list) { create(:wish_list, playthrough:) }
 
       it 'returns the wish lists with the aggregate list first' do
         expect(aggregate_first).to eq([aggregate_list, wish_list])
@@ -50,32 +50,32 @@ RSpec.describe WishList, type: :model do
 
     describe '::belongs_to_user' do
       let(:user) { create(:user) }
-      let!(:game1) { create(:game_with_wish_lists, user:) }
-      let!(:game2) { create(:game_with_wish_lists, user:) }
-      let!(:game3) { create(:game_with_wish_lists, user:) }
+      let!(:playthrough1) { create(:playthrough_with_wish_lists, user:) }
+      let!(:playthrough2) { create(:playthrough_with_wish_lists, user:) }
+      let!(:playthrough3) { create(:playthrough_with_wish_lists, user:) }
 
       before do
-        create(:game_with_wish_lists)
+        create(:playthrough_with_wish_lists)
       end
 
-      it "returns all the wish lists from all the user's games" do
-        # These are going to be rearranged in the output since game.wish_lists
+      it "returns all the wish lists from all the user's playthroughs" do
+        # These are going to be rearranged in the output since playthrough.wish_lists
         # comes back aggregate list first and the scope will return them in descending
         # updated_at order. There was no easy programmatic way to rearrange them so
         # I just have to pull them all out and reorder them in the expectation.
-        agg_list1, game1_list1, game1_list2 = game1.wish_lists.to_a
-        agg_list2, game2_list1, game2_list2 = game2.wish_lists.to_a
-        agg_list3, game3_list1, game3_list2 = game3.wish_lists.to_a
+        agg_list1, playthrough1_list1, playthrough1_list2 = playthrough1.wish_lists.to_a
+        agg_list2, playthrough2_list1, playthrough2_list2 = playthrough2.wish_lists.to_a
+        agg_list3, playthrough3_list1, playthrough3_list2 = playthrough3.wish_lists.to_a
 
         expect(described_class.belonging_to_user(user).to_a).to eq([
-          game3_list1,
-          game3_list2,
+          playthrough3_list1,
+          playthrough3_list2,
           agg_list3,
-          game2_list1,
-          game2_list2,
+          playthrough2_list1,
+          playthrough2_list2,
           agg_list2,
-          game1_list1,
-          game1_list2,
+          playthrough1_list1,
+          playthrough1_list2,
           agg_list1,
         ])
       end
@@ -86,21 +86,21 @@ RSpec.describe WishList, type: :model do
     # Aggregatable
     describe 'aggregate lists' do
       context 'when there are no aggregate lists' do
-        let(:game) { create(:game) }
-        let(:aggregate_list) { build(:aggregate_wish_list, game:) }
+        let(:playthrough) { create(:playthrough) }
+        let(:aggregate_list) { build(:aggregate_wish_list, playthrough:) }
 
         it 'is valid' do
           expect(aggregate_list).to be_valid
         end
       end
 
-      context 'when there is an existing aggregate list belonging to another game' do
-        let(:game) { create(:game) }
-        let(:aggregate_list) { build(:aggregate_wish_list, game:) }
+      context 'when there is an existing aggregate list belonging to another playthrough' do
+        let(:playthrough) { create(:playthrough) }
+        let(:aggregate_list) { build(:aggregate_wish_list, playthrough:) }
 
         before do
-          other_game = create(:game, user: game.user)
-          create(:aggregate_wish_list, game: other_game)
+          other_playthrough = create(:playthrough, user: playthrough.user)
+          create(:aggregate_wish_list, playthrough: other_playthrough)
         end
 
         it 'is valid' do
@@ -108,17 +108,17 @@ RSpec.describe WishList, type: :model do
         end
       end
 
-      context 'when the game already has an aggregate list' do
-        let(:game) { create(:game) }
-        let(:aggregate_list) { build(:aggregate_wish_list, game:) }
+      context 'when the playthrough already has an aggregate list' do
+        let(:playthrough) { create(:playthrough) }
+        let(:aggregate_list) { build(:aggregate_wish_list, playthrough:) }
 
         before do
-          create(:aggregate_wish_list, game:)
+          create(:aggregate_wish_list, playthrough:)
         end
 
         it 'is invalid', :aggregate_failures do
           expect(aggregate_list).not_to be_valid
-          expect(aggregate_list.errors[:aggregate]).to include('can only be one list per game')
+          expect(aggregate_list.errors[:aggregate]).to include('can only be one list per playthrough')
         end
       end
     end
@@ -181,7 +181,7 @@ RSpec.describe WishList, type: :model do
   # Aggregatable
   describe '#aggregate_list' do
     let!(:aggregate_list) { create(:aggregate_wish_list) }
-    let(:wish_list) { create(:wish_list, game: aggregate_list.game) }
+    let(:wish_list) { create(:wish_list, playthrough: aggregate_list.playthrough) }
 
     it 'returns the aggregate list that tracks it' do
       expect(wish_list.aggregate_list).to eq(aggregate_list)
@@ -190,15 +190,15 @@ RSpec.describe WishList, type: :model do
 
   describe 'title transformations' do
     describe 'setting a default title' do
-      let(:game) { create(:game) }
+      let(:playthrough) { create(:playthrough) }
 
       # I don't use FactoryBot to create the models in the subject blocks because
       # it sets values for certain attributes and I don't want those to get in the way.
       context 'when the list is not an aggregate list' do
         context 'when the user has set a title' do
-          subject(:title) { game.wish_lists.create!(title: 'Heljarchen Hall').title }
+          subject(:title) { playthrough.wish_lists.create!(title: 'Heljarchen Hall').title }
 
-          let(:game) { create(:game) }
+          let(:playthrough) { create(:playthrough) }
 
           it 'keeps the title the user has set' do
             expect(title).to eq('Heljarchen Hall')
@@ -206,14 +206,14 @@ RSpec.describe WishList, type: :model do
         end
 
         context 'when the user has not set a title' do
-          subject(:title) { game.wish_lists.create!.title }
+          subject(:title) { playthrough.wish_lists.create!.title }
 
-          context 'when the game has all default-titled regular lists' do
+          context 'when the playthrough has all default-titled regular lists' do
             before do
-              # Create lists for a different game to make sure the name of this game's
+              # Create lists for a different playthrough to make sure the name of this playthrough's
               # list isn't affected by them
               create_list(:wish_list, 2, title: nil)
-              create_list(:wish_list, 2, title: nil, game:)
+              create_list(:wish_list, 2, title: nil, playthrough:)
             end
 
             it 'sets the title based on the highest numbered default title' do
@@ -221,12 +221,12 @@ RSpec.describe WishList, type: :model do
             end
           end
 
-          context 'when the game has differently titled regular lists' do
+          context 'when the playthrough has differently titled regular lists' do
             before do
               create(:wish_list, title: nil)
-              create(:wish_list, game:, title: nil)
-              create(:wish_list, game:, title: 'Windstad Manor')
-              create(:wish_list, game:, title: nil)
+              create(:wish_list, playthrough:, title: nil)
+              create(:wish_list, playthrough:, title: 'Windstad Manor')
+              create(:wish_list, playthrough:, title: nil)
             end
 
             it 'uses the next highest number in default lists' do
@@ -234,10 +234,10 @@ RSpec.describe WishList, type: :model do
             end
           end
 
-          context 'when the game has a wish list with a similar title' do
+          context 'when the playthrough has a wish list with a similar title' do
             before do
-              create(:wish_list, game:, title: 'This List is Called My List 4')
-              create_list(:wish_list, 2, game:, title: nil)
+              create(:wish_list, playthrough:, title: 'This List is Called My List 4')
+              create_list(:wish_list, 2, playthrough:, title: nil)
             end
 
             it 'sets the title based on the highest numbered list called "My List N"' do
@@ -247,8 +247,8 @@ RSpec.describe WishList, type: :model do
 
           context 'when there is a wish list called "My List <non-integer>"' do
             before do
-              create(:wish_list, game:, title: 'My List Is the Best List')
-              create_list(:wish_list, 2, game:, title: nil)
+              create(:wish_list, playthrough:, title: 'My List Is the Best List')
+              create_list(:wish_list, 2, playthrough:, title: nil)
             end
 
             it 'sets the title based on the highest numbered list called "My List N"' do
@@ -258,7 +258,7 @@ RSpec.describe WishList, type: :model do
 
           context 'when there is a wish list called "My List <negative integer>"' do
             before do
-              create(:wish_list, game:, title: 'My List -4')
+              create(:wish_list, playthrough:, title: 'My List -4')
             end
 
             it 'ignores the list title with the negative integer' do
@@ -271,7 +271,7 @@ RSpec.describe WishList, type: :model do
       # Aggregatable
       context 'when the list is an aggregate list' do
         context 'when the user has set a title' do
-          subject(:title) { game.wish_lists.create!(aggregate: true, title: 'Something other than all items').title }
+          subject(:title) { playthrough.wish_lists.create!(aggregate: true, title: 'Something other than all items').title }
 
           it 'overrides the title the user has set' do
             expect(title).to eq('All Items')
@@ -279,7 +279,7 @@ RSpec.describe WishList, type: :model do
         end
 
         context 'when the user has not set a title' do
-          subject(:title) { game.wish_lists.create!(aggregate: true).title }
+          subject(:title) { playthrough.wish_lists.create!(aggregate: true).title }
 
           it 'sets the title to "All Items"' do
             expect(title).to eq('All Items')
@@ -305,7 +305,7 @@ RSpec.describe WishList, type: :model do
     subject(:items) { wish_list.list_items }
 
     let!(:aggregate_list) { create(:aggregate_wish_list) }
-    let(:wish_list) { create(:wish_list, game: aggregate_list.game, aggregate_list_id: aggregate_list.id) }
+    let(:wish_list) { create(:wish_list, playthrough: aggregate_list.playthrough, aggregate_list_id: aggregate_list.id) }
     let!(:item1) { create(:wish_list_item, list: wish_list) }
     let!(:item2) { create(:wish_list_item, list: wish_list) }
     let!(:item3) { create(:wish_list_item, list: wish_list) }
@@ -326,9 +326,9 @@ RSpec.describe WishList, type: :model do
 
       let(:wish_list) { create(:aggregate_wish_list) }
 
-      context 'when the game has regular lists' do
+      context 'when the playthrough has regular lists' do
         before do
-          create(:wish_list, game: wish_list.game, aggregate_list: wish_list)
+          create(:wish_list, playthrough: wish_list.playthrough, aggregate_list: wish_list)
         end
 
         it 'raises an error and does not destroy the list' do
@@ -337,10 +337,10 @@ RSpec.describe WishList, type: :model do
         end
       end
 
-      context 'when the game has no regular lists' do
+      context 'when the playthrough has no regular lists' do
         it 'destroys the aggregate list' do
           expect { destroy_list }
-            .to change(wish_list.game.wish_lists, :count).from(1).to(0)
+            .to change(wish_list.playthrough.wish_lists, :count).from(1).to(0)
         end
       end
     end
@@ -350,25 +350,25 @@ RSpec.describe WishList, type: :model do
   describe 'after destroy hook' do
     subject(:destroy_list) { wish_list.destroy! }
 
-    let!(:aggregate_list) { create(:aggregate_wish_list, game:) }
-    let!(:wish_list) { create(:wish_list, game:) }
-    let(:game) { create(:game) }
+    let!(:aggregate_list) { create(:aggregate_wish_list, playthrough:) }
+    let!(:wish_list) { create(:wish_list, playthrough:) }
+    let(:playthrough) { create(:playthrough) }
 
     context 'when the user has additional regular lists' do
       before do
-        create(:wish_list, game:)
+        create(:wish_list, playthrough:)
       end
 
       it "doesn't destroy the aggregate list" do
         expect { destroy_list }
-          .not_to change(game, :aggregate_wish_list)
+          .not_to change(playthrough, :aggregate_wish_list)
       end
     end
 
     context 'when the user has no additional regular lists' do
       it 'destroys the aggregate list' do
         expect { destroy_list }
-          .to change(game.wish_lists, :count).from(2).to(0)
+          .to change(playthrough.wish_lists, :count).from(2).to(0)
       end
     end
   end
@@ -406,7 +406,7 @@ RSpec.describe WishList, type: :model do
       end
 
       context 'when there is a matching item on the aggregate list' do
-        let(:other_list) { create(:wish_list, game: aggregate_list.game, aggregate_list:) }
+        let(:other_list) { create(:wish_list, playthrough: aggregate_list.playthrough, aggregate_list:) }
 
         let!(:item_on_other_list) do
           create(
@@ -633,7 +633,7 @@ RSpec.describe WishList, type: :model do
 
         let!(:item_on_other_list) { create(:wish_list_item, list: other_list, description:, unit_weight: 1) }
         let!(:aggregate_list_item) { create(:wish_list_item, list: aggregate_list, description:, quantity: 3, unit_weight: 1) }
-        let(:other_list) { create(:wish_list, game: aggregate_list.game, aggregate_list:) }
+        let(:other_list) { create(:wish_list, playthrough: aggregate_list.playthrough, aggregate_list:) }
 
         it 'unsets the unit weight on the aggregate list' do
           update_item
@@ -658,7 +658,7 @@ RSpec.describe WishList, type: :model do
 
         let!(:item_on_other_list) { create(:wish_list_item, list: other_list, description:, unit_weight: 1) }
         let!(:aggregate_list_item) { create(:wish_list_item, list: aggregate_list, description:, quantity: 3, unit_weight: 1) }
-        let(:other_list) { create(:wish_list, game: aggregate_list.game, aggregate_list:) }
+        let(:other_list) { create(:wish_list, playthrough: aggregate_list.playthrough, aggregate_list:) }
 
         it 'unsets the unit weight on the aggregate list' do
           update_item
@@ -791,17 +791,17 @@ RSpec.describe WishList, type: :model do
     describe '#user' do
       let(:wish_list) { create(:wish_list) }
 
-      it 'delegates to the game' do
-        expect(wish_list.user).to eq(wish_list.game.user)
+      it 'delegates to the playthrough' do
+        expect(wish_list.user).to eq(wish_list.playthrough.user)
       end
     end
 
     describe 'parent model' do
       let(:list) { described_class.new(aggregate_list: described_class.new) }
 
-      it 'is invalid without a game' do
+      it 'is invalid without a playthrough' do
         list.validate
-        expect(list.errors[:game]).to include('must exist')
+        expect(list.errors[:playthrough]).to include('must exist')
       end
     end
   end

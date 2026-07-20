@@ -18,7 +18,7 @@ See docs:
 
 The SIM API makes the following RESTful resources available to the client. Note that the `User` model is not exposed as a RESTful resource because Google is the source of truth for profile information.
 
-* [Games](/docs/api/resources/games.md)
+* [Playthroughs](/docs/api/resources/playthroughs.md)
 * [Inventory List Items](/docs/api/resources/inventory-list-items.md)
 * [Inventory Lists](/docs/api/resources/inventory-lists.md)
 * [Wish List Items](/docs/api/resources/wish-list-items.md)
@@ -26,4 +26,4 @@ The SIM API makes the following RESTful resources available to the client. Note 
 
 ### Object Modelling Hierarchy
 
-In SIM, users can have any number of games, which can each have any number of wish lists, which can each have any number of wish list items. An authenticated user can create, access, update, and destroy resources belonging to them. There are currently no admin routes or any way to access resources not belonging to the currently authenticated user (except through direct database access).
+In SIM, users can have any number of playthroughs, which can each have any number of wish lists, which can each have any number of wish list items. An authenticated user can create, access, update, and destroy resources belonging to them. There are currently no admin routes or any way to access resources not belonging to the currently authenticated user (except through direct database access).
