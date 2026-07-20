@@ -17,8 +17,8 @@ class InGameItem < ApplicationRecord
   before_validation :set_canonical_model
   before_validation :set_values_from_canonical
 
-  MUST_DEFINE = 'Models inheriting from InplaythroughItem must define a'
-  DUPLICATE_MATCH = 'is a duplicate of a unique in-playthrough item'
+  MUST_DEFINE = 'Models inheriting from InGameItem must define a'
+  DUPLICATE_MATCH = 'is a duplicate of a unique in-game item'
   DOES_NOT_MATCH = "doesn't match any item that exists in Skyrim"
 
   def canonical_model

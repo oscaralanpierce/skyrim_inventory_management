@@ -10,13 +10,13 @@ class PlaythroughsController < ApplicationController
   end
 
   def create
-    result = CreateService.new(current_user, game_params).perform
+    result = CreateService.new(current_user, playthrough_params).perform
 
     ::Controller::Response.new(self, result).execute
   end
 
   def update
-    result = UpdateService.new(current_user, params[:id], game_params).perform
+    result = UpdateService.new(current_user, params[:id], playthrough_params).perform
 
     ::Controller::Response.new(self, result).execute
   end
@@ -29,7 +29,7 @@ class PlaythroughsController < ApplicationController
 
   private
 
-  def game_params
+  def playthrough_params
     params.require(:playthrough).permit(:name, :description)
   end
 end

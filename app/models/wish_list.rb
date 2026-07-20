@@ -3,7 +3,7 @@
 require 'titlecase'
 
 class WishList < ApplicationRecord
-  # Titles have to be unique per game as described in the API docs. They also can only
+  # Titles have to be unique per playthrough as described in the API docs. They also can only
   # contain alphanumeric characters and spaces with no special characters or whitespace
   # other than spaces. Leading or trailing whitespace is stripped anyway so the validation
   # ignores any leading or trailing whitespace characters.

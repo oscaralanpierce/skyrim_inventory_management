@@ -608,7 +608,7 @@ RSpec.describe Potion, type: :model do
       end
     end
 
-    context 'when updating in-playthrough item attributes' do
+    context 'when updating in-game item attributes' do
       let(:potion) { create(:potion, :with_matching_canonical) }
 
       before do

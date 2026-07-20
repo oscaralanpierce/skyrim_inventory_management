@@ -4,7 +4,7 @@ The SIM back end uses a controller service pattern to extract heavy controller l
 
 ## The Service Class
 
-A service class lives in the `/app/controller_services` directory, in a subdirectory for the controller it serves. Consistent with [Zeitwerk](https://medium.com/cedarcode/understanding-zeitwerk-in-rails-6-f168a9f09a1f) requirements, the service classes are namespaced under the controller itself. For example, `/app/controller_services/games_controller/update_service.rb` contains a class called `PlaythroughsController::UpdateService`.
+A service class lives in the `/app/controller_services` directory, in a subdirectory for the controller it serves. Consistent with [Zeitwerk](https://medium.com/cedarcode/understanding-zeitwerk-in-rails-6-f168a9f09a1f) requirements, the service classes are namespaced under the controller itself. For example, `/app/controller_services/playthroughs_controller/update_service.rb` contains a class called `PlaythroughsController::UpdateService`.
 
 The service class is instantiated with exactly the data it needs to figure out what kind of response to make (i.e., status code) and what the payload should be. It has a single instance method, `perform`, that identifies the correct type of response and returns a result object with the response type and payload.
 

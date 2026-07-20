@@ -1,6 +1,6 @@
 # Non-Canonical In-Game Items
 
-Skyrim Inventory Management uses [canonical models](/docs/canonical_models/README.md) to store information about in-game items and validate user input. Most canonical models have a corresponding non-canonical model. These models are scoped to games (i.e., `belongs_to :playthrough`) and associated to the matching canonical model by a one-to-many relationship.
+Skyrim Inventory Management uses [canonical models](/docs/canonical_models/README.md) to store information about in-game items and validate user input. Most canonical models have a corresponding non-canonical model. These models are scoped to playthroughs (i.e., `belongs_to :playthrough`) and associated to the matching canonical model by a one-to-many relationship.
 
 This documentation covers the scope and purpose of non-canonical in-game items, their associations, and specifics pertaining to particular models that require additional explanation.
 

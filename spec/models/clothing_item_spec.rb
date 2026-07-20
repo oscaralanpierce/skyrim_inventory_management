@@ -72,7 +72,7 @@ RSpec.describe ClothingItem, type: :model do
 
           it 'is invalid' do
             item.validate
-            expect(item.errors[:base]).to include('is a duplicate of a unique in-playthrough item')
+            expect(item.errors[:base]).to include('is a duplicate of a unique in-game item')
           end
         end
       end
@@ -152,7 +152,7 @@ RSpec.describe ClothingItem, type: :model do
       end
     end
 
-    context 'when updating in-playthrough item attributes' do
+    context 'when updating in-game item attributes' do
       let(:item) { create(:clothing_item, :with_enchanted_canonical) }
 
       before do

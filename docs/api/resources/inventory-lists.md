@@ -1,16 +1,16 @@
 # Inventory Lists
 
-Inventory lists represent lists of items a user has, whether carried or stored at one of the user's properties. Users can have different lists corresponding to different locations or carried inventory within each game. Games with inventory lists also have an aggregate list that includes the combined list items and quantities from all the other lists for that game. Aggregate lists are created, updated, and destroyed automatically. They cannot be created, updated, or destroyed through the API (including to change attributes or to add, remove, or update list items).
+Inventory lists represent lists of items a user has, whether carried or stored at one of the user's properties. Users can have different lists corresponding to different locations or carried inventory within each playthrough. Playthroughs with inventory lists also have an aggregate list that includes the combined list items and quantities from all the other lists for that playthrough. Aggregate lists are created, updated, and destroyed automatically. They cannot be created, updated, or destroyed through the API (including to change attributes or to add, remove, or update list items).
 
 Each list contains [inventory list items](/docs/api/resources/inventory-list-items.md), which are returned with the list in any response that includes it.
 
 When making requests to update the title of an inventory list, there are some validations and automatic transformations to keep in mind.
 
-* Titles must be unique per game - you cannot name two lists the same thing within the same game
+* Titles must be unique per playthrough - you cannot name two lists the same thing within the same playthrough
 * Only an aggregate list can be called "All Items"
 * All aggregate lists are called "All Items" and there is no way to rename them something else
 * Titles are saved with headline casing regardless of the case submitted in the request (for example, "lOrd of the rINgS" will be saved as "Lord of the Rings")
-* If the request includes a blank title, then the title will be saved as "My List N", where N is the integer above the highest nonnegative integer used in an existing "My List" title (so if the game has "My List -4" and "My List 3", the next time the user tries to save a list for that game without a title it will be called "My List 4")
+* If the request includes a blank title, then the title will be saved as "My List N", where N is the integer above the highest nonnegative integer used in an existing "My List" title (so if the playthrough has "My List -4" and "My List 3", the next time the user tries to save a list for that playthrough without a title it will be called "My List 4")
 * Leading and trailing whitespace will be stripped from titles before they are saved, so " My List 2  " becomes "My List 2"
 * Titles may only contain alphanumeric characters, spaces, hyphens, apostrophes, and commas - any other characters (other than leading or trailing whitespace, which will be stripped regardless) cause the API to return a 422 response
 
@@ -18,19 +18,19 @@ Like other resources in SIM, inventory lists are scoped to the authenticated use
 
 ## Endpoints
 
-* [`GET /games/:playthrough_id/inventory_lists`](#get-gamesplaythrough_idinventory_lists)
-* [`POST /games/:playthrough_id/inventory_lists`](#post-gamesplaythrough_idinventory_lists)
+* [`GET /playthroughs/:playthrough_id/inventory_lists`](#get-playthroughsplaythrough_idinventory_lists)
+* [`POST /playthroughs/:playthrough_id/inventory_lists`](#post-playthroughsplaythrough_idinventory_lists)
 * [`PATCH|PUT /inventory_lists/:id`](#patchput-inventory_listsid)
 * [`DELETE /inventory_lists/:id`](#delete-inventory_listsid)
 
-## GET /games/:playthrough_id/inventory_lists
+## GET /playthroughs/:playthrough_id/inventory_lists
 
-Returns all inventory lists for the game indicated by the `:playthrough_id` param, provided the game exists and is owned by the authenticated user. The aggregate inventory list will be returned first, followed by the game's other inventory lists in reverse chronological order by `updated_at` (i.e., the lists that were edited most recently will be first).
+Returns all inventory lists for the playthrough indicated by the `:playthrough_id` param, provided the playthrough exists and is owned by the authenticated user. The aggregate inventory list will be returned first, followed by the playthrough's other inventory lists in reverse chronological order by `updated_at` (i.e., the lists that were edited most recently will be first).
 
 ### Example Request
 
 ```
-GET games/25/inventory_lists
+GET playthroughs/25/inventory_lists
 Authorization: Bearer xxxxxxxxxxxxx
 ```
 
@@ -42,11 +42,11 @@ Authorization: Bearer xxxxxxxxxxxxx
 
 #### Example Bodies
 
-For a game with no lists:
+For a playthrough with no lists:
 ```json
 []
 ```
-For a game with multiple lists:
+For a playthrough with multiple lists:
 ```json
 [
   {
@@ -140,7 +140,7 @@ In general, no errors are expected to be returned from this endpoint. However, u
 
 #### Example Bodies
 
-A 404 error is the result of the game not being found or not belonging to the authenticated user. It does not include a response body.
+A 404 error is the result of the playthrough not being found or not belonging to the authenticated user. It does not include a response body.
 
 A 500 error response, which is always a result of an unforeseen problem, includes the error message:
 ```json
@@ -149,15 +149,15 @@ A 500 error response, which is always a result of an unforeseen problem, include
 }
 ```
 
-## POST /games/:playthrough_id/inventory_lists
+## POST /playthroughs/:playthrough_id/inventory_lists
 
-Creates a new inventory list for the specified game if it exists and belongs to the authenticated user. If the game does not already have an aggregate list, an aggregate list will also be created automatically. The response is an array that includes the newly created inventory list(s).
+Creates a new inventory list for the specified playthrough if it exists and belongs to the authenticated user. If the playthrough does not already have an aggregate list, an aggregate list will also be created automatically. The response is an array that includes the newly created inventory list(s).
 
-The request does not have to include a body. If it does, the body should include an `"inventory_list"` object with an optional `"title"` key, the only attribute that can be set on an inventory list via request data. If you don't include a title, your list will be titled "My List N", where _N_ is an integer equal to the highest numbered default list title you have for that game. For example, if one of your games has lists titled "My List 1", "My List 3", and "My List 4" and you don't specify a title for the new list you're requesting for the game, your new list will be titled "My List 5".
+The request does not have to include a body. If it does, the body should include an `"inventory_list"` object with an optional `"title"` key, the only attribute that can be set on an inventory list via request data. If you don't include a title, your list will be titled "My List N", where _N_ is an integer equal to the highest numbered default list title you have for that playthrough. For example, if one of your playthroughs has lists titled "My List 1", "My List 3", and "My List 4" and you don't specify a title for the new list you're requesting for the playthrough, your new list will be titled "My List 5".
 
 There are a few validations and automatic changes made to titles:
 
-* Titles must be unique per game - you cannot name two of one game's lists the same thing
+* Titles must be unique per playthrough - you cannot name two of one playthrough's lists the same thing
 * Only an aggregate list can be called "All Items"
 * All aggregate lists are called "All Items" and there is no way to rename them something else
 * Titles are saved with headline casing regardless of the case submitted in the request (for example, "lOrd of the rINgS" will be saved as "Lord of the Rings")
@@ -167,7 +167,7 @@ There are a few validations and automatic changes made to titles:
 
 Request specifying a title:
 ```
-POST games/1455/inventory_lists
+POST playthroughs/1455/inventory_lists
 Authorization: Bearer xxxxxxxxxx
 Content-Type: application/json
 {
@@ -179,7 +179,7 @@ Content-Type: application/json
 
 Request not specifying a title (list will be given a default title as defined above):
 ```
-POST /games/8928/inventory_lists
+POST /playthroughs/8928/inventory_lists
 Authorization: Bearer xxxxxxxxxx
 Content-Type: application/json
 { "inventory_list": {} }
@@ -187,7 +187,7 @@ Content-Type: application/json
 
 Request with no request body (the list will be given a default title as defined above):
 ```
-POST /games/8928/inventory_lists
+POST /playthroughs/8928/inventory_lists
 Authorization: Bearer xxxxxxxxxx
 ```
 
@@ -248,12 +248,12 @@ When the aggregate list has also been created:
 
 #### Example Bodies
 
-If the game with the given `playthrough_id` is not found or does not belong to the authenticated user, a 404 response will be returned. This response will have no body.
+If the playthrough with the given `playthrough_id` is not found or does not belong to the authenticated user, a 404 response will be returned. This response will have no body.
 
 If duplicate title is given:
 ```json
 {
-  "errors": ["Title must be unique per game"]
+  "errors": ["Title must be unique per playthrough"]
 }
 ```
 
@@ -351,7 +351,7 @@ For a 404 response, no response body is returned.
 For a 422 response due to title uniqueness constraint:
 ```json
 {
-  "errors": ["Title must be unique per game"]
+  "errors": ["Title must be unique per playthrough"]
 }
 ```
 

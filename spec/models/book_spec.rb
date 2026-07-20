@@ -76,7 +76,7 @@ RSpec.describe Book, type: :model do
 
           it 'is invalid' do
             validate
-            expect(book.errors[:base]).to include('is a duplicate of a unique in-playthrough item')
+            expect(book.errors[:base]).to include('is a duplicate of a unique in-game item')
           end
         end
       end
@@ -281,7 +281,7 @@ RSpec.describe Book, type: :model do
       end
     end
 
-    context 'when updating the attributes of an in-playthrough item' do
+    context 'when updating the attributes of an in-game item' do
       let(:book) { create(:book, :with_matching_canonical) }
 
       context 'when the update results in a new canonical match' do

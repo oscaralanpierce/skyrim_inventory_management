@@ -1,16 +1,16 @@
 # Wish Lists
 
-Wish lists represent lists of items a user needs in a given game. Users can have different lists corresponding to different property locations within each game. Games with wish lists also have an aggregate list that includes the combined list items and quantities from all the other lists for that game. Aggregate lists are created, updated, and destroyed automatically. They cannot be created, updated, or destroyed through the API (including to change attributes or to add, remove, or update list items).
+Wish lists represent lists of items a user needs in a given playthrough. Users can have different lists corresponding to different property locations within each playthrough. Playthroughs with wish lists also have an aggregate list that includes the combined list items and quantities from all the other lists for that playthrough. Aggregate lists are created, updated, and destroyed automatically. They cannot be created, updated, or destroyed through the API (including to change attributes or to add, remove, or update list items).
 
 Each list contains [wish list items](/docs/api/resources/wish-list-items.md), which are returned with each response that includes the list.
 
 When making requests to update the title of a wish list, there are some validations and automatic transformations to keep in mind:
 
-* Titles must be unique per game - you cannot name two lists the same thing within the same game
+* Titles must be unique per playthrough - you cannot name two lists the same thing within the same playthrough
 * Only an aggregate list can be called "All Items"
 * All aggregate lists are called "All Items" and there is no way to rename them something else
 * Titles are saved with headline casing regardless of the case submitted in the request (for example, "lOrd of the rINgS" will be saved as "Lord of the Rings")
-* If the request includes a blank title, then the title will be saved as "My List N", where N is the integer above the highest nonnegative integer used in an existing "My List" title (so if the game has "My List 1" and "My List 3", the next time the user tries to save a list for that game without a title it will be called "My List 4")
+* If the request includes a blank title, then the title will be saved as "My List N", where N is the integer above the highest nonnegative integer used in an existing "My List" title (so if the playthrough has "My List 1" and "My List 3", the next time the user tries to save a list for that playthrough without a title it will be called "My List 4")
 * Leading and trailing whitespace will be stripped from titles before they are saved, so " My List 2  " becomes "My List 2"
 * Titles may only contain alphanumeric characters, spaces, hyphens, apostrophes, and commas - any other characters (that aren't leading or trailing whitespace, which will be stripped regardless) cause the API to return a 422 response
 
@@ -18,14 +18,14 @@ Like other resources in SIM, wish lists are scoped to the authenticated user. Th
 
 ## Endpoints
 
-* [`GET /games/:playthrough_id/wish_lists`](#get-gamesplaythrough_idwish_lists)
-* [`POST /games/:playthrough_id/wish_lists`](#post-gamesplaythrough_idwish_lists)
+* [`GET /playthroughs/:playthrough_id/wish_lists`](#get-playthroughsplaythrough_idwish_lists)
+* [`POST /playthroughs/:playthrough_id/wish_lists`](#post-playthroughsplaythrough_idwish_lists)
 * [`PATCH|PUT /wish_lists/:id`](#patchput-wish_listsid)
 * [`DELETE /wish_lists/:id`](#delete-wish_listsid)
 
-## GET /games/:playthrough_id/wish_lists
+## GET /playthroughs/:playthrough_id/wish_lists
 
-Returns all wish lists for the game indicated by the `:playthrough_id` param, provided the game exists and is owned by the authenticated user. The aggregate wish list will be returned first, followed by the game's other wish lists in reverse chronological order by `updated_at` (i.e., the lists that were edited most recently will be on top).
+Returns all wish lists for the playthrough indicated by the `:playthrough_id` param, provided the playthrough exists and is owned by the authenticated user. The aggregate wish list will be returned first, followed by the playthrough's other wish lists in reverse chronological order by `updated_at` (i.e., the lists that were edited most recently will be on top).
 
 ### Example Request
 
@@ -42,11 +42,11 @@ Authorization: Bearer xxxxxxxxxxxxx
 
 #### Example Bodies
 
-For a game with no lists:
+For a playthrough with no lists:
 ```json
 []
 ```
-For a game with multiple lists:
+For a playthrough with multiple lists:
 
 ```json
 [
@@ -147,7 +147,7 @@ In general, no errors are expected to be returned from this endpoint. However, u
 
 #### Example Bodies
 
-A 404 error is the result of the game not being found or not belonging to the authenticated user. It does not include a response body.
+A 404 error is the result of the playthrough not being found or not belonging to the authenticated user. It does not include a response body.
 
 A 500 error response, which is always a result of an unforeseen problem, includes the error message:
 ```json
@@ -156,15 +156,15 @@ A 500 error response, which is always a result of an unforeseen problem, include
 }
 ```
 
-## POST /games/:playthrough_id/wish_lists
+## POST /playthroughs/:playthrough_id/wish_lists
 
-Creates a new wish list for the specified game if it exists and belongs to the authenticated user. If the game does not already have an aggregate list, an aggregate list will also be created automatically. The response is an array that includes all wish lists that were created. The wish lists are returned with the aggregate list first, if one was created while handling this request, and the regular list the user requested.
+Creates a new wish list for the specified playthrough if it exists and belongs to the authenticated user. If the playthrough does not already have an aggregate list, an aggregate list will also be created automatically. The response is an array that includes all wish lists that were created. The wish lists are returned with the aggregate list first, if one was created while handling this request, and the regular list the user requested.
 
 The request does not have to include a body. If it does, the body should include a `"wish_list"` object with an optional `"title"` key, the only attribute that can be set on a wish list via this or any endpoint. If you don't include a title, your list will be titled "My List N", where _N_ is an integer equal to one plus the highest numbered default list title you have. For example, if you have lists titled "My List 1", "My List 3", and "My List 4" and you don't specify a title for your new list, your new list will be titled "My List 5".
 
 There are a few validations and automatic changes made to titles:
 
-* Titles must be unique per game - you cannot name two of one game's lists the same thing
+* Titles must be unique per playthrough - you cannot name two of one playthrough's lists the same thing
 * Only an aggregate list can be called "All Items"
 * All aggregate lists are called "All Items" and there is no way to rename them something else
 * Titles are saved with headline casing regardless of the case submitted in the request (for example, "lOrd of the rINgS" will be saved as "Lord of the Rings")
@@ -174,7 +174,7 @@ There are a few validations and automatic changes made to titles:
 
 Request specifying a title:
 ```
-POST games/1455/wish_lists
+POST playthroughs/1455/wish_lists
 Authorization: Bearer xxxxxxxxxx
 Content-Type: application/json
 {
@@ -186,7 +186,7 @@ Content-Type: application/json
 
 Request not specifying a title (list will be given a default title as defined above):
 ```
-POST /games/8928/wish_lists
+POST /playthroughs/8928/wish_lists
 Authorization: Bearer xxxxxxxxxx
 Content-Type: application/json
 { "wish_list": {} }
@@ -194,7 +194,7 @@ Content-Type: application/json
 
 Request with no request body (the list will be given a default title as defined above):
 ```
-POST /games/8928/wish_lists
+POST /playthroughs/8928/wish_lists
 Authorization: Bearer xxxxxxxxxx
 ```
 
@@ -260,12 +260,12 @@ Authorization: Bearer xxxxxxxxxx
 
 #### Example Bodies
 
-If the game with the given `playthrough_id` is not found or does not belong to the authenticated user, a 404 response will be returned. This response will have no body.
+If the playthrough with the given `playthrough_id` is not found or does not belong to the authenticated user, a 404 response will be returned. This response will have no body.
 
 If duplicate title is given:
 ```json
 {
-  "errors": ["Title must be unique per game"]
+  "errors": ["Title must be unique per playthrough"]
 }
 ```
 
@@ -289,7 +289,7 @@ If the specified wish list exists, belongs to the authenticated user, and is not
 
 ### Example Requests
 
-Requests should include a `"wish_list"` object with a `"title"` key. The `"title"` may be `null`; in this case, a default title will be assigned as described [above](#post-gamesplaythrough_idwish_lists). If the `"wish_list"` object is empty or nonexistent, or if no request body is given, the list will not be updated but will be returned as-is. `"title"` is the only attribute that may be set on wish lists via the SIM API.
+Requests should include a `"wish_list"` object with a `"title"` key. The `"title"` may be `null`; in this case, a default title will be assigned as described [above](#post-playthroughsplaythrough_idwish_lists). If the `"wish_list"` object is empty or nonexistent, or if no request body is given, the list will not be updated but will be returned as-is. `"title"` is the only attribute that may be set on wish lists via the SIM API.
 
 #### PATCH Requests
 
@@ -418,7 +418,7 @@ For a 422 response due to title uniqueness constraint:
 
 ```json
 {
-  "errors": ["Title must be unique per game"]
+  "errors": ["Title must be unique per playthrough"]
 }
 ```
 
@@ -457,7 +457,7 @@ Authorization: Bearer xxxxxxxxxxxx
 
 #### Example Bodies
 
-The response body will be a JSON object with a `"deleted"` key pointing to an array of deleted lists. If only the target list was destroyed, this array will include one member. If the target list was the game's last regular wish list and the aggregate list was therefore also destroyed, the array will include two members. If the aggregate list was not destroyed, it will be returned as well, with its updated list items, under the `"aggregate"` key.
+The response body will be a JSON object with a `"deleted"` key pointing to an array of deleted lists. If only the target list was destroyed, this array will include one member. If the target list was the playthrough's last regular wish list and the aggregate list was therefore also destroyed, the array will include two members. If the aggregate list was not destroyed, it will be returned as well, with its updated list items, under the `"aggregate"` key.
 
 Body including an aggregate list that was not destroyed:
 

@@ -8,7 +8,7 @@ All requests to wish list item endpoints must be [authenticated](/docs/api/resou
 
 ## Automatically Managed Aggregate Lists
 
-Skyrim Inventory Management makes use of automatically managed aggregate lists to help users track an aggregate of what items they need for different properties or purposes in each game. The aggregate list is created automatically when the client creates a the first regular wish list for a game, and is destroyed automatically when the client deletes the game's last regular wish list. When items are added, updated, or destroyed from any of a game's regular lists, aggregate list items are updated as described in this section.
+Skyrim Inventory Management makes use of automatically managed aggregate lists to help users track an aggregate of what items they need for different properties or purposes in each playthrough. The aggregate list is created automatically when the client creates a the first regular wish list for a playthrough, and is destroyed automatically when the client deletes the playthrough's last regular wish list. When items are added, updated, or destroyed from any of a playthrough's regular lists, aggregate list items are updated as described in this section.
 
 (Ensuring automatic management of aggregate lists does require some work on the part of SIM developers. If you are working on lists in SIM and would like information on how to keep them synced, head over to the [`Aggregatable` docs](/docs/aggregate-lists.md).)
 
@@ -23,23 +23,23 @@ If the client requests a new list item be created on a regular list, one of the 
   * The `unit_weight` will be changed to the new item's `unit_weight` unless that value is `null`
   * The `notes` value of the aggregate item will remain unchanged as `null`
 
-If the new item sets a `unit_weight` that is not `null` and is different to the `unit_weight` of any existing matching list items belonging to the same game, those items will also be updated to have the same unit weight as the new item.
+If the new item sets a `unit_weight` that is not `null` and is different to the `unit_weight` of any existing matching list items belonging to the same playthrough, those items will also be updated to have the same unit weight as the new item.
 
 ### Updating a List Item
 
-When a client updates a list item on a regular list for a given game, one (or more) of the following things will happen:
+When a client updates a list item on a regular list for a given playthrough, one (or more) of the following things will happen:
 
 * If the `quantity` is increased, the `quantity` of the item on the aggregate list will be increased by the same amount
 * If the `quantity` is decreased, the `quantity` of the item on the aggregate list will be decreased by the same amount
 * If the `quantity` has not changed, the `quantity` of the item on the aggregate list will also be unchanged
 * If the `notes` are changed, this will not be updated on the aggregate list, whose `notes` will remain `null`
-* If the `unit_weight` is changed to `null` or a valid numeric value, the value will be updated on the aggregate list item as well as any other list items with the same (case-insensitive) description belonging to the same game
+* If the `unit_weight` is changed to `null` or a valid numeric value, the value will be updated on the aggregate list item as well as any other list items with the same (case-insensitive) description belonging to the same playthrough
 
 ### Destroying a List Item
 
 When a client destroys a list item on a regular wish list, one of the following things will happen:
 
-* If the quantity of the item on the aggregate wish list for the same game is higher than the quantity of the item deleted (i.e., if there is another matching item on a different list), the aggregate list item's quantity will be decreased by the amount of the quantity of the deleted item.
+* If the quantity of the item on the aggregate wish list for the same playthrough is higher than the quantity of the item deleted (i.e., if there is another matching item on a different list), the aggregate list item's quantity will be decreased by the amount of the quantity of the deleted item.
 * If the quantity on the aggregate wish list is equal to the quantity of the item deleted (i.e., if there is not another matching item on a different list), the item on the aggregate wish list will be deleted as well.
 
 ## Endpoints
@@ -59,9 +59,9 @@ Creates a wish list item on the given list if the wish list with the given ID:
 3. Is not an aggregate list AND
 4. Does not have an existing wish list item with the same description
 
-If the first three conditions are met but the list does have an existing wish list item with a matching description, `quantity` and `notes` are updated on the existing item to aggregate the values. If the value of `unit_weight` differs from the value on the existing item and is not `null`, the existing item and any other items with the same description belonging to the same game will have their `unit_weight` updated.
+If the first three conditions are met but the list does have an existing wish list item with a matching description, `quantity` and `notes` are updated on the existing item to aggregate the values. If the value of `unit_weight` differs from the value on the existing item and is not `null`, the existing item and any other items with the same description belonging to the same playthrough will have their `unit_weight` updated.
 
-In both cases, the aggregate list for the same game is also updated to reflect the new `quantity` and `unit_weight`. Again, aggregate lists do not track `notes`.
+In both cases, the aggregate list for the same playthrough is also updated to reflect the new `quantity` and `unit_weight`. Again, aggregate lists do not track `notes`.
 
 Allowed fields are:
 
@@ -70,7 +70,7 @@ Allowed fields are:
 * `notes` (string, optional): Any notes about the item or what it is for
 * `unit_weight` (decimal, optional): The unit weight of the item as given in the game, precise to one decimal place
 
-A successful response will return a JSON array of all changed wish lists for the game to which the created or updated list item ultimately belongs, including all the list items on each list.
+A successful response will return a JSON array of all changed wish lists for the playthrough to which the created or updated list item ultimately belongs, including all the list items on each list.
 
 ### Example Request
 
@@ -96,7 +96,7 @@ Content-Type: application/json
 
 If there is no item with a matching description on the requested wish list, a new item will be created and the server will return a 201 response. If there is an item with a matching description, its notes and quantity will be combined with the notes and quantity in the client request and a 200 response will be returned.
 
-The body for both responses is a JSON array containing all _changed_ wish lists for the game to which the created or updated list item ultimately belongs, i.e., those that have had items added, updated, or removed. Each wish list includes its list items.
+The body for both responses is a JSON array containing all _changed_ wish lists for the playthrough to which the created or updated list item ultimately belongs, i.e., those that have had items added, updated, or removed. Each wish list includes its list items.
 
 ```json
 [
@@ -219,7 +219,7 @@ Requests may specify up to three fields to update:
 
 Requests attempting to update `description` will result in a validation error.
 
-When updating `unit_weight`, the `unit_weight` value will be updated for all wish list items belonging to the same game and matching the description. This is to prevent the aggregate list from getting out of sync with the values on its child list items.
+When updating `unit_weight`, the `unit_weight` value will be updated for all wish list items belonging to the same playthrough and matching the description. This is to prevent the aggregate list from getting out of sync with the values on its child list items.
 
 This route supports both `PATCH` and `PUT` requests. Application behaviour does not differ depending on which method is used.
 

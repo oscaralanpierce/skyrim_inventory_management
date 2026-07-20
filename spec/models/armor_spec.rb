@@ -62,7 +62,7 @@ RSpec.describe Armor, type: :model do
             armor.canonical_armor = canonical_armor
             armor.playthrough = playthrough
             validate
-            expect(armor.errors[:base]).to include('is a duplicate of a unique in-playthrough item')
+            expect(armor.errors[:base]).to include('is a duplicate of a unique in-game item')
           end
         end
 
@@ -211,7 +211,7 @@ RSpec.describe Armor, type: :model do
       end
     end
 
-    context 'when updating in-playthrough item attributes' do
+    context 'when updating in-game item attributes' do
       let(:armor) { create(:armor, :with_enchanted_canonical) }
 
       before do
@@ -258,7 +258,7 @@ RSpec.describe Armor, type: :model do
                   .to(new_canonical)
         end
 
-        it 'sets attributes on the in-playthrough item', :aggregate_failures do
+        it 'sets attributes on the in-game item', :aggregate_failures do
           armor.name = 'Imperial boots of resist frost'
           armor.magical_effects = 'this will be case insensitive'
           armor.weight = nil

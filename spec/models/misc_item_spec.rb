@@ -84,7 +84,7 @@ RSpec.describe MiscItem, type: :model do
 
           it 'is invalid' do
             validate
-            expect(item.errors[:base]).to include('is a duplicate of a unique in-playthrough item')
+            expect(item.errors[:base]).to include('is a duplicate of a unique in-game item')
           end
         end
       end
@@ -259,7 +259,7 @@ RSpec.describe MiscItem, type: :model do
       end
     end
 
-    context 'when updating in-playthrough item attributes' do
+    context 'when updating in-game item attributes' do
       let(:item) { create(:misc_item, :with_matching_canonical) }
 
       context 'when the update results in a new canonical match' do

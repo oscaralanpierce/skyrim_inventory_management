@@ -115,7 +115,7 @@ RSpec.describe Ingredient, type: :model do
 
           it 'is invalid' do
             validate
-            expect(ingredient.errors[:base]).to include('is a duplicate of a unique in-playthrough item')
+            expect(ingredient.errors[:base]).to include('is a duplicate of a unique in-game item')
           end
         end
       end
@@ -295,7 +295,7 @@ RSpec.describe Ingredient, type: :model do
       end
     end
 
-    context 'when updating in-playthrough item attributes' do
+    context 'when updating in-game item attributes' do
       let(:ingredient) { create(:ingredient_with_matching_canonical) }
 
       context 'when the update changes the canonical match' do
